@@ -1,4 +1,5 @@
 import 'package:admin/screens/login.dart';
+import 'package:admin/screens/menu.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
@@ -17,9 +18,9 @@ class Main extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return const MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: LoginScreen(),
+      home: MenuScreen(),
     );
   }
 }

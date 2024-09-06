@@ -1,8 +1,8 @@
-import 'package:admin/components/constant.dart';
+import 'package:admin/constants/constant.dart';
 import 'package:flutter/material.dart';
 
 class LoginScreen extends StatefulWidget {
-  LoginScreen({super.key});
+  const LoginScreen({super.key});
 
   @override
   State<LoginScreen> createState() => _LoginScreenState();
@@ -24,7 +24,7 @@ class _LoginScreenState extends State<LoginScreen> {
     var height = MediaQuery.of(context).size.height;
 
     return Scaffold(
-      body: Container(
+      body: SizedBox(
         height: height,
         width: width,
         child: Row(
@@ -44,7 +44,7 @@ class _LoginScreenState extends State<LoginScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Container(
+                  SizedBox(
                     height: height * 0.075,
                     child: Image.asset(
                       "assets/logo/logo-green.png",
@@ -78,9 +78,9 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                     child: TextFormField(
                       decoration: InputDecoration(
-                        label: Text("Email"),
+                        label: const Text("Email"),
                         labelStyle: TextStyle(fontSize: height * 0.02),
-                        border: OutlineInputBorder(),
+                        border: const OutlineInputBorder(),
                         prefixIcon: Icon(
                           Icons.person,
                           size: height * 0.03,
@@ -109,9 +109,9 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                     child: TextFormField(
                       decoration: InputDecoration(
-                        label: Text("Password"),
+                        label: const Text("Password"),
                         labelStyle: TextStyle(fontSize: height * 0.02),
-                        border: OutlineInputBorder(),
+                        border: const OutlineInputBorder(),
                         prefixIcon: Icon(
                           Icons.lock,
                           size: height * 0.03,
@@ -145,15 +145,15 @@ class _LoginScreenState extends State<LoginScreen> {
                         }
                         setState(() {});
                       },
+                      style: TextButton.styleFrom(
+                        overlayColor: Colors.transparent,
+                      ),
                       child: Text(
                         "Forgot Password",
                         style: TextStyle(
                           fontSize: height * 0.018,
                           color: forgotPassword,
                         ),
-                      ),
-                      style: TextButton.styleFrom(
-                        overlayColor: Colors.transparent,
                       ),
                     ),
                   ),
@@ -162,16 +162,16 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                   ElevatedButton(
                     onPressed: () {},
+                    style: ElevatedButton.styleFrom(
+                      minimumSize: Size(width, height * 0.06),
+                      backgroundColor: primary,
+                    ),
                     child: Text(
                       "Login",
                       style: TextStyle(
                         fontSize: height * 0.02,
                         color: Colors.white,
                       ),
-                    ),
-                    style: ElevatedButton.styleFrom(
-                      minimumSize: Size(width, height * 0.06),
-                      backgroundColor: primary,
                     ),
                   ),
                 ],
