@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'dart:math' as math;
 
 Color primary = const Color.fromRGBO(14, 159, 110, 1.0);
 Color secondary = const Color.fromRGBO(6, 208, 1, 1.0);

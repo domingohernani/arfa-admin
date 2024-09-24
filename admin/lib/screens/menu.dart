@@ -1,9 +1,9 @@
 import 'package:admin/components/bargraph.dart';
 import 'package:admin/constants/constant.dart';
-import 'package:admin/components/dashboard.dart';
-import 'package:admin/components/report.dart';
-import 'package:admin/components/request.dart';
-import 'package:admin/components/seller.dart';
+import 'package:admin/screens/dashboard.dart';
+import 'package:admin/screens/report.dart';
+import 'package:admin/screens/request.dart';
+import 'package:admin/screens/seller.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 
