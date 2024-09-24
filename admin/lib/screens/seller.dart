@@ -42,7 +42,7 @@ class _SellersViewState extends State<SellersView> {
                   child: const Row(
                     children: [
                       Icon(
-                        Icons.settings,
+                        Icons.add,
                         size: 20,
                         color: Colors.black,
                       ),
@@ -159,19 +159,111 @@ class _SellersViewState extends State<SellersView> {
                   ),
                   const Divider(),
                   Container(
-                    height: height * 0.9, // Set height for the grid
+                    height: height * 0.9,
                     child: GridView.builder(
                       gridDelegate:
                           const SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 5,
+                        crossAxisCount: 4,
                         crossAxisSpacing: 10,
                         mainAxisSpacing: 10,
-                        childAspectRatio: 4 / 4,
+                        childAspectRatio: 3.5 / 4,
                       ),
                       itemCount: 50,
                       itemBuilder: (context, index) {
                         return Container(
-                          color: Colors.green, // Item color
+                          width: 300,
+                          decoration: BoxDecoration(
+                            borderRadius:
+                                BorderRadius.circular(10), // Rounded corners
+                            color:
+                                Colors.white, // Background color for the card
+                            boxShadow: [
+                              BoxShadow(
+                                color:
+                                    Colors.grey.withOpacity(0.2), // Soft shadow
+                                spreadRadius: 2,
+                                blurRadius: 5,
+                                offset: Offset(0, 3), // Shadow position
+                              ),
+                            ],
+                          ),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              // Top Green Section with logo
+                              Container(
+                                height: 70,
+                                width: double.infinity,
+                                decoration: BoxDecoration(
+                                  color: Colors.green,
+                                  borderRadius: BorderRadius.only(
+                                    topLeft: Radius.circular(10),
+                                    topRight: Radius.circular(10),
+                                  ),
+                                ),
+                                child: Center(
+                                  child: CircleAvatar(
+                                    radius: 30,
+                                    backgroundColor: Colors.white,
+                                    // child: Image.asset(
+                                    //   'assets/logo.png', // Your logo image
+                                    //   fit: BoxFit.contain,
+                                    // ),
+                                  ),
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.all(16.0),
+                                child: Column(
+                                  children: [
+                                    Text(
+                                      "Ry’s Furniture",
+                                      style: TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.black,
+                                      ),
+                                    ),
+                                    SizedBox(height: 5),
+                                    Text(
+                                      "Seller ID: #202",
+                                      style: TextStyle(
+                                        fontSize: 14,
+                                        color: Colors.black54,
+                                      ),
+                                    ),
+                                    SizedBox(height: 5),
+                                    Text(
+                                      "ryfurniture@gmail.com",
+                                      style: TextStyle(
+                                        fontSize: 14,
+                                        color: Colors.black54,
+                                      ),
+                                    ),
+                                    SizedBox(height: 15),
+                                    ElevatedButton(
+                                      onPressed: () {},
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: primaryBg,
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(
+                                              20), // Rounded button
+                                        ),
+                                        padding: EdgeInsets.symmetric(
+                                            horizontal: 24, vertical: 12),
+                                      ),
+                                      child: Text(
+                                        "View Profile",
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
                         );
                       },
                     ),
