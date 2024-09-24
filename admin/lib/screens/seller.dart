@@ -1,0 +1,187 @@
+import 'package:admin/constants/constant.dart';
+import 'package:flutter/material.dart';
+
+class SellersView extends StatefulWidget {
+  const SellersView({super.key});
+
+  @override
+  State<SellersView> createState() => _SellersViewState();
+}
+
+class _SellersViewState extends State<SellersView> {
+  String? showValue;
+  List<String> showItems = ['1', '2', '3', '4'];
+
+  String? statusValue;
+  List<String> statusItems = ['Show All', 'Option 2', 'Option 3', 'Option 4'];
+
+  @override
+  Widget build(BuildContext context) {
+    var height = MediaQuery.of(context).size.height;
+    var width =
+        MediaQuery.of(context).size.width - sidebarSize - paddingHorizontal;
+
+    return SizedBox(
+      height: height,
+      width: width,
+      child: SingleChildScrollView(
+        child: Column(
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Text(
+                  "Seller Shops",
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                OutlinedButton(
+                  onPressed: () {},
+                  child: const Row(
+                    children: [
+                      Icon(
+                        Icons.settings,
+                        size: 20,
+                        color: Colors.black,
+                      ),
+                      SizedBox(
+                        width: 5,
+                      ),
+                      Text(
+                        "Add Shop",
+                        style: TextStyle(
+                          color: Colors.black,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(
+              height: 15,
+            ),
+            Container(
+              width: width,
+              padding: EdgeInsets.symmetric(
+                  horizontal: paddingView_horizontal,
+                  vertical: paddingView_vertical),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                color: Colors.white,
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Container(
+                        width: 250,
+                        height: 40,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: TextField(
+                          decoration: const InputDecoration(
+                            hintText: "Search seller...",
+                            hintStyle: TextStyle(
+                              fontSize: 13,
+                              color: Colors.black45,
+                            ),
+                            prefixIcon: Icon(
+                              Icons.search,
+                              color: Colors.grey,
+                            ),
+                          ),
+                          style: const TextStyle(
+                            fontSize: 13,
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        width: 160,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            DropdownButton<String>(
+                              value: showValue,
+                              hint: const Text('Show'),
+                              icon: const Icon(Icons.arrow_drop_down),
+                              iconSize: 24,
+                              elevation: 16,
+                              style: const TextStyle(
+                                color: Colors.black45,
+                                fontSize: 13,
+                              ),
+                              onChanged: (String? newValue) {
+                                setState(() {
+                                  showValue = newValue;
+                                });
+                              },
+                              items: showItems.map<DropdownMenuItem<String>>(
+                                  (String value) {
+                                return DropdownMenuItem<String>(
+                                  value: value,
+                                  child: Text(value),
+                                );
+                              }).toList(),
+                            ),
+                            DropdownButton<String>(
+                              value: statusValue,
+                              hint: const Text('Status'),
+                              icon: const Icon(Icons.arrow_drop_down),
+                              iconSize: 24,
+                              elevation: 16,
+                              style: const TextStyle(
+                                color: Colors.black45,
+                                fontSize: 13,
+                              ),
+                              onChanged: (String? newValue) {
+                                setState(() {
+                                  statusValue = newValue;
+                                });
+                              },
+                              items: statusItems.map<DropdownMenuItem<String>>(
+                                  (String value) {
+                                return DropdownMenuItem<String>(
+                                  value: value,
+                                  child: Text(value),
+                                );
+                              }).toList(),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                  const Divider(),
+                  Container(
+                    height: height * 0.9, // Set height for the grid
+                    child: GridView.builder(
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 5,
+                        crossAxisSpacing: 10,
+                        mainAxisSpacing: 10,
+                        childAspectRatio: 4 / 4,
+                      ),
+                      itemCount: 50,
+                      itemBuilder: (context, index) {
+                        return Container(
+                          color: Colors.green, // Item color
+                        );
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}

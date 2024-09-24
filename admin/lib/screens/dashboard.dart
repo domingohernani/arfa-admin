@@ -64,28 +64,28 @@ class _DashboardViewState extends State<DashboardView> {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                DataCard(
+                _DataCard(
                   title: "₱ 100,000.00",
                   subTitle: "Monthly Revenue",
                   percentage: "98.00",
                   iconData: Icons.arrow_drop_up_outlined,
                   cardIcon: Icons.attach_money_outlined,
                 ),
-                DataCard(
+                _DataCard(
                   title: "1,000",
                   subTitle: "Orders",
                   percentage: "98.00",
                   iconData: Icons.arrow_drop_up_outlined,
                   cardIcon: Icons.shopping_bag_outlined,
                 ),
-                DataCard(
+                _DataCard(
                   title: "100",
                   subTitle: "New Users",
                   percentage: "98.00",
                   iconData: Icons.arrow_drop_up_outlined,
                   cardIcon: Icons.person_add_alt_1_outlined,
                 ),
-                DataCard(
+                _DataCard(
                   title: "1,000",
                   subTitle: "Existing Users",
                   percentage: "98.00",
@@ -274,8 +274,8 @@ class _DashboardViewState extends State<DashboardView> {
   }
 }
 
-class DataCard extends StatelessWidget {
-  const DataCard(
+class _DataCard extends StatelessWidget {
+  const _DataCard(
       {super.key,
       required this.title,
       required this.subTitle,
