@@ -1,7 +1,7 @@
 import 'package:admin/screens/login.dart';
-import 'package:admin/screens/menu.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 
 import 'firebase_options.dart';
 
@@ -10,7 +10,7 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  runApp(const Main());
+  runApp(Main());
 }
 
 class Main extends StatelessWidget {
@@ -18,9 +18,10 @@ class Main extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: MenuScreen(),
+      home: LoginScreen(),
+      builder: EasyLoading.init(),
     );
   }
 }
