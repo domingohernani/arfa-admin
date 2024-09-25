@@ -1,5 +1,10 @@
 import 'package:admin/constants/constant.dart';
+import 'package:admin/screens/menu.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:quickalert/models/quickalert_type.dart';
+import 'package:quickalert/widgets/quickalert_dialog.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -11,11 +16,54 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   bool hidePassword = true;
   Color? forgotPassword;
+  final emailCont = TextEditingController();
+  final passwordCont = TextEditingController();
+  final formKey = GlobalKey<FormState>();
 
   void togglePassword() {
     setState(() {
       hidePassword = !hidePassword;
     });
+  }
+
+  void login() async {
+    if (formKey.currentState!.validate()) {
+      EasyLoading.show(status: 'Logging In. Please wait...');
+
+      try {
+        await FirebaseAuth.instance.signInWithEmailAndPassword(
+            email: emailCont.text, password: passwordCont.text);
+
+        // Check if the widget is still mounted before performing navigation
+        if (!mounted) return;
+
+        EasyLoading.dismiss();
+
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => const MenuScreen(),
+          ),
+        );
+
+        print('Login successful');
+      } catch (error) {
+        EasyLoading.dismiss();
+
+        // Check if the widget is still mounted before showing the error alert
+        if (mounted) {
+          QuickAlert.show(
+              context: context,
+              type: QuickAlertType.error,
+              title: 'No User Found!',
+              text: 'Enter a valid account.');
+        }
+
+        print('Login failed: $error');
+      }
+    }
+
+    print('Email: ${emailCont.text}');
+    print('Password: ${passwordCont.text}');
   }
 
   @override
@@ -41,140 +89,145 @@ class _LoginScreenState extends State<LoginScreen> {
                 horizontal: width * 0.05,
                 vertical: height * 0.08,
               ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  SizedBox(
-                    height: height * 0.075,
-                    child: Image.asset(
-                      "assets/logo/logo-green.png",
-                    ),
-                  ),
-                  SizedBox(
-                    height: height * 0.065,
-                  ),
-                  Text(
-                    "Welcome Back",
-                    style: TextStyle(
-                      fontSize: height * 0.07,
-                      fontWeight: FontWeight.w700,
-                    ),
-                  ),
-                  Text(
-                    "Please login your account",
-                    style: TextStyle(
-                      fontSize: height * 0.03,
-                      fontWeight: FontWeight.w400,
-                    ),
-                  ),
-                  SizedBox(
-                    height: height * 0.075,
-                  ),
-                  Container(
-                    height: height * 0.07,
-                    decoration: BoxDecoration(
-                      color: Colors.grey.shade200,
-                      borderRadius: BorderRadius.circular(height * 0.01),
-                    ),
-                    child: TextFormField(
-                      decoration: InputDecoration(
-                        label: const Text("Email"),
-                        labelStyle: TextStyle(fontSize: height * 0.02),
-                        border: const OutlineInputBorder(),
-                        prefixIcon: Icon(
-                          Icons.person,
-                          size: height * 0.03,
-                        ),
-                        suffix: Text(
-                          "",
-                          style: TextStyle(
-                            fontSize: height * 0.03,
-                          ),
-                        ),
+              child: Form(
+                key: formKey,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    SizedBox(
+                      height: height * 0.075,
+                      child: Image.asset(
+                        "assets/logo/logo-green.png",
                       ),
-                      cursorHeight: height * 0.02,
+                    ),
+                    SizedBox(
+                      height: height * 0.065,
+                    ),
+                    Text(
+                      "Welcome Back",
                       style: TextStyle(
-                        fontSize: height * 0.02,
+                        fontSize: height * 0.07,
+                        fontWeight: FontWeight.w700,
                       ),
                     ),
-                  ),
-                  SizedBox(
-                    height: height * 0.03,
-                  ),
-                  Container(
-                    height: height * 0.07,
-                    decoration: BoxDecoration(
-                      color: Colors.grey.shade200,
-                      borderRadius: BorderRadius.circular(height * 0.01),
+                    Text(
+                      "Please login your account",
+                      style: TextStyle(
+                        fontSize: height * 0.03,
+                        fontWeight: FontWeight.w400,
+                      ),
                     ),
-                    child: TextFormField(
-                      decoration: InputDecoration(
-                        label: const Text("Password"),
-                        labelStyle: TextStyle(fontSize: height * 0.02),
-                        border: const OutlineInputBorder(),
-                        prefixIcon: Icon(
-                          Icons.lock,
-                          size: height * 0.03,
-                        ),
-                        suffix: IconButton(
-                          onPressed: togglePassword,
-                          icon: Icon(
-                            hidePassword
-                                ? Icons.visibility
-                                : Icons.visibility_off,
+                    SizedBox(
+                      height: height * 0.075,
+                    ),
+                    Container(
+                      height: height * 0.07,
+                      decoration: BoxDecoration(
+                        color: Colors.grey.shade200,
+                        borderRadius: BorderRadius.circular(height * 0.01),
+                      ),
+                      child: TextFormField(
+                        controller: emailCont,
+                        decoration: InputDecoration(
+                          label: const Text("Email"),
+                          labelStyle: TextStyle(fontSize: height * 0.02),
+                          border: const OutlineInputBorder(),
+                          prefixIcon: Icon(
+                            Icons.person,
                             size: height * 0.03,
                           ),
+                          suffix: Text(
+                            "",
+                            style: TextStyle(
+                              fontSize: height * 0.03,
+                            ),
+                          ),
+                        ),
+                        cursorHeight: height * 0.02,
+                        style: TextStyle(
+                          fontSize: height * 0.02,
                         ),
                       ),
-                      cursorHeight: height * 0.02,
-                      style: TextStyle(
-                        fontSize: height * 0.02,
-                      ),
-                      obscureText: hidePassword,
                     ),
-                  ),
-                  Container(
-                    alignment: Alignment.topRight,
-                    child: TextButton(
-                      onPressed: () {},
-                      onHover: (value) {
-                        if (value == true) {
-                          forgotPassword = Colors.black;
-                        } else {
-                          forgotPassword = Colors.grey;
-                        }
-                        setState(() {});
-                      },
-                      style: TextButton.styleFrom(
-                        overlayColor: Colors.transparent,
+                    SizedBox(
+                      height: height * 0.03,
+                    ),
+                    Container(
+                      height: height * 0.07,
+                      decoration: BoxDecoration(
+                        color: Colors.grey.shade200,
+                        borderRadius: BorderRadius.circular(height * 0.01),
+                      ),
+                      child: TextFormField(
+                        controller: passwordCont,
+                        decoration: InputDecoration(
+                          label: const Text("Password"),
+                          labelStyle: TextStyle(fontSize: height * 0.02),
+                          border: const OutlineInputBorder(),
+                          prefixIcon: Icon(
+                            Icons.lock,
+                            size: height * 0.03,
+                          ),
+                          suffix: IconButton(
+                            onPressed: togglePassword,
+                            icon: Icon(
+                              hidePassword
+                                  ? Icons.visibility
+                                  : Icons.visibility_off,
+                              size: height * 0.03,
+                            ),
+                          ),
+                        ),
+                        cursorHeight: height * 0.02,
+                        style: TextStyle(
+                          fontSize: height * 0.02,
+                        ),
+                        obscureText: hidePassword,
+                      ),
+                    ),
+                    Container(
+                      alignment: Alignment.topRight,
+                      child: TextButton(
+                        onPressed: () {},
+                        onHover: (value) {
+                          if (value == true) {
+                            forgotPassword = Colors.black;
+                          } else {
+                            forgotPassword = Colors.grey;
+                          }
+                          setState(() {});
+                        },
+                        style: TextButton.styleFrom(
+                          overlayColor: Colors.transparent,
+                        ),
+                        child: Text(
+                          "Forgot Password",
+                          style: TextStyle(
+                            fontSize: height * 0.018,
+                            color: forgotPassword,
+                          ),
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      height: height * 0.03,
+                    ),
+                    ElevatedButton(
+                      onPressed: login,
+                      style: ElevatedButton.styleFrom(
+                        minimumSize: Size(width, height * 0.06),
+                        backgroundColor: primary,
                       ),
                       child: Text(
-                        "Forgot Password",
+                        "Login",
                         style: TextStyle(
-                          fontSize: height * 0.018,
-                          color: forgotPassword,
+                          fontSize: height * 0.02,
+                          color: Colors.white,
                         ),
                       ),
                     ),
-                  ),
-                  SizedBox(
-                    height: height * 0.03,
-                  ),
-                  ElevatedButton(
-                    onPressed: () {},
-                    style: ElevatedButton.styleFrom(
-                      minimumSize: Size(width, height * 0.06),
-                      backgroundColor: primary,
-                    ),
-                    child: Text(
-                      "Login",
-                      style: TextStyle(
-                        fontSize: height * 0.02,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             )
           ],

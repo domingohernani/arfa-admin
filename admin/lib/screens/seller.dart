@@ -164,12 +164,16 @@ class _SellersViewState extends State<SellersView> {
                       gridDelegate:
                           const SliverGridDelegateWithFixedCrossAxisCount(
                         crossAxisCount: 4,
-                        crossAxisSpacing: 10,
-                        mainAxisSpacing: 10,
+                        crossAxisSpacing: 25,
+                        mainAxisSpacing: 30,
                         childAspectRatio: 3.5 / 4,
                       ),
                       itemCount: 50,
                       itemBuilder: (context, index) {
+                        if (index == 49) {
+                          return AddSellerCard();
+                        }
+
                         return Container(
                           width: 300,
                           decoration: BoxDecoration(
@@ -253,7 +257,7 @@ class _SellersViewState extends State<SellersView> {
                                             horizontal: 24, vertical: 12),
                                       ),
                                       child: Text(
-                                        "View Profile",
+                                        "View Store",
                                         style: TextStyle(
                                           color: Colors.white,
                                         ),
@@ -269,6 +273,176 @@ class _SellersViewState extends State<SellersView> {
                     ),
                   ),
                 ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class AddSellerCard extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: () async {
+        return showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              title: Text(
+                "Add New Seller",
+                style: TextStyle(
+                  fontSize: 18,
+                  color: primary,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              actions: <Widget>[
+                Container(
+                  width: 400,
+                  child: Column(
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Container(
+                            height: 90,
+                            width: 90,
+                            child: CircleAvatar(
+                              backgroundColor: Colors.green,
+                            ),
+                          ),
+                          SizedBox(
+                            width: 25,
+                          ),
+                          OutlinedButton(
+                            onPressed: () {},
+                            child: Row(
+                              children: [
+                                Icon(Icons.add_a_photo_rounded),
+                                SizedBox(
+                                  width: 10,
+                                ),
+                                Text(
+                                  "Upload",
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(
+                        height: 25,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          Container(
+                            width: 170,
+                            child: TextField(
+                              decoration: InputDecoration(
+                                border: OutlineInputBorder(),
+                                label: Text("Firstname"),
+                              ),
+                            ),
+                          ),
+                          Container(
+                            width: 170,
+                            child: TextField(
+                              decoration: InputDecoration(
+                                border: OutlineInputBorder(),
+                                label: Text("Lastname"),
+                              ),
+                            ),
+                          )
+                        ],
+                      ),
+                      SizedBox(
+                        height: 25,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          Container(
+                            width: 170,
+                            child: TextField(
+                              decoration: InputDecoration(
+                                border: OutlineInputBorder(),
+                                label: Text("Firstname"),
+                              ),
+                            ),
+                          ),
+                          Container(
+                            width: 170,
+                            child: TextField(
+                              decoration: InputDecoration(
+                                border: OutlineInputBorder(),
+                                label: Text("Lastname"),
+                              ),
+                            ),
+                          )
+                        ],
+                      ),
+                      SizedBox(
+                        height: 25,
+                      ),
+                      Container(
+                        width: double.infinity,
+                        child: ElevatedButton(
+                          onPressed: () {},
+                          child: Text(
+                            "ADD",
+                            style: TextStyle(
+                              color: Colors.white,
+                            ),
+                          ),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: primary,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                )
+              ],
+            );
+          },
+        );
+      },
+      child: Container(
+        width: 250,
+        height: 150,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(12), // Rounded corners
+          border: Border.all(
+            color: Colors.green, // Outline border color
+            width: 2, // Border thickness
+          ),
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            CircleAvatar(
+              radius: 30,
+              backgroundColor: Colors.green.withOpacity(0.1),
+              child: Icon(
+                Icons.add, // Add icon
+                size: 40,
+                color: Colors.green,
+              ),
+            ),
+            SizedBox(height: 10),
+            Text(
+              "Add Seller",
+              style: TextStyle(
+                color: Colors.green,
+                fontSize: 16,
+                fontWeight: FontWeight.w500,
               ),
             ),
           ],
