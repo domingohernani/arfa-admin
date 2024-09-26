@@ -1,4 +1,7 @@
 import 'package:admin/constants/constant.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
 class SellersView extends StatefulWidget {
@@ -11,9 +14,22 @@ class SellersView extends StatefulWidget {
 class _SellersViewState extends State<SellersView> {
   String? showValue;
   List<String> showItems = ['1', '2', '3', '4'];
-
   String? statusValue;
   List<String> statusItems = ['Show All', 'Option 2', 'Option 3', 'Option 4'];
+
+  // void fetchData() async {
+  //   try {
+  //     var document = await FirebaseFirestore.instance.collection("users").where("role", isEqualTo: "seller").snapshots()
+  //   } catch (ex) {
+  //     print("Error: ${ex}");
+  //   }
+  // }
+
+  @override
+  void dispose() {
+    // Clean up listeners if any
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -41,28 +57,15 @@ class _SellersViewState extends State<SellersView> {
                   onPressed: () {},
                   child: const Row(
                     children: [
-                      Icon(
-                        Icons.add,
-                        size: 20,
-                        color: Colors.black,
-                      ),
-                      SizedBox(
-                        width: 5,
-                      ),
-                      Text(
-                        "Add Shop",
-                        style: TextStyle(
-                          color: Colors.black,
-                        ),
-                      ),
+                      Icon(Icons.add, size: 20, color: Colors.black),
+                      SizedBox(width: 5),
+                      Text("Add Shop", style: TextStyle(color: Colors.black)),
                     ],
                   ),
                 ),
               ],
             ),
-            const SizedBox(
-              height: 15,
-            ),
+            const SizedBox(height: 15),
             Container(
               width: width,
               padding: EdgeInsets.symmetric(
@@ -81,24 +84,14 @@ class _SellersViewState extends State<SellersView> {
                       Container(
                         width: 250,
                         height: 40,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(8),
-                        ),
                         child: TextField(
                           decoration: const InputDecoration(
                             hintText: "Search seller...",
-                            hintStyle: TextStyle(
-                              fontSize: 13,
-                              color: Colors.black45,
-                            ),
-                            prefixIcon: Icon(
-                              Icons.search,
-                              color: Colors.grey,
-                            ),
+                            hintStyle:
+                                TextStyle(fontSize: 13, color: Colors.black45),
+                            prefixIcon: Icon(color: Colors.grey, Icons.search),
                           ),
-                          style: const TextStyle(
-                            fontSize: 13,
-                          ),
+                          style: const TextStyle(fontSize: 13),
                         ),
                       ),
                       SizedBox(
@@ -113,9 +106,7 @@ class _SellersViewState extends State<SellersView> {
                               iconSize: 24,
                               elevation: 16,
                               style: const TextStyle(
-                                color: Colors.black45,
-                                fontSize: 13,
-                              ),
+                                  color: Colors.black45, fontSize: 13),
                               onChanged: (String? newValue) {
                                 setState(() {
                                   showValue = newValue;
@@ -136,9 +127,7 @@ class _SellersViewState extends State<SellersView> {
                               iconSize: 24,
                               elevation: 16,
                               style: const TextStyle(
-                                color: Colors.black45,
-                                fontSize: 13,
-                              ),
+                                  color: Colors.black45, fontSize: 13),
                               onChanged: (String? newValue) {
                                 setState(() {
                                   statusValue = newValue;
@@ -158,6 +147,42 @@ class _SellersViewState extends State<SellersView> {
                     ],
                   ),
                   const Divider(),
+                  // StreamBuilder<QuerySnapshot>(
+                  //   stream: FirebaseFirestore.instance
+                  //       .collection("users")
+                  //       .where("role", isEqualTo: "seller")
+                  //       .snapshots(),
+                  //   builder: (context, snapshot) {
+                  //     if (snapshot.connectionState == ConnectionState.waiting) {
+                  //       return Center(child: CircularProgressIndicator());
+                  //     }
+
+                  //     if (snapshot.hasError) {
+                  //       return Center(child: Text("Error: ${snapshot.error}"));
+                  //     }
+
+                  //     if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+                  //       return Center(child: Text("No sellers available"));
+                  //     }
+
+                  //     final sellers = snapshot.data!.docs;
+
+                  //     return ListView.builder(
+                  //       shrinkWrap: true,
+                  //       physics:
+                  //           NeverScrollableScrollPhysics(), // Prevent internal scrolling
+                  //       itemCount: sellers.length,
+                  //       itemBuilder: (context, index) {
+                  //         var sellerData = sellers[index];
+                  //         return ListTile(
+                  //           title: Text(
+                  //               '${sellerData['email']}'), // Adjust according to your fields
+                  //         );
+                  //       },
+                  //     );
+                  //   },
+                  // ),
+                  // const Divider(),
                   Container(
                     height: height * 0.9,
                     child: GridView.builder(
@@ -168,12 +193,12 @@ class _SellersViewState extends State<SellersView> {
                         mainAxisSpacing: 30,
                         childAspectRatio: 3.5 / 4,
                       ),
-                      itemCount: 50,
+                      itemCount: 20, // +1 for the AddSellerCard
                       itemBuilder: (context, index) {
-                        if (index == 49) {
-                          return AddSellerCard();
-                        }
-
+                        // if (index == shops.length) {
+                        //   return AddSellerCard(); // Display the add seller card
+                        // }
+                        // var shop = shops[index];
                         return Container(
                           width: 300,
                           decoration: BoxDecoration(
@@ -221,7 +246,7 @@ class _SellersViewState extends State<SellersView> {
                                 child: Column(
                                   children: [
                                     Text(
-                                      "Ry’s Furniture",
+                                      "arfa", // Assuming 'name' field exists
                                       style: TextStyle(
                                         fontSize: 18,
                                         fontWeight: FontWeight.bold,
@@ -230,7 +255,7 @@ class _SellersViewState extends State<SellersView> {
                                     ),
                                     SizedBox(height: 5),
                                     Text(
-                                      "Seller ID: #202",
+                                      "Seller ID: ", // Document ID
                                       style: TextStyle(
                                         fontSize: 14,
                                         color: Colors.black54,
@@ -238,7 +263,7 @@ class _SellersViewState extends State<SellersView> {
                                     ),
                                     SizedBox(height: 5),
                                     Text(
-                                      "ryfurniture@gmail.com",
+                                      "ry@g.com", // Assuming 'email' field exists
                                       style: TextStyle(
                                         fontSize: 14,
                                         color: Colors.black54,
@@ -314,31 +339,23 @@ class AddSellerCard extends StatelessWidget {
                               backgroundColor: Colors.green,
                             ),
                           ),
-                          SizedBox(
-                            width: 25,
-                          ),
+                          SizedBox(width: 25),
                           OutlinedButton(
                             onPressed: () {},
                             child: Row(
                               children: [
                                 Icon(Icons.add_a_photo_rounded),
-                                SizedBox(
-                                  width: 10,
-                                ),
+                                SizedBox(width: 10),
                                 Text(
                                   "Upload",
-                                  style: TextStyle(
-                                    fontSize: 14,
-                                  ),
+                                  style: TextStyle(fontSize: 14),
                                 ),
                               ],
                             ),
                           ),
                         ],
                       ),
-                      SizedBox(
-                        height: 25,
-                      ),
+                      SizedBox(height: 25),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
@@ -359,12 +376,10 @@ class AddSellerCard extends StatelessWidget {
                                 label: Text("Lastname"),
                               ),
                             ),
-                          )
+                          ),
                         ],
                       ),
-                      SizedBox(
-                        height: 25,
-                      ),
+                      SizedBox(height: 25),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
@@ -373,7 +388,7 @@ class AddSellerCard extends StatelessWidget {
                             child: TextField(
                               decoration: InputDecoration(
                                 border: OutlineInputBorder(),
-                                label: Text("Firstname"),
+                                label: Text("Email"),
                               ),
                             ),
                           ),
@@ -382,24 +397,20 @@ class AddSellerCard extends StatelessWidget {
                             child: TextField(
                               decoration: InputDecoration(
                                 border: OutlineInputBorder(),
-                                label: Text("Lastname"),
+                                label: Text("Phone"),
                               ),
                             ),
-                          )
+                          ),
                         ],
                       ),
-                      SizedBox(
-                        height: 25,
-                      ),
+                      SizedBox(height: 25),
                       Container(
                         width: double.infinity,
                         child: ElevatedButton(
                           onPressed: () {},
                           child: Text(
                             "ADD",
-                            style: TextStyle(
-                              color: Colors.white,
-                            ),
+                            style: TextStyle(color: Colors.white),
                           ),
                           style: ElevatedButton.styleFrom(
                             backgroundColor: primary,
@@ -408,7 +419,7 @@ class AddSellerCard extends StatelessWidget {
                       ),
                     ],
                   ),
-                )
+                ),
               ],
             );
           },
