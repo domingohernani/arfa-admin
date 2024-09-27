@@ -4,6 +4,7 @@ import 'package:admin/screens/dashboard.dart';
 import 'package:admin/screens/report.dart';
 import 'package:admin/screens/request.dart';
 import 'package:admin/screens/seller.dart';
+import 'package:admin/screens/store.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 

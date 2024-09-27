@@ -21,7 +21,7 @@ class Main extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: MenuScreen(),
+      home: LoginScreen(),
       builder: EasyLoading.init(),
     );
   }
