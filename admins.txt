@@ -1,0 +1,25 @@
+SUPER ADMIN 1
+	id: tXM5NwfXVtS2VzSjwxrmsbDnBgn1
+	name: Arfa Elijah
+	email: supadmin_elijah@arfa.com
+	password: arfa_elijah
+ADMIN 2
+	id: mFRf7bzxGBOiwNhQntNy4OOjMTI3
+	name: Arfa Hernani
+	email: admin_hernani@arfa.com
+	password: arfa_hernani
+ADMIN 3
+	id: qLpxJlrrP0eK7Z1jVsGAHKWPYL73
+	name: Arfa Ryan
+	email: admin_ryan@arfa.com
+	password: arfa_ryan
+ADMIN 4
+	id: K6ou1qTxLtUyhOn2KemOxKLuf2E2
+	name: Arfa Vincent
+	email: admin_vincent@arfa.com
+	password: arfa_vincent
+ADMIN 5
+	id: BUq56hh7CgayQIKDn8m8995ijo23
+	name: Arfa Jessica
+	email: admin_jessica@arfa.com
+	password: arfa_jessica

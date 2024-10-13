@@ -1,4 +1,4 @@
-import 'package:admin/constants/constant.dart';
+import 'package:admin/themes/theme.dart';
 import 'package:flutter/material.dart';
 
 class RequestsView extends StatefulWidget {
@@ -16,9 +16,13 @@ class _RequestsViewState extends State<RequestsView> {
     var height = MediaQuery.of(context).size.height;
     var width =
         MediaQuery.of(context).size.width - sidebarSize - paddingHorizontal;
-    return SizedBox(
+    return Container(
       height: height,
       width: width,
+      padding: EdgeInsets.symmetric(
+        vertical: paddingView_vertical,
+        horizontal: paddingView_horizontal,
+      ),
       child: SingleChildScrollView(
         child: Column(
           children: [
@@ -46,7 +50,6 @@ class _RequestsViewState extends State<RequestsView> {
             ),
             const SizedBox(height: 15),
             Container(
-              width: width,
               padding: EdgeInsets.symmetric(
                   horizontal: paddingView_horizontal,
                   vertical: paddingView_vertical),
