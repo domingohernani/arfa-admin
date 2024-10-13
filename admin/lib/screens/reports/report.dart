@@ -1,6 +1,7 @@
 import 'package:admin/components/bargraph.dart';
 import 'package:admin/components/linegraph.dart';
-import 'package:admin/constants/constant.dart';
+import 'package:admin/themes/theme.dart';
+
 import 'package:flutter/material.dart';
 
 class ReportsView extends StatefulWidget {
@@ -22,6 +23,10 @@ class _ReportsViewState extends State<ReportsView> {
     return Container(
       height: height,
       width: width,
+      padding: EdgeInsets.symmetric(
+        vertical: paddingView_vertical,
+        horizontal: paddingView_horizontal,
+      ),
       child: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -64,7 +69,6 @@ class _ReportsViewState extends State<ReportsView> {
               height: 15,
             ),
             Container(
-              width: width,
               padding: const EdgeInsets.only(
                 top: 10,
                 left: 20,
@@ -302,7 +306,6 @@ class _ReportsViewState extends State<ReportsView> {
               height: 20,
             ),
             Container(
-              width: width,
               padding: const EdgeInsets.only(
                 top: 10,
                 left: 20,

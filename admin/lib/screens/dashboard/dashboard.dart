@@ -1,6 +1,6 @@
 import 'package:admin/components/bargraph.dart';
 import 'package:admin/components/linegraph.dart';
-import 'package:admin/constants/constant.dart';
+import 'package:admin/themes/theme.dart';
 
 import 'package:flutter/material.dart';
 
@@ -20,6 +20,10 @@ class _DashboardViewState extends State<DashboardView> {
     return Container(
       height: height,
       width: width,
+      padding: EdgeInsets.symmetric(
+        vertical: paddingView_vertical,
+        horizontal: paddingView_horizontal,
+      ),
       child: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
