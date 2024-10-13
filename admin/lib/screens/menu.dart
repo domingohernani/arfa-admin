@@ -1,9 +1,10 @@
 import 'package:admin/components/headerNavigation.dart';
 import 'package:admin/components/sideBarNavigation.dart';
+import 'package:admin/screens/customers/shoppers.dart';
 import 'package:admin/screens/dashboard/dashboard.dart';
 import 'package:admin/screens/reports/report.dart';
 import 'package:admin/screens/requests/request.dart';
-import 'package:admin/screens/sellers/seller.dart';
+import 'package:admin/screens/customers/seller.dart';
 import 'package:admin/themes/theme.dart';
 import 'package:admin/models/adminData.dart';
 import 'package:admin/screens/login.dart';
@@ -273,12 +274,28 @@ class _MenuScreenState extends State<MenuScreen> {
                     ),
                     tooltipContent: "Dashboard",
                   ),
-                  SideMenuItem(
-                    title: 'Sellers',
-                    onTap: (index, _) {
-                      sideMenu.changePage(index);
-                    },
-                    icon: const Icon(Icons.supervisor_account),
+                  SideMenuExpansionItem(
+                    title: 'Customers',
+                    iconWidget: Icon(
+                      Icons.group_rounded,
+                      color: Colors.white,
+                    ),
+                    children: [
+                      SideMenuItem(
+                        title: 'Sellers',
+                        onTap: (index, _) {
+                          sideMenu.changePage(index);
+                        },
+                        icon: const Icon(Icons.store_rounded),
+                      ),
+                      SideMenuItem(
+                        title: 'Shoppers',
+                        onTap: (index, _) {
+                          sideMenu.changePage(index);
+                        },
+                        icon: const Icon(Icons.supervised_user_circle_rounded),
+                      ),
+                    ],
                   ),
                   SideMenuItem(
                     title: 'Reports',
@@ -335,6 +352,7 @@ class _MenuScreenState extends State<MenuScreen> {
                   children: [
                     DashboardView(),
                     SellersView(),
+                    ShoppersView(),
                     ReportsView(),
                     RequestsView(),
                     // Container(

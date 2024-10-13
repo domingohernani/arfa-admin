@@ -1,5 +1,6 @@
 import 'package:admin/models/adminData.dart';
 import 'package:admin/models/sellersData.dart';
+import 'package:admin/models/shoppersData.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -25,10 +26,9 @@ class FirestoreService {
     }
   }
 
-  Future<List<Seller>> getUsersData() async {
+  Future<List<Seller>> getSellersData() async {
     final _firestore_db = FirebaseFirestore.instance;
     List<Seller> sellers = [];
-    String businesspermit = "";
     Map<String, Map<String, dynamic>> shopsInfo = {};
 
     try {
@@ -84,6 +84,49 @@ class FirestoreService {
     }
 
     return sellers;
+  }
+
+  Future<List<Shopper>> getShoppersData() async {
+    final _firestore_db = FirebaseFirestore.instance;
+    List<Shopper> shoppers = [];
+
+    try {
+      QuerySnapshot snapshotUsers =
+          await _firestore_db.collection('users').get();
+
+      for (var userdoc in snapshotUsers.docs) {
+        Map<String, dynamic> data = userdoc.data() as Map<String, dynamic>;
+
+        final user = Shopper(
+          id: data['id'] ?? "",
+          firstname: data['firstName'] ?? "",
+          lastname: data['lastName'] ?? "",
+          email: data['email'] ?? "",
+          phone: data['phoneNumber'] ?? "No Phone Number",
+
+          role: data['role'] ?? "",
+          location: {
+            "street": data["street"]?.toString() ?? '',
+            "barangay": data["barangay"]?.toString() ?? '',
+            "city": data["city"]?.toString() ?? '',
+            "province": data["province"]?.toString() ?? '',
+            "region": data["region"]?.toString() ?? '',
+          },
+          // Optionally handle these fields if necessary
+          // location: data['location']?.toString() ?? "",
+          // cart: data['cart']?.toString() ?? "",
+          // wishlist: data['wishlist']?.toString() ?? "",
+        );
+
+        if (user.role.toLowerCase() == 'shopper') {
+          shoppers.add(user);
+        }
+      }
+    } catch (error) {
+      print(error);
+    }
+
+    return shoppers;
   }
 
   void signOut() async {

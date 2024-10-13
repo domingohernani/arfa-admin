@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:admin/models/sellersData.dart';
+import 'package:admin/models/shoppersData.dart';
 import 'package:admin/services/firestoreService.dart';
 import 'package:admin/themes/theme.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -8,14 +9,14 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
-class SellersView extends StatefulWidget {
-  const SellersView({super.key});
+class ShoppersView extends StatefulWidget {
+  const ShoppersView({super.key});
 
   @override
-  State<SellersView> createState() => _SellersViewState();
+  State<ShoppersView> createState() => _ShoppersViewState();
 }
 
-class _SellersViewState extends State<SellersView> {
+class _ShoppersViewState extends State<ShoppersView> {
   String? showValue;
   List<String> showItems = ['1', '2', '3', '4'];
   String? statusValue;
@@ -48,7 +49,7 @@ class _SellersViewState extends State<SellersView> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               const Text(
-                "Seller Shops",
+                "Shoppers Information",
                 style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
@@ -151,7 +152,7 @@ class _SellersViewState extends State<SellersView> {
                   width: double.infinity,
                   height: height - 251,
                   child: FutureBuilder(
-                    future: _fs.getUsersData(),
+                    future: _fs.getShoppersData(),
                     builder: (context, snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting) {
                         return Center(child: CircularProgressIndicator());
@@ -165,7 +166,7 @@ class _SellersViewState extends State<SellersView> {
                         return Center(child: Text("No sellers available"));
                       }
 
-                      List<Seller> sellers = snapshot.data!;
+                      List<Shopper> shoppers = snapshot.data!;
 
                       return GridView.builder(
                           gridDelegate:
@@ -175,14 +176,9 @@ class _SellersViewState extends State<SellersView> {
                             mainAxisSpacing: 30,
                             childAspectRatio: 3.5 / 4,
                           ),
-                          itemCount:
-                              sellers.length + 1, // +1 for the AddSellerCard
+                          itemCount: shoppers.length,
                           itemBuilder: (context, index) {
-                            if (index == sellers.length) {
-                              return AddSellerCard(); // Display the add seller card
-                            }
-
-                            var seller = sellers[index];
+                            var shopper = shoppers[index];
 
                             return Container(
                               width: 300,
@@ -227,7 +223,10 @@ class _SellersViewState extends State<SellersView> {
                                     child: Column(
                                       children: [
                                         Text(
-                                          "${seller.shopname}", // Assuming 'name' field exists
+                                          (shopper.firstname.isEmpty &&
+                                                  shopper.lastname.isEmpty)
+                                              ? "No Name"
+                                              : "${shopper.firstname} ${shopper.lastname}", // Assuming 'name' field exists
                                           style: TextStyle(
                                             fontSize: 18,
                                             fontWeight: FontWeight.bold,
@@ -236,7 +235,7 @@ class _SellersViewState extends State<SellersView> {
                                         ),
                                         SizedBox(height: 5),
                                         Text(
-                                          "${seller.id}", // Document ID
+                                          "${shopper.phone}", // Document ID
                                           style: TextStyle(
                                             fontSize: 14,
                                             color: Colors.black54,
@@ -244,7 +243,7 @@ class _SellersViewState extends State<SellersView> {
                                         ),
                                         SizedBox(height: 5),
                                         Text(
-                                          "${seller.email}", // Assuming 'email' field exists
+                                          "${shopper.email}", // Assuming 'email' field exists
                                           style: TextStyle(
                                             fontSize: 14,
                                             color: Colors.black54,
@@ -264,7 +263,7 @@ class _SellersViewState extends State<SellersView> {
                                                 horizontal: 24, vertical: 12),
                                           ),
                                           child: Text(
-                                            "View Store",
+                                            "View Profile",
                                             style: TextStyle(
                                               color: Colors.white,
                                             ),
