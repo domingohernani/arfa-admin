@@ -51,7 +51,6 @@ class _MenuScreenState extends State<MenuScreen> {
         } else if (!snapshot.hasData || snapshot.data == null) {
           return const Center(child: Text('No admin data found.'));
         }
-        print("here:${snapshot.data}");
 
         var admin = snapshot.data!;
 

@@ -1,5 +1,5 @@
 import 'package:admin/models/adminData.dart';
-import 'package:admin/models/customerData.dart';
+import 'package:admin/models/sellersData.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -13,7 +13,7 @@ class FirestoreService {
       var data = await _firestore_db.collection("admins").doc(adminId).get();
 
       if (data.exists) {
-        print("Document exists: ${data.data()}");
+        // print("Document exists: ${data.data()}");
         return Admin.fromFirestore(data);
       } else {
         print("Document doesn't exists.");
@@ -25,47 +25,65 @@ class FirestoreService {
     }
   }
 
-  // Future<Customer?> getUserData(String userId) async {
-  //   try {
-  //     var data = await _firestore_db.collection("users").doc(userId).get();
-
-  //     if (data.exists) {
-  //       print("www: ${data.data()}");
-  //       return Customer.fromFirestore(data.data()!);
-  //     } else {
-  //       print("Document doesn't exists.");
-  //       return null;
-  //     }
-  //   } catch (error) {
-  //     print("Error: $error");
-  //     return null;
-  //   }
-  // }
-
-  Future<void> getUserData() async {
+  Future<List<Seller>> getUsersData() async {
     final _firestore_db = FirebaseFirestore.instance;
+    List<Seller> sellers = [];
+    String businesspermit = "";
+    Map<String, Map<String, dynamic>> shopsInfo = {};
 
     try {
-      // Access the collection (replace 'users' with your collection name)
-      QuerySnapshot snapshot = await _firestore_db.collection('users').get();
+      QuerySnapshot snapshotUsers =
+          await _firestore_db.collection('users').get();
+      QuerySnapshot snapshotShops =
+          await _firestore_db.collection('shops').get();
 
-      // Loop through each document in the collection
-      for (var doc in snapshot.docs) {
-        print("Document ID: ${doc.id}");
+      for (var shopDoc in snapshotShops.docs) {
+        Map<String, dynamic> data = shopDoc.data() as Map<String, dynamic>;
 
-        Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+        String sellerId = data['userId'] ?? "";
+        shopsInfo[sellerId] = {
+          'name': data['name'] ?? "",
+          'validId': data['validId'] ?? "",
+          'businessPermit': data['businessPermit'] ?? "",
+        };
+      }
 
-        Customer customer = Customer.fromFirestore(data);
-        // // Print each key-value pair from the document
-        // data.forEach((key, value) {
-        //   print("$key: $value");
-        // });
+      for (var userdoc in snapshotUsers.docs) {
+        Map<String, dynamic> data = userdoc.data() as Map<String, dynamic>;
+        Map<String, dynamic>? shopData = shopsInfo[data['id']];
 
-        // print("\n---------------------------\n"); // Separator between documents
+        final user = Seller(
+          id: data['id'] ?? "",
+          firstname: data['firstname'] ?? "",
+          lastname: data['lastname'] ?? "",
+          email: data['email'] ?? "",
+          phone: data['phone'] ?? "",
+          role: data['role'] ?? "",
+          address: {
+            "street": data["street"]?.toString() ?? '',
+            "barangay": data["barangay"]?.toString() ?? '',
+            "city": data["city"]?.toString() ?? '',
+            "province": data["province"]?.toString() ?? '',
+            "region": data["region"]?.toString() ?? '',
+          },
+          shopname: shopData?['name'] ?? "",
+          shopvalidid: shopData?['validId'] ?? "",
+          shoppermit: shopData?['businessPermit'] ?? "",
+          // Optionally handle these fields if necessary
+          // location: data['location']?.toString() ?? "",
+          // cart: data['cart']?.toString() ?? "",
+          // wishlist: data['wishlist']?.toString() ?? "",
+        );
+
+        if (user.role.toLowerCase() == 'seller') {
+          sellers.add(user);
+        }
       }
     } catch (error) {
-      print("Error: $error");
+      print(error);
     }
+
+    return sellers;
   }
 
   void signOut() async {
