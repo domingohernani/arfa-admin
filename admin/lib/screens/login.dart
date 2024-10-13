@@ -1,4 +1,6 @@
-import 'package:admin/constants/constant.dart';
+import 'dart:ui';
+
+import 'package:admin/themes/theme.dart';
 import 'package:admin/screens/menu.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -26,7 +28,7 @@ class _LoginScreenState extends State<LoginScreen> {
     });
   }
 
-  void login() async {
+  Future<void> login() async {
     if (formKey.currentState!.validate()) {
       EasyLoading.show(status: 'Logging In. Please wait...');
 
@@ -34,36 +36,34 @@ class _LoginScreenState extends State<LoginScreen> {
         await FirebaseAuth.instance.signInWithEmailAndPassword(
             email: emailCont.text, password: passwordCont.text);
 
-        // Check if the widget is still mounted before performing navigation
-        if (!mounted) return;
+        String id = FirebaseAuth.instance.currentUser!.uid;
+
+        print("My id: $id");
 
         EasyLoading.dismiss();
 
-        Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (context) => const MenuScreen(),
-          ),
-        );
+        Navigator.of(context).push(MaterialPageRoute(
+          builder: (context) => MenuScreen(uid: id),
+        ));
 
         print('Login successful');
       } catch (error) {
         EasyLoading.dismiss();
 
-        // Check if the widget is still mounted before showing the error alert
-        if (mounted) {
-          QuickAlert.show(
-              context: context,
-              type: QuickAlertType.error,
-              title: 'No User Found!',
-              text: 'Enter a valid account.');
-        }
+        QuickAlert.show(
+            context: context,
+            type: QuickAlertType.error,
+            title: 'No User Found!',
+            text: 'Enter a valid account.');
 
         print('Login failed: $error');
       }
     }
+  }
 
-    print('Email: ${emailCont.text}');
-    print('Password: ${passwordCont.text}');
+  @override
+  void initState() {
+    super.initState();
   }
 
   @override

@@ -11,17 +11,32 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  runApp(Main());
+  runApp(const Main());
 }
 
-class Main extends StatelessWidget {
+class Main extends StatefulWidget {
   const Main({super.key});
 
+  @override
+  State<Main> createState() => _MainState();
+}
+
+class _MainState extends State<Main> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: LoginScreen(),
+      theme: ThemeData(
+        fontFamily: 'Raleway',
+        textTheme: Theme.of(context).textTheme.apply(
+              fontFamily: 'Raleway',
+            ),
+      ),
+      home: const Scaffold(
+        body: MenuScreen(
+          uid: "qLpxJlrrP0eK7Z1jVsGAHKWPYL73",
+        ),
+      ),
       builder: EasyLoading.init(),
     );
   }
