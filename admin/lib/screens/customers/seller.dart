@@ -244,7 +244,7 @@ class _SellersViewState extends State<SellersView> {
                                         ),
                                         SizedBox(height: 5),
                                         Text(
-                                          "${seller.email}", // Assuming 'email' field exists
+                                          "${seller.firstname}", // Assuming 'email' field exists
                                           style: TextStyle(
                                             fontSize: 14,
                                             color: Colors.black54,
