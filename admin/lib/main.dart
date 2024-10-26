@@ -33,9 +33,10 @@ class _MainState extends State<Main> {
             ),
       ),
       home: const Scaffold(
-        body: MenuScreen(
-          uid: "qLpxJlrrP0eK7Z1jVsGAHKWPYL73",
-        ),
+        body: LoginScreen(),
+        // body: MenuScreen(
+        //   uid: "qLpxJlrrP0eK7Z1jVsGAHKWPYL73",
+        // ),
       ),
       builder: EasyLoading.init(),
     );

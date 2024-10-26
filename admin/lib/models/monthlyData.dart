@@ -16,4 +16,16 @@ class MonthlyReport {
     required this.month,
     required this.year,
   });
+
+  factory MonthlyReport.fromFirestore(Map<String, dynamic> data) {
+    return MonthlyReport(
+      id: data['id'] ?? '',
+      newusers: data['newUsers'] ?? '',
+      currentusers: data['currentusers'] ?? '',
+      monthlyrevenue: data['monthlyRevenue'] ?? 0,
+      monthlyorders: data['monthlyOrders'],
+      month: data['month'] ?? [],
+      year: data['year'] ?? [],
+    );
+  }
 }

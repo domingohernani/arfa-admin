@@ -1,6 +1,8 @@
 import 'package:admin/components/bargraph.dart';
 import 'package:admin/components/linegraph.dart';
+import 'package:admin/dataInitialization.dart';
 import 'package:admin/models/furnituresData.dart';
+import 'package:admin/models/monthlyData.dart';
 import 'package:admin/models/sellersData.dart';
 import 'package:admin/services/firestoreService.dart';
 import 'package:admin/themes/theme.dart';
@@ -19,6 +21,8 @@ class _DashboardViewState extends State<DashboardView> {
   FirestoreService _fs = FirestoreService();
   List<Seller> _sellers = [];
   List<Furniture> _furnitures = [];
+
+  MonthlyReport? _report;
 
   void fetchShopInfo() async {
     final fs = FirestoreService();
@@ -107,12 +111,12 @@ class _DashboardViewState extends State<DashboardView> {
               height: 15,
             ),
             Container(
-              child: const Row(
+              child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   _DataCard(
-                    title: "₱ 100,000.00",
+                    title: "₱ 100,000",
                     subTitle: "Monthly Revenue",
                     percentage: "98.00",
                     iconData: Icons.arrow_drop_up_outlined,

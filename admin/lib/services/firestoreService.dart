@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:admin/dataInitialization.dart';
 import 'package:admin/models/adminData.dart';
 import 'package:admin/models/furnituresData.dart';
 import 'package:admin/models/monthlyData.dart';
@@ -17,7 +18,7 @@ class FirestoreService {
   final _firestore_db = FirebaseFirestore.instance;
   final _firebaseAuth = FirebaseAuth.instance;
 
-  MonthlyReport? report;
+  int currentMonth = DateTime.now().month;
 
   int month = DateTime.now().month;
   int year = DateTime.now().year;
@@ -241,21 +242,48 @@ class FirestoreService {
       print(error);
     }
 
-    setMonthlyReport();
-
     return orders;
   }
 
+  // Future<MonthlyReport?> getMonthlyReport() async {
+  //   try {
+  //     var data = await _firestore_db.collection("reports").get();
+
+  //     if (data.docs.isNotEmpty) {
+  //       return MonthlyReport.fromFirestore(data.docs!);
+  //     } else {
+  //       print("Document doesn't exists.");
+  //       return null;
+  //     }
+  //   } catch (error) {
+  //     print("Error: $error");
+  //     return null;
+  //   }
+  // }
+
   Future<void> setMonthlyReport() async {
     try {
-      await _firestore_db.collection("reports").add({
-        "newusers": newusers.toString(),
+      final docRef = _firestore_db.collection("reports").doc();
+
+      docRef.set({
+        "id": docRef.id,
+        "newUsers": newusers.toString(),
         "currentUsers": existingusers.toString(),
         "monthlyRevenue": revenue.toString(),
         "monthlyOrders": monthlyorders.toString(),
         "month": monthToText(month).toString(),
         "year": year.toString(),
       });
+
+      // await _firestore_db.collection("reports").add({
+      //   "id": docRef.id,
+      //   "newUsers": newusers.toString(),
+      //   "currentUsers": existingusers.toString(),
+      //   "monthlyRevenue": revenue.toString(),
+      //   "monthlyOrders": monthlyorders.toString(),
+      //   "month": monthToText(month).toString(),
+      //   "year": year.toString(),
+      // });
     } catch (error) {
       print(error);
     }
