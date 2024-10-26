@@ -1,6 +1,10 @@
 import 'package:admin/components/bargraph.dart';
 import 'package:admin/components/linegraph.dart';
+import 'package:admin/models/furnituresData.dart';
+import 'package:admin/models/sellersData.dart';
+import 'package:admin/services/firestoreService.dart';
 import 'package:admin/themes/theme.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'package:flutter/material.dart';
 
@@ -12,6 +16,44 @@ class DashboardView extends StatefulWidget {
 }
 
 class _DashboardViewState extends State<DashboardView> {
+  FirestoreService _fs = FirestoreService();
+  List<Seller> _sellers = [];
+  List<Furniture> _furnitures = [];
+
+  void fetchShopInfo() async {
+    final fs = FirestoreService();
+
+    fs.getShoppersData().then(
+          (value) {},
+        );
+
+    fs.getFurnituresData().then(
+      (value) {
+        print("Furnitures length: ${value.length}");
+      },
+    );
+
+    fs.getSellersData().then(
+      (value) {
+        print("Sellers length: ${value.length}");
+      },
+    );
+
+    fs.getOrdersData().then(
+      (value) {
+        print("Orders length: ${value.length}");
+      },
+    );
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    fetchShopInfo();
+    // _fs.setMonthlyReport();
+    // _fs.getOrdersData();
+  }
+
   @override
   Widget build(BuildContext context) {
     var height = MediaQuery.of(context).size.height;
@@ -19,7 +61,7 @@ class _DashboardViewState extends State<DashboardView> {
         MediaQuery.of(context).size.width - sidebarSize - paddingHorizontal;
     return Container(
       height: height,
-      width: width,
+      width: double.infinity,
       padding: EdgeInsets.symmetric(
         vertical: paddingView_vertical,
         horizontal: paddingView_horizontal,
@@ -64,39 +106,41 @@ class _DashboardViewState extends State<DashboardView> {
             const SizedBox(
               height: 15,
             ),
-            const Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                _DataCard(
-                  title: "₱ 100,000.00",
-                  subTitle: "Monthly Revenue",
-                  percentage: "98.00",
-                  iconData: Icons.arrow_drop_up_outlined,
-                  cardIcon: Icons.attach_money_outlined,
-                ),
-                _DataCard(
-                  title: "1,000",
-                  subTitle: "Orders",
-                  percentage: "98.00",
-                  iconData: Icons.arrow_drop_up_outlined,
-                  cardIcon: Icons.shopping_bag_outlined,
-                ),
-                _DataCard(
-                  title: "100",
-                  subTitle: "New Users",
-                  percentage: "98.00",
-                  iconData: Icons.arrow_drop_up_outlined,
-                  cardIcon: Icons.person_add_alt_1_outlined,
-                ),
-                _DataCard(
-                  title: "1,000",
-                  subTitle: "Existing Users",
-                  percentage: "98.00",
-                  iconData: Icons.arrow_drop_up_outlined,
-                  cardIcon: Icons.groups_2_outlined,
-                ),
-              ],
+            Container(
+              child: const Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  _DataCard(
+                    title: "₱ 100,000.00",
+                    subTitle: "Monthly Revenue",
+                    percentage: "98.00",
+                    iconData: Icons.arrow_drop_up_outlined,
+                    cardIcon: Icons.attach_money_outlined,
+                  ),
+                  _DataCard(
+                    title: "1,000",
+                    subTitle: "Orders",
+                    percentage: "98.00",
+                    iconData: Icons.arrow_drop_up_outlined,
+                    cardIcon: Icons.shopping_bag_outlined,
+                  ),
+                  _DataCard(
+                    title: "100",
+                    subTitle: "New Users",
+                    percentage: "98.00",
+                    iconData: Icons.arrow_drop_up_outlined,
+                    cardIcon: Icons.person_add_alt_1_outlined,
+                  ),
+                  _DataCard(
+                    title: "1,000",
+                    subTitle: "Existing Users",
+                    percentage: "98.00",
+                    iconData: Icons.arrow_drop_up_outlined,
+                    cardIcon: Icons.groups_2_outlined,
+                  ),
+                ],
+              ),
             ),
             const SizedBox(
               height: 20,
@@ -191,86 +235,149 @@ class _DashboardViewState extends State<DashboardView> {
             SizedBox(
               height: 20,
             ),
-            Container(
-              width: width,
-              padding: const EdgeInsets.only(
-                top: 10,
-                left: 20,
-                bottom: 10,
-                right: 25,
-              ),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(10),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.2),
-                    spreadRadius: 1,
-                    blurRadius: 5,
-                    offset: const Offset(2, 4),
+            FutureBuilder<List<Seller>>(
+              future: _fs.getSellersData(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Center(child: CircularProgressIndicator());
+                } else if (snapshot.hasError) {
+                  return Center(child: Text('Error: ${snapshot.error}'));
+                } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                  return Center(child: Text('No sellers found.'));
+                }
+
+                List<Seller> sellers = snapshot.data!;
+
+                return Container(
+                  width: double.infinity,
+                  padding: EdgeInsets.symmetric(
+                    vertical: paddingView_vertical,
+                    horizontal: paddingView_horizontal,
                   ),
-                ],
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text(
-                    "Top Seller by Units Sold",
-                    style: TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.w500,
-                    ),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(10),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.2),
+                        spreadRadius: 1,
+                        blurRadius: 5,
+                        offset: const Offset(2, 4),
+                      ),
+                    ],
                   ),
-                  SizedBox(
-                    height: 20,
+                  child: Table(
+                    defaultVerticalAlignment: TableCellVerticalAlignment.middle,
+                    border: TableBorder.all(),
+                    children: [
+                      // Header row
+                      TableRow(
+                        decoration: BoxDecoration(
+                          color: Colors.grey[300],
+                        ),
+                        children: [
+                          Center(
+                              child: Padding(
+                            padding: EdgeInsets.all(8.0),
+                            child: Text("Name",
+                                style: TextStyle(fontWeight: FontWeight.bold)),
+                          )),
+                          Center(
+                              child: Padding(
+                            padding: EdgeInsets.all(8.0),
+                            child: Text("Revenue",
+                                style: TextStyle(fontWeight: FontWeight.bold)),
+                          )),
+                          Center(
+                              child: Padding(
+                            padding: EdgeInsets.all(8.0),
+                            child: Text("Products Sold",
+                                style: TextStyle(fontWeight: FontWeight.bold)),
+                          )),
+                        ],
+                      ),
+                      ...sellers.map(
+                        (seller) {
+                          return TableRow(
+                            children: [
+                              TableCell(
+                                  child: Padding(
+                                padding: EdgeInsets.all(8.0),
+                                child: Text(
+                                    "${seller.firstname} ${seller.lastname}"),
+                              )),
+                              TableCell(
+                                  child: Padding(
+                                padding: EdgeInsets.all(8.0),
+                                child: Text(seller
+                                    .email), // Replace with actual revenue data if available
+                              )),
+                              TableCell(
+                                  child: Padding(
+                                padding: EdgeInsets.all(8.0),
+                                child: Text(
+                                    "50"), // Replace with actual products sold data if available
+                              )),
+                            ],
+                          );
+                        },
+                      ).toList(),
+                    ],
                   ),
-                  Container(
-                    padding: EdgeInsets.symmetric(horizontal: 50),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text("Name"),
-                        Text("Revenue"),
-                        Text("Units Sold"),
-                      ],
-                    ),
-                  ),
-                  Divider(
-                    thickness: 1,
-                    color: Colors.black,
-                  ),
-                  Container(
-                    width: width,
-                    height: 400,
-                    child: ListView.builder(
-                      itemCount: 15,
-                      itemBuilder: (context, index) {
-                        return Column(
-                          children: [
-                            Container(
-                              padding: EdgeInsets.symmetric(horizontal: 50),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text("Ryan Shop"),
-                                  Text("P 100,000.00"),
-                                  Text("1,100"),
-                                ],
-                              ),
-                            ),
-                            Divider(
-                              color: Colors.grey,
-                              thickness: 0.5,
-                            )
-                          ],
-                        );
-                      },
-                    ),
-                  )
-                ],
-              ),
-            ),
+                );
+              },
+            )
+            // FutureBuilder(
+            //   future: _fs.getSellersData(),
+            //   initialData: 5,
+            //   builder: (context, snapshot) {
+            //     return Container(
+            //       width: width,
+            //       padding: const EdgeInsets.only(
+            //         top: 10,
+            //         left: 20,
+            //         bottom: 10,
+            //         right: 25,
+            //       ),
+            //       decoration: BoxDecoration(
+            //         color: Colors.white,
+            //         borderRadius: BorderRadius.circular(10),
+            //         boxShadow: [
+            //           BoxShadow(
+            //             color: Colors.black.withOpacity(0.2),
+            //             spreadRadius: 1,
+            //             blurRadius: 5,
+            //             offset: const Offset(2, 4),
+            //           ),
+            //         ],
+            //       ),
+            //       child: Table(
+            //         children: [
+            //           TableRow(
+            //             children: [
+            //               Center(
+            //                 child: Text("Name"),
+            //               ),
+            //               Center(
+            //                 child: Text("Revenue"),
+            //               ),
+            //               Center(
+            //                 child: Text("Product Sold"),
+            //               )
+            //             ],
+            //           ),
+            //           ..._sellers.map(
+            //             (seller) {
+            //               return TableRow(children: [
+            //                 TableCell(child: Text("asdf")),
+            //               ]);
+            //             },
+            //           ).toList()
+            //         ],
+            //       ),
+            //     );
+            //   },
+            // ),
           ],
         ),
       ),
@@ -295,9 +402,13 @@ class _DataCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var height = MediaQuery.of(context).size.height;
+    var width =
+        MediaQuery.of(context).size.width - sidebarSize - paddingHorizontal;
     return Container(
       height: 90,
-      padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+      width: width * 0.24,
+      padding: const EdgeInsets.symmetric(horizontal: 10),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(8),

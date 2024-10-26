@@ -8,21 +8,23 @@ class Shopper {
   final String email;
   final String phone;
   final String role;
+  final Timestamp datejoined;
   final Map<String, String> location;
   // final List<Map<String, dynamic>> cart;
   // final String wishlist;
 
-  Shopper({
-    required this.id,
-    required this.firstname,
-    required this.lastname,
-    required this.email,
-    required this.phone,
-    required this.role,
-    required this.location,
-    // required this.cart,
-    // required this.wishlist,
-  });
+  Shopper(
+      {required this.id,
+      required this.firstname,
+      required this.lastname,
+      required this.email,
+      required this.phone,
+      required this.role,
+      required this.location,
+      required this.datejoined
+      // required this.cart,
+      // required this.wishlist,
+      });
 
   factory Shopper.fromFirestore(Map<String, dynamic> data) {
     return Shopper(
@@ -39,6 +41,7 @@ class Shopper {
         "province": data["province"] ?? "",
         "region": data["region"] ?? "",
       },
+      datejoined: data["datejoined"],
       // cart: data["cart"],
       // wishlist: data["wishlist"],
     );

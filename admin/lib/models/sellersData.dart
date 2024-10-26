@@ -48,7 +48,6 @@ class Seller {
       shopname: data["name"] ?? "",
       shopvalidid: data["validId"],
       shoppermit: data["businessPermit"],
-
       // cart: data["cart"],
       // wishlist: data["wishlist"],
     );
