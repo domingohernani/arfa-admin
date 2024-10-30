@@ -7,6 +7,7 @@ import 'package:admin/models/monthlyData.dart';
 import 'package:admin/models/ordersData.dart';
 import 'package:admin/models/sellersData.dart';
 import 'package:admin/models/shoppersData.dart';
+import 'package:admin/models/shopsData.dart';
 import 'package:admin/utilities/dateconvertion.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -17,15 +18,6 @@ import 'package:intl/intl.dart';
 class FirestoreService {
   final _firestore_db = FirebaseFirestore.instance;
   final _firebaseAuth = FirebaseAuth.instance;
-
-  int currentMonth = DateTime.now().month;
-
-  int month = DateTime.now().month;
-  int year = DateTime.now().year;
-  int newusers = 0;
-  int existingusers = 0;
-  double revenue = 0;
-  int monthlyorders = 0;
 
   // Add a callback to handle the retrieved admin data
   Future<Admin?> getAdminData(String adminId) async {
@@ -49,6 +41,8 @@ class FirestoreService {
     final _firestore_db = FirebaseFirestore.instance;
     List<Seller> sellers = [];
     Map<String, Map<String, dynamic>> shopsInfo = {};
+    Map<String, Map<String, dynamic>> shopOrder = {};
+    List shopId = [];
 
     try {
       QuerySnapshot snapshotUsers =
@@ -60,6 +54,7 @@ class FirestoreService {
         Map<String, dynamic> data = shopDoc.data() as Map<String, dynamic>;
 
         String sellerId = data['userId'] ?? "";
+        shopId.add(data['userId']);
         shopsInfo[sellerId] = {
           'name': data['name'] ?? "",
           'validId': data['validId'] ?? "",
@@ -116,12 +111,12 @@ class FirestoreService {
       for (var userdoc in snapshotUsers.docs) {
         Map<String, dynamic> data = userdoc.data() as Map<String, dynamic>;
 
-        String datejoined = toMonth(data["dateJoined"]);
+        // String datejoined = toMonth(data["dateJoined"]);
 
-        if (int.parse(datejoined) == month) {
-          newusers++;
-        }
-        existingusers++;
+        // if (int.parse(datejoined) == month) {
+        //   newusers++;
+        // }
+        // existingusers++;
 
         // print("${datejoined} : ${month} : ${newusers} : ${data['email']}");
 
@@ -199,6 +194,70 @@ class FirestoreService {
     return furnitures;
   }
 
+  Future<List<Shop>> getShopData() async {
+    List<Shop> shop = [];
+    // List shopId = [];
+
+    int count = 0;
+
+    try {
+      QuerySnapshot snapshotShops =
+          await _firestore_db.collection("shops").get();
+      QuerySnapshot snapshotOrders =
+          await _firestore_db.collection("orders").get();
+
+      for (var shopdoc in snapshotShops.docs) {
+        Map<String, dynamic> shopdata = shopdoc.data() as Map<String, dynamic>;
+
+        double revenue = 0;
+        int totalproductsold = 0;
+
+        String shopname = shopdata['name'];
+        String shopid = shopdata['userId'];
+
+        for (var orderdoc in snapshotOrders.docs) {
+          Map<String, dynamic> orderdata =
+              orderdoc.data() as Map<String, dynamic>;
+          List<dynamic> orderItems = orderdata["orderItems"];
+
+          int totalproductprice = 0;
+
+          if (shopdata['userId'] == orderdata['shopId'] &&
+              orderdata['orderStatus'] == "Delivered") {
+            int priceSubtotal = 0;
+
+            // print("${count++} ${shopdata['userId']} : ${orderdata['shopId']}");
+            for (var item in orderItems) {
+              // int quantity = 0;
+              int totalItemPrice = item['totalItemPrice'];
+              int quantity = item['quantity'];
+              totalproductsold += quantity;
+              priceSubtotal += totalItemPrice;
+
+              // print("Product: ${item['name']}, Quantity : ${item['quantity']}");
+            }
+            totalproductprice += priceSubtotal;
+          }
+          revenue += totalproductprice * 0.05;
+        }
+
+        String revenueFormat = revenue.toStringAsFixed(2);
+        revenue = double.parse(revenueFormat);
+
+        shop.add(Shop(
+            shopid: shopid,
+            shopname: shopname,
+            revenue: revenue,
+            orders: totalproductsold));
+        // print(
+        //     "ID:${shopid}, Shop:${shopname}, total:${totalproductsold}, revenue:${revenue.toStringAsFixed(2)}");
+      }
+    } catch (error) {
+      print(error);
+    }
+    return shop;
+  }
+
   Future<List<OrderItem>> getOrdersData() async {
     List<OrderItem> orders = [];
     int totalprice = 0;
@@ -213,19 +272,19 @@ class FirestoreService {
         int pricesubtotal = 0;
         int quantitysubtotal = 0;
 
-        String ordersinmonth = toMonth(data['createdAt']);
+        // String ordersinmonth = toMonth(data['createdAt']);
 
-        if (int.parse(ordersinmonth) == month) {
-          for (var items in orderItems) {
-            int totalItemPrice = items["totalItemPrice"];
-            int quantity = items["quantity"];
-            pricesubtotal += totalItemPrice;
-            quantitysubtotal += quantity;
-          }
-        }
+        // if (int.parse(ordersinmonth) == month) {
+        //   for (var items in orderItems) {
+        //     int totalItemPrice = items["totalItemPrice"];
+        //     int quantity = items["quantity"];
+        //     pricesubtotal += totalItemPrice;
+        //     quantitysubtotal += quantity;
+        //   }
+        // }
 
-        totalprice += pricesubtotal;
-        monthlyorders += quantitysubtotal;
+        // totalprice += pricesubtotal;
+        // monthlyorders += quantitysubtotal;
 
         orders.add(
           OrderItem(
@@ -237,43 +296,120 @@ class FirestoreService {
               orderitems: data["orderItems"]),
         );
       }
-      revenue = (totalprice * 5) / 100;
+      // revenue = (totalprice * 5) / 100;
     } catch (error) {
       print(error);
     }
 
+    // MonthlyReport report = MonthlyReport(
+    //   id: "",
+    //   newusers: newusers,
+    //   currentusers: existingusers,
+    //   monthlyrevenue: revenue,
+    //   monthlyorders: monthlyorders,
+    //   month: month,
+    //   year: year,
+    // );
+
+    // print("New users: ${newusers}");
+    // print("Existing users: ${existingusers}");
+    // print("Revenue: ${revenue}");
+    // print("Orders: ${monthlyorders}");
+
     return orders;
   }
 
-  // Future<MonthlyReport?> getMonthlyReport() async {
+  // Future<List<MonthlyReport>> getMonthlyReport() async {
+  //   List<MonthlyReport> reports = [];
   //   try {
-  //     var data = await _firestore_db.collection("reports").get();
+  //     QuerySnapshot snapshotReports =
+  //         await _firestore_db.collection("reports").get();
 
-  //     if (data.docs.isNotEmpty) {
-  //       return MonthlyReport.fromFirestore(data.docs!);
-  //     } else {
-  //       print("Document doesn't exists.");
-  //       return null;
+  //     for (var reportsdoc in snapshotReports.docs) {
+  //       Map<String, dynamic> data = reportsdoc.data() as Map<String, dynamic>;
+
+  //       reports.add(
+  //         MonthlyReport(
+  //           id: data["id"],
+  //           newusers: data["newUsers"],
+  //           currentusers: data["currentUsers"],
+  //           monthlyrevenue: data["monthlyOrders"],
+  //           monthlyorders: data["monthlyRevenue"],
+  //           month: data["month"],
+  //           year: data["year"],
+  //         ),
+  //       );
   //     }
   //   } catch (error) {
-  //     print("Error: $error");
-  //     return null;
+  //     print(error);
   //   }
+  //   return reports;
   // }
 
-  Future<void> setMonthlyReport() async {
-    try {
-      final docRef = _firestore_db.collection("reports").doc();
+  Future<MonthlyReport> getMonthlyReport() async {
+    int currentMonth = DateTime.now().month;
 
-      docRef.set({
-        "id": docRef.id,
-        "newUsers": newusers.toString(),
-        "currentUsers": existingusers.toString(),
-        "monthlyRevenue": revenue.toString(),
-        "monthlyOrders": monthlyorders.toString(),
-        "month": monthToText(month).toString(),
-        "year": year.toString(),
-      });
+    int month = DateTime.now().month;
+    int year = DateTime.now().year;
+    int newusers = 0;
+    int existingusers = 0;
+    double revenue = 0;
+    int monthlyorders = 0;
+
+    int totalprice = 0;
+
+    try {
+      QuerySnapshot snapshotUsers =
+          await _firestore_db.collection('users').get();
+      QuerySnapshot snapshotShops =
+          await _firestore_db.collection('shops').get();
+      QuerySnapshot snapshotOrders =
+          await _firestore_db.collection("orders").get();
+
+      for (var users in snapshotUsers.docs) {
+        Map<String, dynamic> data = users.data() as Map<String, dynamic>;
+
+        String datejoined = toMonth(data["dateJoined"]);
+
+        if (int.parse(datejoined) == month) {
+          newusers++;
+        }
+        existingusers++;
+      }
+
+      for (var shops in snapshotShops.docs) {
+        Map<String, dynamic> data = shops.data() as Map<String, dynamic>;
+      }
+
+      for (var orders in snapshotOrders.docs) {
+        Map<String, dynamic> data = orders.data() as Map<String, dynamic>;
+
+        List<dynamic> orderItems = data["orderItems"];
+
+        int pricesubtotal = 0;
+        int quantitysubtotal = 0;
+
+        String ordersinmonth = toMonth(data['createdAt']);
+
+        if (int.parse(ordersinmonth) == month &&
+            data["orderStatus"] == "Delivered") {
+          for (var items in orderItems) {
+            int totalItemPrice = items["totalItemPrice"];
+            int quantity = items["quantity"];
+            pricesubtotal += totalItemPrice;
+            quantitysubtotal += quantity;
+          }
+        }
+
+        totalprice += pricesubtotal;
+        monthlyorders += quantitysubtotal;
+      }
+      revenue = totalprice * 0.05;
+
+      // print("New users: ${newusers}");
+      // print("Existing users: ${existingusers}");
+      // print("Revenue: ${revenue}");
+      // print("Orders: ${monthlyorders}");
 
       // await _firestore_db.collection("reports").add({
       //   "id": docRef.id,
@@ -287,6 +423,17 @@ class FirestoreService {
     } catch (error) {
       print(error);
     }
+
+    MonthlyReport report = MonthlyReport(
+        id: " ",
+        newusers: newusers,
+        currentusers: existingusers,
+        monthlyrevenue: revenue,
+        monthlyorders: monthlyorders,
+        month: month,
+        year: year);
+
+    return report;
   }
 
   void signOut() async {

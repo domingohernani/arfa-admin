@@ -26,24 +26,24 @@ class Shopper {
       // required this.wishlist,
       });
 
-  factory Shopper.fromFirestore(Map<String, dynamic> data) {
-    return Shopper(
-      id: data["id"] ?? "",
-      firstname: data["firstName"] ?? "",
-      lastname: data["lastName"] ?? "",
-      email: data["email"] ?? "",
-      phone: data["phoneNumber"] ?? "",
-      role: data["role"] ?? "",
-      location: {
-        "street": data["street"] ?? "",
-        "barangay": data["barangay"] ?? "",
-        "city": data["city"] ?? "",
-        "province": data["province"] ?? "",
-        "region": data["region"] ?? "",
-      },
-      datejoined: data["datejoined"],
-      // cart: data["cart"],
-      // wishlist: data["wishlist"],
-    );
-  }
+  // factory Shopper.fromFirestore(Map<String, dynamic> data) {
+  //   return Shopper(
+  //     id: data["id"] ?? "",
+  //     firstname: data["firstName"] ?? "",
+  //     lastname: data["lastName"] ?? "",
+  //     email: data["email"] ?? "",
+  //     phone: data["phoneNumber"] ?? "",
+  //     role: data["role"] ?? "",
+  //     location: {
+  //       "street": data["street"] ?? "",
+  //       "barangay": data["barangay"] ?? "",
+  //       "city": data["city"] ?? "",
+  //       "province": data["province"] ?? "",
+  //       "region": data["region"] ?? "",
+  //     },
+  //     datejoined: data["datejoined"],
+  //     // cart: data["cart"],
+  //     // wishlist: data["wishlist"],
+  //   );
+  // }
 }

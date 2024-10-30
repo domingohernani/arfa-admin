@@ -18,6 +18,8 @@ class MonthlyReport {
   });
 
   factory MonthlyReport.fromFirestore(Map<String, dynamic> data) {
+    print("New: ${data["newusers"]}");
+
     return MonthlyReport(
       id: data['id'] ?? '',
       newusers: data['newUsers'] ?? '',
