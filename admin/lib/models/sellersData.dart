@@ -12,6 +12,7 @@ class Seller {
   final String shoppermit;
   final String shopvalidid;
   final Map<String, String> address;
+  // final int productssold;
   // final List<Map<String, dynamic>> cart;
   // final String wishlist;
 
@@ -26,32 +27,33 @@ class Seller {
     required this.shopname,
     required this.shoppermit,
     required this.shopvalidid,
+    // required this.productssold,
     // required this.cart,
     // required this.wishlist,
   });
 
-  factory Seller.fromFirestore(Map<String, dynamic> data) {
-    return Seller(
-      id: data["id"] ?? "",
-      firstname: data["firstname"] ?? "",
-      lastname: data["lastname"] ?? "",
-      email: data["email"] ?? "",
-      phone: data["phoneNumber"] ?? "",
-      role: data["role"] ?? "",
-      address: {
-        "street": data["street"] ?? "",
-        "barangay": data["barangay"] ?? "",
-        "city": data["city"] ?? "",
-        "province": data["province"] ?? "",
-        "region": data["region"] ?? "",
-      },
-      shopname: data["name"] ?? "",
-      shopvalidid: data["validId"],
-      shoppermit: data["businessPermit"],
-      // cart: data["cart"],
-      // wishlist: data["wishlist"],
-    );
-  }
+  // factory Seller.fromFirestore(Map<String, dynamic> data) {
+  //   return Seller(
+  //     id: data["id"] ?? "",
+  //     firstname: data["firstname"] ?? "",
+  //     lastname: data["lastname"] ?? "",
+  //     email: data["email"] ?? "",
+  //     phone: data["phoneNumber"] ?? "",
+  //     role: data["role"] ?? "",
+  //     address: {
+  //       "street": data["street"] ?? "",
+  //       "barangay": data["barangay"] ?? "",
+  //       "city": data["city"] ?? "",
+  //       "province": data["province"] ?? "",
+  //       "region": data["region"] ?? "",
+  //     },
+  //     shopname: data["name"] ?? "",
+  //     shopvalidid: data["validId"],
+  //     shoppermit: data["businessPermit"],
+  //     // cart: data["cart"],
+  //     // wishlist: data["wishlist"],
+  //   );
+  // }
 }
 
 // class Customer {

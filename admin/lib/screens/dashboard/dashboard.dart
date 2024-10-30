@@ -4,6 +4,7 @@ import 'package:admin/dataInitialization.dart';
 import 'package:admin/models/furnituresData.dart';
 import 'package:admin/models/monthlyData.dart';
 import 'package:admin/models/sellersData.dart';
+import 'package:admin/models/shopsData.dart';
 import 'package:admin/services/firestoreService.dart';
 import 'package:admin/themes/theme.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -43,19 +44,32 @@ class _DashboardViewState extends State<DashboardView> {
       },
     );
 
+    fs.getShopData();
+
     fs.getOrdersData().then(
       (value) {
         print("Orders length: ${value.length}");
       },
     );
+
+    fs.getMonthlyReport().then(
+          (value) {},
+        );
+
+    // DateTime now = DateTime.now();
+    // DateTime firstSecondNextMonth = DateTime(now.year, now.month + 1, 1);
+    // DateTime lastSecondThisMonth =
+    //     firstSecondNextMonth.subtract(Duration(seconds: 1));
+
+    // if (now.isAtSameMomentAs(lastSecondThisMonth)) {
+    //   fs.setMonthlyReport();
+    // }
   }
 
   @override
   void initState() {
     super.initState();
     fetchShopInfo();
-    // _fs.setMonthlyReport();
-    // _fs.getOrdersData();
   }
 
   @override
@@ -110,42 +124,93 @@ class _DashboardViewState extends State<DashboardView> {
             const SizedBox(
               height: 15,
             ),
-            Container(
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  _DataCard(
-                    title: "₱ 100,000",
-                    subTitle: "Monthly Revenue",
-                    percentage: "98.00",
-                    iconData: Icons.arrow_drop_up_outlined,
-                    cardIcon: Icons.attach_money_outlined,
+            FutureBuilder(
+              future: _fs.getMonthlyReport(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Center(child: CircularProgressIndicator());
+                } else if (snapshot.hasError) {
+                  return Center(child: Text('Error: ${snapshot.error}'));
+                } else if (!snapshot.hasData) {
+                  return Center(child: Text('No sellers found.'));
+                }
+
+                var reports = snapshot.data!;
+
+                return Container(
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      _DataCard(
+                        title: "₱ ${reports.monthlyrevenue.toString()}",
+                        subTitle: "Monthly Revenue",
+                        percentage: "98.00",
+                        iconData: Icons.arrow_drop_up_outlined,
+                        cardIcon: Icons.attach_money_outlined,
+                      ),
+                      _DataCard(
+                        title: "${reports.monthlyorders}",
+                        subTitle: "Orders",
+                        percentage: "98.00",
+                        iconData: Icons.arrow_drop_up_outlined,
+                        cardIcon: Icons.shopping_bag_outlined,
+                      ),
+                      _DataCard(
+                        title: "${reports.newusers}",
+                        subTitle: "New Users",
+                        percentage: "98.00",
+                        iconData: Icons.arrow_drop_up_outlined,
+                        cardIcon: Icons.person_add_alt_1_outlined,
+                      ),
+                      _DataCard(
+                        title: "${reports.currentusers}",
+                        subTitle: "Existing Users",
+                        percentage: "98.00",
+                        iconData: Icons.arrow_drop_up_outlined,
+                        cardIcon: Icons.groups_2_outlined,
+                      ),
+                    ],
                   ),
-                  _DataCard(
-                    title: "1,000",
-                    subTitle: "Orders",
-                    percentage: "98.00",
-                    iconData: Icons.arrow_drop_up_outlined,
-                    cardIcon: Icons.shopping_bag_outlined,
-                  ),
-                  _DataCard(
-                    title: "100",
-                    subTitle: "New Users",
-                    percentage: "98.00",
-                    iconData: Icons.arrow_drop_up_outlined,
-                    cardIcon: Icons.person_add_alt_1_outlined,
-                  ),
-                  _DataCard(
-                    title: "1,000",
-                    subTitle: "Existing Users",
-                    percentage: "98.00",
-                    iconData: Icons.arrow_drop_up_outlined,
-                    cardIcon: Icons.groups_2_outlined,
-                  ),
-                ],
-              ),
+                );
+              },
             ),
+            // Container(
+            //   child: Row(
+            //     crossAxisAlignment: CrossAxisAlignment.start,
+            //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            //     children: [
+            //       _DataCard(
+            //         title: "₱ 100,000",
+            //         subTitle: "Monthly Revenue",
+            //         percentage: "98.00",
+            //         iconData: Icons.arrow_drop_up_outlined,
+            //         cardIcon: Icons.attach_money_outlined,
+            //       ),
+            //       _DataCard(
+            //         title: "1,000",
+            //         subTitle: "Orders",
+            //         percentage: "98.00",
+            //         iconData: Icons.arrow_drop_up_outlined,
+            //         cardIcon: Icons.shopping_bag_outlined,
+            //       ),
+            //       _DataCard(
+            //         title: "100",
+            //         subTitle: "New Users",
+            //         percentage: "98.00",
+            //         iconData: Icons.arrow_drop_up_outlined,
+            //         cardIcon: Icons.person_add_alt_1_outlined,
+            //       ),
+            //       _DataCard(
+            //         title: "1,000",
+            //         subTitle: "Existing Users",
+            //         percentage: "98.00",
+            //         iconData: Icons.arrow_drop_up_outlined,
+            //         cardIcon: Icons.groups_2_outlined,
+            //       ),
+            //     ],
+            //   ),
+            // ),
             const SizedBox(
               height: 20,
             ),
@@ -239,8 +304,8 @@ class _DashboardViewState extends State<DashboardView> {
             SizedBox(
               height: 20,
             ),
-            FutureBuilder<List<Seller>>(
-              future: _fs.getSellersData(),
+            FutureBuilder<List<Shop>>(
+              future: _fs.getShopData(),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return Center(child: CircularProgressIndicator());
@@ -250,7 +315,7 @@ class _DashboardViewState extends State<DashboardView> {
                   return Center(child: Text('No sellers found.'));
                 }
 
-                List<Seller> sellers = snapshot.data!;
+                List<Shop> shops = snapshot.data!;
 
                 return Container(
                   width: double.infinity,
@@ -283,7 +348,7 @@ class _DashboardViewState extends State<DashboardView> {
                           Center(
                               child: Padding(
                             padding: EdgeInsets.all(8.0),
-                            child: Text("Name",
+                            child: Text("Shop Name",
                                 style: TextStyle(fontWeight: FontWeight.bold)),
                           )),
                           Center(
@@ -300,27 +365,26 @@ class _DashboardViewState extends State<DashboardView> {
                           )),
                         ],
                       ),
-                      ...sellers.map(
-                        (seller) {
+                      ...shops.map(
+                        (shop) {
                           return TableRow(
                             children: [
                               TableCell(
                                   child: Padding(
                                 padding: EdgeInsets.all(8.0),
-                                child: Text(
-                                    "${seller.firstname} ${seller.lastname}"),
-                              )),
-                              TableCell(
-                                  child: Padding(
-                                padding: EdgeInsets.all(8.0),
-                                child: Text(seller
-                                    .email), // Replace with actual revenue data if available
+                                child: Text("${shop.shopname}"),
                               )),
                               TableCell(
                                   child: Padding(
                                 padding: EdgeInsets.all(8.0),
                                 child: Text(
-                                    "50"), // Replace with actual products sold data if available
+                                    "${shop.revenue}"), // Replace with actual revenue data if available
+                              )),
+                              TableCell(
+                                  child: Padding(
+                                padding: EdgeInsets.all(8.0),
+                                child: Text(
+                                    "${shop.orders}"), // Replace with actual products sold data if available
                               )),
                             ],
                           );
