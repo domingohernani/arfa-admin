@@ -11,6 +11,7 @@ class Seller {
   final String shopname;
   final String shoppermit;
   final String shopvalidid;
+  final String logo;
   final Map<String, String> address;
   // final int productssold;
   // final List<Map<String, dynamic>> cart;
@@ -27,6 +28,7 @@ class Seller {
     required this.shopname,
     required this.shoppermit,
     required this.shopvalidid,
+    required this.logo,
     // required this.productssold,
     // required this.cart,
     // required this.wishlist,

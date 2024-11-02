@@ -1,9 +1,12 @@
 import 'dart:async';
 
 import 'package:admin/models/sellersData.dart';
+import 'package:admin/screens/customers/viewStore.dart';
 import 'package:admin/services/firestoreService.dart';
 import 'package:admin/themes/theme.dart';
+import 'package:admin/utilities/logoUrl.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:easy_sidemenu/easy_sidemenu.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -168,62 +171,75 @@ class _SellersViewState extends State<SellersView> {
                       List<Seller> sellers = snapshot.data!;
 
                       return GridView.builder(
-                          gridDelegate:
-                              const SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 3,
-                            crossAxisSpacing: 25,
-                            mainAxisSpacing: 30,
-                            childAspectRatio: 3.5 / 4,
-                          ),
-                          itemCount:
-                              sellers.length + 1, // +1 for the AddSellerCard
-                          itemBuilder: (context, index) {
-                            if (index == sellers.length) {
-                              return AddSellerCard(); // Display the add seller card
-                            }
+                        gridDelegate:
+                            const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 3,
+                          crossAxisSpacing: 25,
+                          mainAxisSpacing: 30,
+                          childAspectRatio: 4 / 3.8,
+                        ),
+                        itemCount:
+                            sellers.length + 1, // +1 for the AddSellerCard
+                        itemBuilder: (context, index) {
+                          if (index == sellers.length) {
+                            return AddSellerCard(); // Display the add seller card
+                          }
 
-                            var seller = sellers[index];
+                          var seller = sellers[index];
 
-                            return Container(
-                              width: 300,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
-                                color: Colors.white,
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.grey.withOpacity(0.2),
-                                    spreadRadius: 2,
-                                    blurRadius: 5,
-                                    offset: Offset(0, 3),
-                                  ),
-                                ],
+                          return Container(
+                            width: 300,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(15),
+                              border: Border.all(
+                                color: primary,
+                                width: 3,
                               ),
-                              child: Column(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Container(
-                                    height: 70,
-                                    width: double.infinity,
-                                    decoration: BoxDecoration(
-                                      color: Colors.green,
-                                      borderRadius: BorderRadius.only(
-                                        topLeft: Radius.circular(10),
-                                        topRight: Radius.circular(10),
-                                      ),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.grey.withOpacity(0.2),
+                                  spreadRadius: 2,
+                                  blurRadius: 5,
+                                  offset: Offset(0, 3),
+                                ),
+                              ],
+                            ),
+                            child: Stack(
+                              // mainAxisSize: MainAxisSize.min
+                              alignment: Alignment.topCenter,
+                              children: [
+                                Container(
+                                  height: 60,
+                                  width: double.infinity,
+                                  decoration: BoxDecoration(
+                                    color: Colors.green,
+                                    borderRadius: BorderRadius.only(
+                                      topLeft: Radius.circular(10),
+                                      topRight: Radius.circular(10),
                                     ),
-                                    child: Center(
-                                      child: CircleAvatar(
-                                        radius: 30,
-                                        backgroundColor: Colors.white,
-                                        // child: Image.asset(
-                                        //   'assets/logo.png', // Your logo image
-                                        //   fit: BoxFit.contain,
-                                        // ),
+                                  ),
+                                ),
+                                Positioned(
+                                  top: 15,
+                                  child: Container(
+                                    height: 100,
+                                    width: 100,
+                                    child: CircleAvatar(
+                                      radius: 30,
+                                      backgroundColor: Colors.white,
+                                      child: ClipOval(
+                                        child: Image.network(
+                                          '${seller.logo}',
+                                          fit: BoxFit.cover,
+                                        ),
                                       ),
                                     ),
                                   ),
-                                  Padding(
-                                    padding: const EdgeInsets.all(16.0),
+                                ),
+                                Positioned(
+                                  top: 110,
+                                  child: Container(
+                                    padding: EdgeInsets.only(top: 20),
                                     child: Column(
                                       children: [
                                         Text(
@@ -236,23 +252,34 @@ class _SellersViewState extends State<SellersView> {
                                         ),
                                         SizedBox(height: 5),
                                         Text(
-                                          "${seller.id}", // Document ID
+                                          "ID: ${seller.id}", // Document ID
                                           style: TextStyle(
                                             fontSize: 14,
+                                            fontWeight: FontWeight.bold,
                                             color: Colors.black54,
                                           ),
                                         ),
                                         SizedBox(height: 5),
                                         Text(
-                                          "${seller.firstname}", // Assuming 'email' field exists
+                                          "Email: ${seller.email}", // Assuming 'email' field exists
                                           style: TextStyle(
                                             fontSize: 14,
+                                            fontWeight: FontWeight.bold,
                                             color: Colors.black54,
                                           ),
                                         ),
                                         SizedBox(height: 15),
                                         ElevatedButton(
-                                          onPressed: () {},
+                                          onPressed: () async {
+                                            await showDialog(
+                                              context: context,
+                                              builder: (context) {
+                                                return ViewStoreProile(
+                                                  id: seller.id,
+                                                );
+                                              },
+                                            );
+                                          },
                                           style: ElevatedButton.styleFrom(
                                             backgroundColor: primaryBg,
                                             shape: RoundedRectangleBorder(
@@ -273,393 +300,15 @@ class _SellersViewState extends State<SellersView> {
                                       ],
                                     ),
                                   ),
-                                ],
-                              ),
-                            );
-                          }
-
-                          // return Container(
-                          //   width: 300,
-                          //   decoration: BoxDecoration(
-                          //     borderRadius:
-                          //         BorderRadius.circular(10), // Rounded corners
-                          //     color:
-                          //         Colors.white, // Background color for the card
-                          //     boxShadow: [
-                          //       BoxShadow(
-                          //         color:
-                          //             Colors.grey.withOpacity(0.2), // Soft shadow
-                          //         spreadRadius: 2,
-                          //         blurRadius: 5,
-                          //         offset: Offset(0, 3), // Shadow position
-                          //       ),
-                          //     ],
-                          //   ),
-                          //   child: Column(
-                          //     mainAxisSize: MainAxisSize.min,
-                          //     children: [
-                          //       // Top Green Section with logo
-                          //       Container(
-                          //         height: 70,
-                          //         width: double.infinity,
-                          //         decoration: BoxDecoration(
-                          //           color: Colors.green,
-                          //           borderRadius: BorderRadius.only(
-                          //             topLeft: Radius.circular(10),
-                          //             topRight: Radius.circular(10),
-                          //           ),
-                          //         ),
-                          //         child: Center(
-                          //           child: CircleAvatar(
-                          //             radius: 30,
-                          //             backgroundColor: Colors.white,
-                          //             // child: Image.asset(
-                          //             //   'assets/logo.png', // Your logo image
-                          //             //   fit: BoxFit.contain,
-                          //             // ),
-                          //           ),
-                          //         ),
-                          //       ),
-                          //       Padding(
-                          //         padding: const EdgeInsets.all(16.0),
-                          //         child: Column(
-                          //           children: [
-                          //             Text(
-                          //               customer
-                          //                   .firstname!, // Assuming 'name' field exists
-                          //               style: TextStyle(
-                          //                 fontSize: 18,
-                          //                 fontWeight: FontWeight.bold,
-                          //                 color: Colors.black,
-                          //               ),
-                          //             ),
-                          //             SizedBox(height: 5),
-                          //             Text(
-                          //               "Seller ID: ", // Document ID
-                          //               style: TextStyle(
-                          //                 fontSize: 14,
-                          //                 color: Colors.black54,
-                          //               ),
-                          //             ),
-                          //             SizedBox(height: 5),
-                          //             Text(
-                          //               "ry@g.com", // Assuming 'email' field exists
-                          //               style: TextStyle(
-                          //                 fontSize: 14,
-                          //                 color: Colors.black54,
-                          //               ),
-                          //             ),
-                          //             SizedBox(height: 15),
-                          //             ElevatedButton(
-                          //               onPressed: () {},
-                          //               style: ElevatedButton.styleFrom(
-                          //                 backgroundColor: primaryBg,
-                          //                 shape: RoundedRectangleBorder(
-                          //                   borderRadius: BorderRadius.circular(
-                          //                       20), // Rounded button
-                          //                 ),
-                          //                 padding: EdgeInsets.symmetric(
-                          //                     horizontal: 24, vertical: 12),
-                          //               ),
-                          //               child: Text(
-                          //                 "View Store",
-                          //                 style: TextStyle(
-                          //                   color: Colors.white,
-                          //                 ),
-                          //               ),
-                          //             ),
-                          //           ],
-                          //         ),
-                          //       ),
-                          //     ],
-                          //   ),
-                          // );
-
+                                ),
+                              ],
+                            ),
                           );
+                        },
+                      );
                     },
                   ),
                 ),
-                // FutureBuilder<Customer?>(
-                //   future: _fs.getUserData(),
-                //   builder: (context, snapshot) {
-                //     if (snapshot.connectionState == ConnectionState.waiting) {
-                //       return Center(child: CircularProgressIndicator());
-                //     }
-
-                //     if (snapshot.hasError) {
-                //       return Center(child: Text("Error: ${snapshot.error}"));
-                //     }
-
-                //     if (!snapshot.hasData || snapshot.data == null) {
-                //       return Center(child: Text("No sellers available"));
-                //     }
-
-                //     // print("asdfasdf ${customers}");
-
-                //     return GridView.builder(
-                //       gridDelegate:
-                //           const SliverGridDelegateWithFixedCrossAxisCount(
-                //         crossAxisCount: 4,
-                //         crossAxisSpacing: 25,
-                //         mainAxisSpacing: 30,
-                //         childAspectRatio: 3.5 / 4,
-                //       ),
-                //       itemCount: 5, // +1 for the AddSellerCard
-                //       itemBuilder: (context, index) {
-                //         // if (index == customers.length) {
-                //         //   return AddSellerCard(); // Display the add seller card
-                //         // }
-
-                //         // final customer = customers[index];
-
-                //         return Card(
-                //           elevation: 5,
-                //           child: Padding(
-                //             padding: const EdgeInsets.all(8.0),
-                //             child: Column(
-                //               mainAxisAlignment: MainAxisAlignment.center,
-                //               crossAxisAlignment: CrossAxisAlignment.start,
-                //               children: [
-                //                 Text(
-                //                   'Name: ',
-                //                   style: TextStyle(fontWeight: FontWeight.bold),
-                //                 ),
-                //                 SizedBox(height: 5),
-                //                 Text('Age: '),
-                //               ],
-                //             ),
-                //           ),
-                //         );
-
-                //         // return Container(
-                //         //   width: 300,
-                //         //   decoration: BoxDecoration(
-                //         //     borderRadius:
-                //         //         BorderRadius.circular(10), // Rounded corners
-                //         //     color:
-                //         //         Colors.white, // Background color for the card
-                //         //     boxShadow: [
-                //         //       BoxShadow(
-                //         //         color:
-                //         //             Colors.grey.withOpacity(0.2), // Soft shadow
-                //         //         spreadRadius: 2,
-                //         //         blurRadius: 5,
-                //         //         offset: Offset(0, 3), // Shadow position
-                //         //       ),
-                //         //     ],
-                //         //   ),
-                //         //   child: Column(
-                //         //     mainAxisSize: MainAxisSize.min,
-                //         //     children: [
-                //         //       // Top Green Section with logo
-                //         //       Container(
-                //         //         height: 70,
-                //         //         width: double.infinity,
-                //         //         decoration: BoxDecoration(
-                //         //           color: Colors.green,
-                //         //           borderRadius: BorderRadius.only(
-                //         //             topLeft: Radius.circular(10),
-                //         //             topRight: Radius.circular(10),
-                //         //           ),
-                //         //         ),
-                //         //         child: Center(
-                //         //           child: CircleAvatar(
-                //         //             radius: 30,
-                //         //             backgroundColor: Colors.white,
-                //         //             // child: Image.asset(
-                //         //             //   'assets/logo.png', // Your logo image
-                //         //             //   fit: BoxFit.contain,
-                //         //             // ),
-                //         //           ),
-                //         //         ),
-                //         //       ),
-                //         //       Padding(
-                //         //         padding: const EdgeInsets.all(16.0),
-                //         //         child: Column(
-                //         //           children: [
-                //         //             Text(
-                //         //               customer
-                //         //                   .firstname!, // Assuming 'name' field exists
-                //         //               style: TextStyle(
-                //         //                 fontSize: 18,
-                //         //                 fontWeight: FontWeight.bold,
-                //         //                 color: Colors.black,
-                //         //               ),
-                //         //             ),
-                //         //             SizedBox(height: 5),
-                //         //             Text(
-                //         //               "Seller ID: ", // Document ID
-                //         //               style: TextStyle(
-                //         //                 fontSize: 14,
-                //         //                 color: Colors.black54,
-                //         //               ),
-                //         //             ),
-                //         //             SizedBox(height: 5),
-                //         //             Text(
-                //         //               "ry@g.com", // Assuming 'email' field exists
-                //         //               style: TextStyle(
-                //         //                 fontSize: 14,
-                //         //                 color: Colors.black54,
-                //         //               ),
-                //         //             ),
-                //         //             SizedBox(height: 15),
-                //         //             ElevatedButton(
-                //         //               onPressed: () {},
-                //         //               style: ElevatedButton.styleFrom(
-                //         //                 backgroundColor: primaryBg,
-                //         //                 shape: RoundedRectangleBorder(
-                //         //                   borderRadius: BorderRadius.circular(
-                //         //                       20), // Rounded button
-                //         //                 ),
-                //         //                 padding: EdgeInsets.symmetric(
-                //         //                     horizontal: 24, vertical: 12),
-                //         //               ),
-                //         //               child: Text(
-                //         //                 "View Store",
-                //         //                 style: TextStyle(
-                //         //                   color: Colors.white,
-                //         //                 ),
-                //         //               ),
-                //         //             ),
-                //         //           ],
-                //         //         ),
-                //         //       ),
-                //         //     ],
-                //         //   ),
-                //         // );
-                //       },
-                //     );
-
-                //     // return ListView.builder(
-                //     //   shrinkWrap: true,
-                //     //   physics:
-                //     //       NeverScrollableScrollPhysics(), // Prevent internal scrolling
-                //     //   itemCount: snapshot.len,
-                //     //   itemBuilder: (context, index) {
-                //     //     var sellerData = sellers[index];
-                //     //     return ListTile(
-                //     //       title: Text(
-                //     //           '${sellerData['email']}'), // Adjust according to your fields
-                //     //     );
-                //     //   },
-                //     // );
-                //   },
-                // ),
-                // const Divider(),
-                // Container(
-                //   height: height * 0.9,
-                //   child: GridView.builder(
-                //     gridDelegate:
-                //         const SliverGridDelegateWithFixedCrossAxisCount(
-                //       crossAxisCount: 4,
-                //       crossAxisSpacing: 25,
-                //       mainAxisSpacing: 30,
-                //       childAspectRatio: 3.5 / 4,
-                //     ),
-                //     itemCount: 20, // +1 for the AddSellerCard
-                //     itemBuilder: (context, index) {
-                //       if (index == shops.length) {
-                //         return AddSellerCard(); // Display the add seller card
-                //       }
-                //       var shop = shops[index];
-                //       return Container(
-                //         width: 300,
-                //         decoration: BoxDecoration(
-                //           borderRadius:
-                //               BorderRadius.circular(10), // Rounded corners
-                //           color:
-                //               Colors.white, // Background color for the card
-                //           boxShadow: [
-                //             BoxShadow(
-                //               color:
-                //                   Colors.grey.withOpacity(0.2), // Soft shadow
-                //               spreadRadius: 2,
-                //               blurRadius: 5,
-                //               offset: Offset(0, 3), // Shadow position
-                //             ),
-                //           ],
-                //         ),
-                //         child: Column(
-                //           mainAxisSize: MainAxisSize.min,
-                //           children: [
-                //             // Top Green Section with logo
-                //             Container(
-                //               height: 70,
-                //               width: double.infinity,
-                //               decoration: BoxDecoration(
-                //                 color: Colors.green,
-                //                 borderRadius: BorderRadius.only(
-                //                   topLeft: Radius.circular(10),
-                //                   topRight: Radius.circular(10),
-                //                 ),
-                //               ),
-                //               child: Center(
-                //                 child: CircleAvatar(
-                //                   radius: 30,
-                //                   backgroundColor: Colors.white,
-                //                   // child: Image.asset(
-                //                   //   'assets/logo.png', // Your logo image
-                //                   //   fit: BoxFit.contain,
-                //                   // ),
-                //                 ),
-                //               ),
-                //             ),
-                //             Padding(
-                //               padding: const EdgeInsets.all(16.0),
-                //               child: Column(
-                //                 children: [
-                //                   Text(
-                //                     "arfa", // Assuming 'name' field exists
-                //                     style: TextStyle(
-                //                       fontSize: 18,
-                //                       fontWeight: FontWeight.bold,
-                //                       color: Colors.black,
-                //                     ),
-                //                   ),
-                //                   SizedBox(height: 5),
-                //                   Text(
-                //                     "Seller ID: ", // Document ID
-                //                     style: TextStyle(
-                //                       fontSize: 14,
-                //                       color: Colors.black54,
-                //                     ),
-                //                   ),
-                //                   SizedBox(height: 5),
-                //                   Text(
-                //                     "ry@g.com", // Assuming 'email' field exists
-                //                     style: TextStyle(
-                //                       fontSize: 14,
-                //                       color: Colors.black54,
-                //                     ),
-                //                   ),
-                //                   SizedBox(height: 15),
-                //                   ElevatedButton(
-                //                     onPressed: () {},
-                //                     style: ElevatedButton.styleFrom(
-                //                       backgroundColor: primaryBg,
-                //                       shape: RoundedRectangleBorder(
-                //                         borderRadius: BorderRadius.circular(
-                //                             20), // Rounded button
-                //                       ),
-                //                       padding: EdgeInsets.symmetric(
-                //                           horizontal: 24, vertical: 12),
-                //                     ),
-                //                     child: Text(
-                //                       "View Store",
-                //                       style: TextStyle(
-                //                         color: Colors.white,
-                //                       ),
-                //                     ),
-                //                   ),
-                //                 ],
-                //               ),
-                //             ),
-                //           ],
-                //         ),
-                //       );
-                //     },
-                //   ),
-                // ),
               ],
             ),
           ),

@@ -1,6 +1,7 @@
 import 'package:admin/components/headerNavigation.dart';
 import 'package:admin/components/sideBarNavigation.dart';
 import 'package:admin/screens/customers/shoppers.dart';
+import 'package:admin/screens/customers/viewStore.dart';
 import 'package:admin/screens/dashboard/dashboard.dart';
 import 'package:admin/screens/reports/report.dart';
 import 'package:admin/screens/requests/request.dart';
@@ -355,6 +356,7 @@ class _MenuScreenState extends State<MenuScreen> {
                     ShoppersView(),
                     ReportsView(),
                     RequestsView(),
+
                     // Container(
                     //   color: Colors.white,
                     //   child: const Center(
