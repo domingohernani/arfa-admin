@@ -5,6 +5,7 @@ import 'package:admin/models/furnituresData.dart';
 import 'package:admin/models/monthlyData.dart';
 import 'package:admin/models/sellersData.dart';
 import 'package:admin/models/shopsData.dart';
+import 'package:admin/screens/customers/viewStore.dart';
 import 'package:admin/services/firestoreService.dart';
 import 'package:admin/themes/theme.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -335,73 +336,129 @@ class _DashboardViewState extends State<DashboardView> {
                       ),
                     ],
                   ),
-                  child: Table(
-                    defaultVerticalAlignment: TableCellVerticalAlignment.middle,
-                    border: TableBorder.all(),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      // Header row
-                      TableRow(
-                        decoration: BoxDecoration(
-                          color: Colors.grey[300],
+                      Text(
+                        "Top Sellers",
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
                         ),
-                        children: [
-                          Center(
-                              child: Padding(
-                            padding: EdgeInsets.all(8.0),
-                            child: Text("Shop Name",
-                                style: TextStyle(fontWeight: FontWeight.bold)),
-                          )),
-                          Center(
-                              child: Padding(
-                            padding: EdgeInsets.all(8.0),
-                            child: Text("Revenue",
-                                style: TextStyle(fontWeight: FontWeight.bold)),
-                          )),
-                          // Center(
-                          //     child: Padding(
-                          //   padding: EdgeInsets.all(8.0),
-                          //   child: Text("Total Products",
-                          //       style: TextStyle(fontWeight: FontWeight.bold)),
-                          // )),
-                          Center(
-                              child: Padding(
-                            padding: EdgeInsets.all(8.0),
-                            child: Text("Products Sold",
-                                style: TextStyle(fontWeight: FontWeight.bold)),
-                          )),
-                        ],
                       ),
-                      ...shops.map(
-                        (shop) {
-                          return TableRow(
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Table(
+                        border: TableBorder.symmetric(
+                            inside: BorderSide(color: Colors.grey)),
+                        columnWidths: {
+                          0: FlexColumnWidth(),
+                          1: FlexColumnWidth(),
+                          2: FlexColumnWidth(),
+                          3: FixedColumnWidth(100.0),
+                        },
+                        defaultVerticalAlignment:
+                            TableCellVerticalAlignment.middle,
+                        children: [
+                          TableRow(
+                            decoration: BoxDecoration(
+                              color: Colors.grey.shade200,
+                            ),
                             children: [
-                              TableCell(
+                              Center(
+                                  child: Padding(
+                                padding: EdgeInsets.all(12.0),
+                                child: Text("Shop Name",
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.bold)),
+                              )),
+                              Center(
                                   child: Padding(
                                 padding: EdgeInsets.all(8.0),
-                                child: Text("${shop.shopname}"),
+                                child: Text("Revenue",
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.bold)),
                               )),
-                              TableCell(
-                                  child: Padding(
-                                padding: EdgeInsets.all(8.0),
-                                child: Text(
-                                    "${shop.revenue}"), // Replace with actual revenue data if available
-                              )),
-                              // TableCell(
+                              // Center(
                               //     child: Padding(
                               //   padding: EdgeInsets.all(8.0),
-                              //   child: Text(
-                              //       "${shop.revenue}"), // Replace with actual revenue data if available
+                              //   child: Text("Total Products",
+                              //       style: TextStyle(fontWeight: FontWeight.bold)),
                               // )),
-                              TableCell(
+                              Center(
                                   child: Padding(
                                 padding: EdgeInsets.all(8.0),
-                                child: Text(
-                                    "${shop.orders}"), // Replace with actual products sold data if available
+                                child: Text("Products Sold",
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.bold)),
+                              )),
+                              Center(
+                                  child: Padding(
+                                padding: EdgeInsets.all(8.0),
+                                child: Text("Action",
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.bold)),
                               )),
                             ],
-                          );
-                        },
-                      ).toList(),
+                          ),
+                          ...shops.map(
+                            (shop) {
+                              return TableRow(
+                                children: [
+                                  TableCell(
+                                      child: Padding(
+                                    padding: EdgeInsets.symmetric(
+                                        vertical: 4, horizontal: 10),
+                                    child: Text("${shop.shopname}"),
+                                  )),
+                                  TableCell(
+                                      child: Padding(
+                                    padding: EdgeInsets.symmetric(
+                                        vertical: 4, horizontal: 10),
+                                    child: Text(
+                                        "${shop.revenue}"), // Replace with actual revenue data if available
+                                  )),
+                                  // TableCell(
+                                  //     child: Padding(
+                                  //   padding: EdgeInsets.all(8.0),
+                                  //   child: Text(
+                                  //       "${shop.revenue}"), // Replace with actual revenue data if available
+                                  // )),
+                                  TableCell(
+                                      child: Padding(
+                                    padding: EdgeInsets.symmetric(
+                                        vertical: 4, horizontal: 10),
+                                    child: Text(
+                                        "${shop.orders}"), // Replace with actual products sold data if available
+                                  )),
+                                  TableCell(
+                                    child: Container(
+                                      width: 50,
+                                      padding: EdgeInsets.symmetric(
+                                          vertical: 4, horizontal: 10),
+                                      child: IconButton(
+                                        onPressed: () async {
+                                          await showDialog(
+                                            context: context,
+                                            builder: (context) {
+                                              return ViewStoreProile(
+                                                id: shop.shopid,
+                                              );
+                                            },
+                                          );
+                                        },
+                                        icon: Icon(
+                                            Icons.arrow_right_alt_outlined),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              );
+                            },
+                          ).toList(),
+                        ],
+                      ),
                     ],
                   ),
                 );
