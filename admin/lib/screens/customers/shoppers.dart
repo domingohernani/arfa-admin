@@ -174,17 +174,19 @@ class _ShoppersViewState extends State<ShoppersView> {
                             crossAxisCount: 3,
                             crossAxisSpacing: 25,
                             mainAxisSpacing: 30,
-                            childAspectRatio: 3.5 / 4,
+                            childAspectRatio: 4 / 3.8,
                           ),
                           itemCount: shoppers.length,
                           itemBuilder: (context, index) {
                             var shopper = shoppers[index];
-
                             return Container(
                               width: 300,
                               decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
-                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(15),
+                                border: Border.all(
+                                  color: primary,
+                                  width: 3,
+                                ),
                                 boxShadow: [
                                   BoxShadow(
                                     color: Colors.grey.withOpacity(0.2),
@@ -194,11 +196,12 @@ class _ShoppersViewState extends State<ShoppersView> {
                                   ),
                                 ],
                               ),
-                              child: Column(
-                                mainAxisSize: MainAxisSize.min,
+                              child: Stack(
+                                // mainAxisSize: MainAxisSize.min
+                                alignment: Alignment.topCenter,
                                 children: [
                                   Container(
-                                    height: 70,
+                                    height: 60,
                                     width: double.infinity,
                                     decoration: BoxDecoration(
                                       color: Colors.green,
@@ -207,69 +210,81 @@ class _ShoppersViewState extends State<ShoppersView> {
                                         topRight: Radius.circular(10),
                                       ),
                                     ),
-                                    child: Center(
+                                  ),
+                                  Positioned(
+                                    top: 15,
+                                    child: Container(
+                                      height: 100,
+                                      width: 100,
                                       child: CircleAvatar(
                                         radius: 30,
                                         backgroundColor: Colors.white,
-                                        // child: Image.asset(
-                                        //   'assets/logo.png', // Your logo image
-                                        //   fit: BoxFit.contain,
-                                        // ),
+                                        child: ClipOval(
+                                            // child: Image.network(
+                                            //   '${seller.logo}', // Your logo image
+                                            //   fit: BoxFit.cover,
+                                            // ),
+                                            ),
                                       ),
                                     ),
                                   ),
-                                  Padding(
-                                    padding: const EdgeInsets.all(16.0),
-                                    child: Column(
-                                      children: [
-                                        Text(
-                                          (shopper.firstname.isEmpty &&
-                                                  shopper.lastname.isEmpty)
-                                              ? "No Name"
-                                              : "${shopper.firstname} ${shopper.lastname}", // Assuming 'name' field exists
-                                          style: TextStyle(
-                                            fontSize: 18,
-                                            fontWeight: FontWeight.bold,
-                                            color: Colors.black,
-                                          ),
-                                        ),
-                                        SizedBox(height: 5),
-                                        Text(
-                                          "${shopper.phone}", // Document ID
-                                          style: TextStyle(
-                                            fontSize: 14,
-                                            color: Colors.black54,
-                                          ),
-                                        ),
-                                        SizedBox(height: 5),
-                                        Text(
-                                          "${shopper.email}", // Assuming 'email' field exists
-                                          style: TextStyle(
-                                            fontSize: 14,
-                                            color: Colors.black54,
-                                          ),
-                                        ),
-                                        SizedBox(height: 15),
-                                        ElevatedButton(
-                                          onPressed: () {},
-                                          style: ElevatedButton.styleFrom(
-                                            backgroundColor: primaryBg,
-                                            shape: RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(
-                                                      20), // Rounded button
-                                            ),
-                                            padding: EdgeInsets.symmetric(
-                                                horizontal: 24, vertical: 12),
-                                          ),
-                                          child: Text(
-                                            "View Profile",
+                                  Positioned(
+                                    top: 110,
+                                    child: Container(
+                                      padding: EdgeInsets.only(top: 20),
+                                      child: Column(
+                                        children: [
+                                          Text(
+                                            (shopper.firstname.isEmpty &&
+                                                    shopper.lastname.isEmpty)
+                                                ? "No Name"
+                                                : "${shopper.firstname} ${shopper.lastname}",
                                             style: TextStyle(
-                                              color: Colors.white,
+                                              fontSize: 18,
+                                              fontWeight: FontWeight.bold,
+                                              color: Colors.black,
                                             ),
                                           ),
-                                        ),
-                                      ],
+                                          SizedBox(height: 5),
+                                          Text(
+                                            "Phone: ${shopper.phone}", // Document ID
+                                            style: TextStyle(
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.bold,
+                                              color: Colors.black54,
+                                            ),
+                                          ),
+                                          SizedBox(height: 5),
+                                          Text(
+                                            "Email: ${shopper.email}", // Assuming 'email' field exists
+                                            style: TextStyle(
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.bold,
+                                              color: Colors.black54,
+                                            ),
+                                          ),
+                                          SizedBox(height: 15),
+                                          ElevatedButton(
+                                            onPressed: () {},
+                                            style: ElevatedButton.styleFrom(
+                                              backgroundColor: primaryBg,
+                                              shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(
+                                                        20), // Rounded button
+                                              ),
+                                              padding: EdgeInsets.symmetric(
+                                                  horizontal: 24, vertical: 12),
+                                            ),
+                                            child: Text(
+                                              "View Profile",
+                                              style: TextStyle(
+                                                color: Colors.white,
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
                                     ),
                                   ),
                                 ],

@@ -34,13 +34,13 @@ class _DashboardViewState extends State<DashboardView> {
 
     fs.getFurnituresData().then(
       (value) {
-        print("Furnitures length: ${value.length}");
+        // print("Furnitures length: ${value.length}");
       },
     );
 
     fs.getSellersData().then(
       (value) {
-        print("Sellers length: ${value.length}");
+        // print("Sellers length: ${value.length}");
       },
     );
 
@@ -48,7 +48,7 @@ class _DashboardViewState extends State<DashboardView> {
 
     fs.getOrdersData().then(
       (value) {
-        print("Orders length: ${value.length}");
+        // print("Orders length: ${value.length}");
       },
     );
 
@@ -357,6 +357,12 @@ class _DashboardViewState extends State<DashboardView> {
                             child: Text("Revenue",
                                 style: TextStyle(fontWeight: FontWeight.bold)),
                           )),
+                          // Center(
+                          //     child: Padding(
+                          //   padding: EdgeInsets.all(8.0),
+                          //   child: Text("Total Products",
+                          //       style: TextStyle(fontWeight: FontWeight.bold)),
+                          // )),
                           Center(
                               child: Padding(
                             padding: EdgeInsets.all(8.0),
@@ -380,6 +386,12 @@ class _DashboardViewState extends State<DashboardView> {
                                 child: Text(
                                     "${shop.revenue}"), // Replace with actual revenue data if available
                               )),
+                              // TableCell(
+                              //     child: Padding(
+                              //   padding: EdgeInsets.all(8.0),
+                              //   child: Text(
+                              //       "${shop.revenue}"), // Replace with actual revenue data if available
+                              // )),
                               TableCell(
                                   child: Padding(
                                 padding: EdgeInsets.all(8.0),

@@ -8,9 +8,12 @@ import 'package:admin/models/ordersData.dart';
 import 'package:admin/models/sellersData.dart';
 import 'package:admin/models/shoppersData.dart';
 import 'package:admin/models/shopsData.dart';
+import 'package:admin/models/singleShopData.dart';
 import 'package:admin/utilities/dateconvertion.dart';
+import 'package:admin/utilities/logoUrl.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:intl/intl.dart';
@@ -59,7 +62,9 @@ class FirestoreService {
           'name': data['name'] ?? "",
           'validId': data['validId'] ?? "",
           'businessPermit': data['businessPermit'] ?? "",
+          'logo': getLogoUrl(data['logo']) ?? "",
         };
+        // print("Name: ${data['name']} , logo:${getLogoUrl(data['logo'])}");
       }
 
       for (var userdoc in snapshotUsers.docs) {
@@ -83,6 +88,7 @@ class FirestoreService {
           shopname: shopData?['name'] ?? "",
           shopvalidid: shopData?['validId'] ?? "",
           shoppermit: shopData?['businessPermit'] ?? "",
+          logo: shopData?['logo'] ?? "",
           // Optionally handle these fields if necessary
           // location: data['location']?.toString() ?? "",
           // cart: data['cart']?.toString() ?? "",
@@ -196,7 +202,6 @@ class FirestoreService {
 
   Future<List<Shop>> getShopData() async {
     List<Shop> shop = [];
-    // List shopId = [];
 
     int count = 0;
 
@@ -319,32 +324,155 @@ class FirestoreService {
     return orders;
   }
 
-  // Future<List<MonthlyReport>> getMonthlyReport() async {
-  //   List<MonthlyReport> reports = [];
-  //   try {
-  //     QuerySnapshot snapshotReports =
-  //         await _firestore_db.collection("reports").get();
+  Future<SingleShop?> getSingleStoreData(String shopid) async {
+    // Default values
+    String id = "";
+    String firstname = "";
+    String lastname = "";
+    String email = "";
+    String phone = "";
+    String shopname = "";
+    String shoppermit = "";
+    String shopvalidid = "";
+    String logo = "";
+    Map<String, String> address = {};
+    List<Furniture> furnitures = [];
 
-  //     for (var reportsdoc in snapshotReports.docs) {
-  //       Map<String, dynamic> data = reportsdoc.data() as Map<String, dynamic>;
+    Timestamp datejoined = Timestamp.fromDate(DateTime(1970, 1, 1));
 
-  //       reports.add(
-  //         MonthlyReport(
-  //           id: data["id"],
-  //           newusers: data["newUsers"],
-  //           currentusers: data["currentUsers"],
-  //           monthlyrevenue: data["monthlyOrders"],
-  //           monthlyorders: data["monthlyRevenue"],
-  //           month: data["month"],
-  //           year: data["year"],
-  //         ),
-  //       );
-  //     }
-  //   } catch (error) {
-  //     print(error);
-  //   }
-  //   return reports;
-  // }
+    String description = "";
+    int price = 0;
+    int stock = 0;
+    String category = "";
+    int depth = 0;
+    int width = 0;
+    int discountedprice = 0;
+    int height = 0;
+    String imageurl = "";
+    String imagepreviewfilename = "";
+    bool issale = false;
+    String modelurl = "";
+
+    String shopperid = "";
+    String orderstatus = "";
+    int ordertotal = 0;
+    List<dynamic> orderitems = [];
+
+    try {
+      QuerySnapshot snapshotShop = await _firestore_db
+          .collection('shops')
+          .where('userId', isEqualTo: shopid)
+          .get();
+      for (var shopdoc in snapshotShop.docs) {
+        Map<String, dynamic> data = shopdoc.data() as Map<String, dynamic>;
+        id = data['userId'] ?? "";
+        shopname = data['name'] ?? "";
+        logo = getLogoUrl(data['logo']) ?? "";
+        shopvalidid = data['validId'] ?? "";
+        shoppermit = data['businessPermit'] ?? "";
+        address = {
+          "street": data['address']["street"].toString() ?? '',
+          "barangay": data['address']["barangay"] ?? '',
+          "city": data['address']["city"] ?? '',
+          "province": data['address']["province"] ?? '',
+          "region": data['address']["region"] ?? '',
+        };
+      }
+
+      print("Data: ${shopname}");
+      print("Data: ${logo}");
+      print("Data: ${shopvalidid}");
+      print("Data: ${shoppermit}");
+      print("Data: ${address['city']}");
+
+      QuerySnapshot snapshotSeller = await _firestore_db
+          .collection('users')
+          .where('id', isEqualTo: shopid)
+          .get();
+      for (var sellerdoc in snapshotSeller.docs) {
+        Map<String, dynamic> data = sellerdoc.data() as Map<String, dynamic>;
+
+        firstname = data['firstName'] ?? "";
+        lastname = data['lastName'] ?? "";
+        email = data['email'] ?? "";
+        phone = data['phoneNumber'] ?? "";
+      }
+      print("Data: ${firstname}");
+      print("Data: ${lastname}");
+      print("Data: ${email}");
+      print("Data: ${phone}");
+
+      QuerySnapshot snapshotFurnitures = await _firestore_db
+          .collection('furnitures')
+          .where('ownerId', isEqualTo: shopid)
+          .get();
+      for (var furnituredoc in snapshotFurnitures.docs) {
+        Map<String, dynamic> data = furnituredoc.data() as Map<String, dynamic>;
+
+        furnitures.add(
+          Furniture(
+              sellerid: data['ownerId'] ?? "",
+              name: data['name'] ?? "",
+              description: data['description'] ?? "",
+              price: data['price'] ?? 0,
+              stock: data['stocks'] ?? 0,
+              category: data['category'] ?? "",
+              createdat:
+                  data['createdAt'] ?? Timestamp.fromDate(DateTime(1970, 1, 1)),
+              depth: data['depth'] ?? 0,
+              width: data['width'] ?? 0,
+              discountedprice: data['discountedprice'] ?? 0,
+              height: data['height'] ?? 0,
+              imageurl: getProductImageUrl(
+                      data['imagesUrl'], data['imgPreviewFilename']) ??
+                  "",
+              imagepreviewfilename: data['imgPreviewFilename'] ?? "",
+              issale: data['isSale'] ?? false,
+              modelurl: data['modelUrl'] ?? ""),
+        );
+      }
+    } catch (error) {
+      print("Error fetching data: $error");
+      return null;
+    }
+
+    SingleShop sh = SingleShop(
+      id: id,
+      firstname: firstname,
+      lastname: lastname,
+      email: email,
+      phone: phone,
+      address: address,
+      shopname: shopname,
+      shoppermit: shoppermit,
+      shopvalidid: shopvalidid,
+      logo: logo,
+      furniture: furnitures,
+
+      description: description,
+      price: price,
+      stock: stock,
+      category: category,
+      createdatFurniture:
+          Timestamp.fromDate(DateTime(1970, 1, 1)), // Default date
+      depth: depth,
+      width: width,
+      discountedprice: discountedprice,
+      height: height,
+      imageurl: imageurl,
+      imagepreviewfilename: imagepreviewfilename,
+      issale: issale,
+      modelurl: modelurl,
+      shopperid: shopperid,
+      orderstatus: orderstatus,
+      ordertotal: ordertotal,
+      createdatOrder: Timestamp.fromDate(DateTime(1970, 1, 1)), // Default date
+      orderitems: orderitems,
+    );
+
+    print("SH: ${sh.toString()}");
+    return sh;
+  }
 
   Future<MonthlyReport> getMonthlyReport() async {
     int currentMonth = DateTime.now().month;
