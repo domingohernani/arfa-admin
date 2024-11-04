@@ -11,13 +11,15 @@ class ViewDocumentModal extends StatefulWidget {
 }
 
 class _ViewDocumentModalState extends State<ViewDocumentModal> {
-  final GlobalKey<SfPdfViewerState> _pdfViewerKey = GlobalKey();
+  final GlobalKey<SfPdfViewerState> _idpdfViewerKey = GlobalKey();
+  final GlobalKey<SfPdfViewerState> _permitpdfViewerKey = GlobalKey();
   bool _isLoading = true;
 
   @override
   void initState() {
     super.initState();
-    _pdfViewerKey.currentContext;
+    _idpdfViewerKey.currentContext;
+    _permitpdfViewerKey.currentContext;
   }
 
   @override
@@ -79,13 +81,11 @@ class _ViewDocumentModalState extends State<ViewDocumentModal> {
                     Container(
                       width: double.infinity,
                       height: 500, // Set a fixed height for the container
-                      color: Colors.amber,
                       child: Stack(
                         children: [
                           SfPdfViewer.network(
-                            "https://firebasestorage.googleapis.com/v0/b/aria-16a4d.appspot.com/o/files%2Fpermit%2FIAMS%20and%20P-D-C-A.pdf?alt=media&token=06ab2ac8-3760-4a46-8b9c-3fa7be92f3a1",
-                            // widget.idurl.toString(),
-                            key: _pdfViewerKey,
+                            widget.idurl.toString(),
+                            key: _idpdfViewerKey,
                             initialZoomLevel: 2,
                             canShowScrollHead: true,
                             canShowPageLoadingIndicator: true,
@@ -147,9 +147,32 @@ class _ViewDocumentModalState extends State<ViewDocumentModal> {
                     ),
                     Container(
                       width: double.infinity,
-                      height: height,
-                      child: SingleChildScrollView(),
-                    )
+                      height: 500, // Set a fixed height for the container
+                      child: Stack(
+                        children: [
+                          SfPdfViewer.network(
+                            widget.permiturl.toString(),
+                            key: _permitpdfViewerKey,
+                            initialZoomLevel: 2,
+                            canShowScrollHead: true,
+                            canShowPageLoadingIndicator: true,
+                            scrollDirection: PdfScrollDirection.vertical,
+                            onDocumentLoaded: (details) {
+                              setState(() =>
+                                  _isLoading = false); // Hide loader on load
+                            },
+                            onDocumentLoadFailed: (details) {
+                              print(
+                                  "PDF failed to load: ${details.description}");
+                            },
+                          ),
+                          if (_isLoading)
+                            Center(
+                                child:
+                                    CircularProgressIndicator()), // Show loader
+                        ],
+                      ),
+                    ),
                   ],
                 ),
               ),
