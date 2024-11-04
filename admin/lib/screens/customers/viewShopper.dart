@@ -21,7 +21,7 @@ class _ViewShopperProfileState extends State<ViewShopperProfile> {
   @override
   Widget build(BuildContext context) {
     var height = MediaQuery.of(context).size.height * 0.90;
-    var width = MediaQuery.of(context).size.width * 0.50;
+    var width = MediaQuery.of(context).size.width * 0.55;
 
     return FutureBuilder<SingleUser?>(
         future: _fs.getSingleUserData(widget.id),
@@ -397,7 +397,7 @@ class _ViewShopperProfileState extends State<ViewShopperProfile> {
                                       crossAxisCount: 3,
                                       crossAxisSpacing: 25,
                                       mainAxisSpacing: 30,
-                                      childAspectRatio: 4 / 3,
+                                      childAspectRatio: 4 / 4,
                                     ),
                                     itemCount: shopper.wishlists.length,
                                     itemBuilder: (context, index) {
@@ -542,7 +542,7 @@ class _ViewShopperProfileState extends State<ViewShopperProfile> {
                                       crossAxisCount: 3,
                                       crossAxisSpacing: 25,
                                       mainAxisSpacing: 30,
-                                      childAspectRatio: 4 / 3,
+                                      childAspectRatio: 4 / 4,
                                     ),
                                     itemCount: shopper.cartitems.length,
                                     itemBuilder: (context, index) {
