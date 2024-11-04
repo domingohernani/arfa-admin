@@ -8,6 +8,7 @@ class Shopper {
   final String email;
   final String phone;
   final String role;
+  final String profileurl;
   final Timestamp datejoined;
   final Map<String, String> location;
   // final List<Map<String, dynamic>> cart;
@@ -21,6 +22,7 @@ class Shopper {
       required this.phone,
       required this.role,
       required this.location,
+      required this.profileurl,
       required this.datejoined
       // required this.cart,
       // required this.wishlist,

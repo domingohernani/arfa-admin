@@ -173,10 +173,10 @@ class _SellersViewState extends State<SellersView> {
                       return GridView.builder(
                         gridDelegate:
                             const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 3,
+                          crossAxisCount: 4,
                           crossAxisSpacing: 25,
                           mainAxisSpacing: 30,
-                          childAspectRatio: 4 / 3.8,
+                          childAspectRatio: 4 / 3,
                         ),
                         itemCount:
                             sellers.length + 1, // +1 for the AddSellerCard

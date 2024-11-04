@@ -9,6 +9,7 @@ import 'package:admin/models/sellersData.dart';
 import 'package:admin/models/shoppersData.dart';
 import 'package:admin/models/shopsData.dart';
 import 'package:admin/models/singleShopData.dart';
+import 'package:admin/models/singleUser.dart';
 import 'package:admin/utilities/dateconvertion.dart';
 import 'package:admin/utilities/logoUrl.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -140,6 +141,7 @@ class FirestoreService {
             "province": data["province"]?.toString() ?? '',
             "region": data["region"]?.toString() ?? '',
           },
+          profileurl: data["profileUrl"] ?? "",
           datejoined: data["dateJoined"],
         );
 
@@ -379,11 +381,11 @@ class FirestoreService {
         };
       }
 
-      print("Data: ${shopname}");
-      print("Data: ${logo}");
-      print("Data: ${shopvalidid}");
-      print("Data: ${shoppermit}");
-      print("Data: ${address['city']}");
+      // print("Data: ${shopname}");
+      // print("Data: ${logo}");
+      // print("Data: ${shopvalidid}");
+      // print("Data: ${shoppermit}");
+      // print("Data: ${address['city']}");
 
       QuerySnapshot snapshotSeller = await _firestore_db
           .collection('users')
@@ -397,10 +399,10 @@ class FirestoreService {
         email = data['email'] ?? "";
         phone = data['phoneNumber'] ?? "";
       }
-      print("Data: ${firstname}");
-      print("Data: ${lastname}");
-      print("Data: ${email}");
-      print("Data: ${phone}");
+      // print("Data: ${firstname}");
+      // print("Data: ${lastname}");
+      // print("Data: ${email}");
+      // print("Data: ${phone}");
 
       QuerySnapshot snapshotFurnitures = await _firestore_db
           .collection('furnitures')
@@ -431,6 +433,7 @@ class FirestoreService {
               modelurl: data['modelUrl'] ?? ""),
         );
       }
+      // print("Furni: ${furnitures.length}");
     } catch (error) {
       print("Error fetching data: $error");
       return null;
@@ -472,6 +475,149 @@ class FirestoreService {
 
     print("SH: ${sh.toString()}");
     return sh;
+  }
+
+  Future<SingleUser?> getSingleUserData(String userid) async {
+    String id = "";
+    String firstname = "";
+    String lastname = "";
+    String email = "";
+    String phone = "";
+    String profileurl = "";
+    Map<String, String> address = {};
+    Timestamp datejoined = Timestamp.fromDate(DateTime(1970, 1, 1));
+    List<Furniture> wishlists = [];
+    List<Furniture> cartitems = [];
+
+    print("============");
+
+    try {
+      List<dynamic> wishlistsId = [];
+      List<String> cartitemsId = [];
+
+      QuerySnapshot snapshotSeller = await _firestore_db
+          .collection('users')
+          .where('id', isEqualTo: userid)
+          .get();
+      for (var sellerdoc in snapshotSeller.docs) {
+        Map<String, dynamic> data = sellerdoc.data() as Map<String, dynamic>;
+
+        id = data['id'] ?? "";
+        firstname = data['firstName'] ?? "";
+        lastname = data['lastName'] ?? "";
+        email = data['email'] ?? "";
+        phone = data['phoneNumber'] ?? "";
+        profileurl = data['profileUrl'] ?? "";
+        address = {
+          "street": data['location']["street"] ?? '',
+          "barangay": data['location']["barangay"] ?? '',
+          "city": data['location']["city"] ?? '',
+          "province": data['location']["province"] ?? '',
+          "region": data['location']["region"] ?? '',
+        };
+        datejoined = data['dateJoined'] ?? datejoined;
+        wishlistsId = data['wishlist'] ?? [];
+        for (var items in data['cart']) {
+          cartitemsId.add(items['furnitureId']);
+        }
+      }
+
+      for (var id in wishlistsId) {
+        QuerySnapshot snapshotFurnitureWL = await _firestore_db
+            .collection('furnitures')
+            .where('id', isEqualTo: id)
+            .get();
+
+        for (var furnituredoc in snapshotFurnitureWL.docs) {
+          Map<String, dynamic> data =
+              furnituredoc.data() as Map<String, dynamic>;
+
+          wishlists.add(
+            Furniture(
+              sellerid: data["ownerId"] ?? "",
+              name: data["name"] ?? "",
+              description: data["description"] ?? "",
+              price: data["price"] ?? 0,
+              stock: data["stock"] ?? 0,
+              category: data["category"] ?? "",
+              createdat: data["createdAt"],
+              depth: data["depth"] ?? 0,
+              width: data["width"] ?? 0,
+              discountedprice: data["discountedPrice"] ?? 0,
+              height: data["height"] ?? 0,
+              imageurl: getProductImageUrl(
+                      data["imagesUrl"], data["imgPreviewFilename"]) ??
+                  "",
+              imagepreviewfilename: data["imgPreviewFilename"] ?? "",
+              issale: data["isSale"],
+              modelurl: data["modelUrl"] ?? "",
+            ),
+          );
+        }
+      }
+
+      for (var id in cartitemsId) {
+        QuerySnapshot snapshotFurnitureWL = await _firestore_db
+            .collection('furnitures')
+            .where('id', isEqualTo: id)
+            .get();
+
+        for (var furnituredoc in snapshotFurnitureWL.docs) {
+          Map<String, dynamic> data =
+              furnituredoc.data() as Map<String, dynamic>;
+
+          print("Cartss: ${data}");
+
+          cartitems.add(
+            Furniture(
+              sellerid: data["ownerId"] ?? "",
+              name: data["name"] ?? "",
+              description: data["description"] ?? "",
+              price: data["price"] ?? 0,
+              stock: data["stock"] ?? 0,
+              category: data["category"] ?? "",
+              createdat: data["createdAt"],
+              depth: data["depth"] ?? 0,
+              width: data["width"] ?? 0,
+              discountedprice: data["discountedPrice"] ?? 0,
+              height: data["height"] ?? 0,
+              imageurl: getProductImageUrl(
+                      data["imagesUrl"], data["imgPreviewFilename"]) ??
+                  "",
+              imagepreviewfilename: data["imgPreviewFilename"] ?? "",
+              issale: data["isSale"],
+              modelurl: data["modelUrl"] ?? "",
+            ),
+          );
+        }
+      }
+
+      // print("Data: ${id}");
+      // print("Data: ${firstname}");
+      // print("Data: ${lastname}");
+      // print("Data: ${email}");
+      // print("Data: ${phone}");
+      // print("Data: ${datejoined}");
+
+      // print("Data: ${address.toString()}");
+    } catch (error) {
+      print(error);
+    }
+
+    SingleUser userData = SingleUser(
+      id: id,
+      firstname: firstname,
+      lastname: lastname,
+      email: email,
+      phone: phone,
+      profileUrl: profileurl,
+      address: address,
+      datejoined: datejoined,
+      wishlists: wishlists,
+      cartitems: cartitems,
+    );
+
+    return userData;
   }
 
   Future<MonthlyReport> getMonthlyReport() async {

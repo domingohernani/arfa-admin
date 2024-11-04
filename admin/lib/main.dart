@@ -1,3 +1,4 @@
+import 'package:admin/screens/customers/viewShopper.dart';
 import 'package:admin/screens/customers/viewStore.dart';
 import 'package:admin/screens/login.dart';
 import 'package:admin/screens/menu.dart';
@@ -34,8 +35,8 @@ class _MainState extends State<Main> {
             ),
       ),
       home: Scaffold(
-        // body: ViewStoreProile(
-        //   id: "W7NmlrmaVLc5dpG2d5oBVuZAqrj1",
+        // body: ViewShopperProfile(
+        //   id: "PN4ftzuqJgV3Vd0qX1COByRZpbL2",
         // ),
         body: MenuScreen(
           uid: "qLpxJlrrP0eK7Z1jVsGAHKWPYL73",

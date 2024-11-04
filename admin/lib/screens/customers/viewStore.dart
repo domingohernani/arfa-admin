@@ -19,6 +19,8 @@ class _ViewStoreProileState extends State<ViewStoreProile> {
     var height = MediaQuery.of(context).size.height * 0.90;
     var width = MediaQuery.of(context).size.width * 0.90;
 
+    print("width: ${width}");
+
     return FutureBuilder<SingleShop?>(
         future: _fs.getSingleStoreData(widget.id),
         builder: (context, snapshot) {
@@ -151,13 +153,19 @@ class _ViewStoreProileState extends State<ViewStoreProile> {
                                             borderRadius:
                                                 BorderRadius.circular(5),
                                           ),
-                                          child: IconButton(
+                                          child: TextButton(
                                             onPressed: () {},
-                                            style: IconButton.styleFrom(
+                                            style: TextButton.styleFrom(
                                               shape: RoundedRectangleBorder(),
+                                              backgroundColor: primary,
                                             ),
-                                            iconSize: 22,
-                                            icon: Icon(Icons.delete_outlined),
+                                            child: Text(
+                                              "View Document",
+                                              style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                color: textWhite,
+                                              ),
+                                            ),
                                           ),
                                         ),
                                       ],
@@ -256,106 +264,134 @@ class _ViewStoreProileState extends State<ViewStoreProile> {
                           ),
                           Container(
                             width: double.infinity,
-                            height: 500,
+                            height: MediaQuery.of(context).size.height,
+                            padding: EdgeInsets.all(25),
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(10),
                               color: Colors.white,
                             ),
-                            child: GridView.builder(
-                              gridDelegate:
-                                  const SliverGridDelegateWithFixedCrossAxisCount(
-                                crossAxisCount: 3,
-                                crossAxisSpacing: 25,
-                                mainAxisSpacing: 30,
-                                childAspectRatio: 4 / 3.8,
-                              ),
-                              itemCount: seller
-                                  .furniture.length, // +1 for the AddSellerCard
-                              itemBuilder: (context, index) {
-                                var sel = seller.furniture[index];
+                            child: seller.furniture.isNotEmpty
+                                ? GridView.builder(
+                                    gridDelegate:
+                                        const SliverGridDelegateWithFixedCrossAxisCount(
+                                      crossAxisCount: 4,
+                                      crossAxisSpacing: 25,
+                                      mainAxisSpacing: 30,
+                                      childAspectRatio: 4 / 3,
+                                    ),
+                                    itemCount: seller.furniture
+                                        .length, // +1 for the AddSellerCard
+                                    itemBuilder: (context, index) {
+                                      var sel = seller.furniture[index];
 
-                                print("Seller: ${sel}");
-
-                                return Card(
-                                  elevation: 4,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(16),
-                                  ),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      // Product Image
-                                      ClipRRect(
-                                        borderRadius: BorderRadius.vertical(
-                                            top: Radius.circular(16)),
-                                        child: Image.network(
-                                          sel.imageurl, // Replace with your image URL
-                                          height: 150,
-                                          width: double.infinity,
-                                          fit: BoxFit.cover,
+                                      return Container(
+                                        height: 400,
+                                        child: Card(
+                                          elevation: 4,
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(16),
+                                          ),
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              // Product Image
+                                              ClipRRect(
+                                                borderRadius:
+                                                    BorderRadius.vertical(
+                                                        top: Radius.circular(
+                                                            16)),
+                                                child: Image.network(
+                                                  sel.imageurl, // Replace with your image URL
+                                                  height: 200,
+                                                  width: double.infinity,
+                                                  fit: BoxFit.cover,
+                                                ),
+                                              ),
+                                              Padding(
+                                                padding:
+                                                    const EdgeInsets.all(12.0),
+                                                child: Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .spaceBetween,
+                                                      children: [
+                                                        Text(
+                                                          '${sel.name}',
+                                                          style: TextStyle(
+                                                            fontSize: 16,
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                          ),
+                                                        ),
+                                                        Text(
+                                                          'Rating',
+                                                          style: TextStyle(
+                                                            fontSize: 14,
+                                                            color: Colors
+                                                                .grey[600],
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                    SizedBox(height: 4),
+                                                    Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .spaceBetween,
+                                                      children: [
+                                                        Text(
+                                                          '₱ ${sel.price}',
+                                                          style: TextStyle(
+                                                            fontSize: 16,
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                            color: Colors.black,
+                                                          ),
+                                                        ),
+                                                        Text(
+                                                          '4.6',
+                                                          style: TextStyle(
+                                                            fontSize: 14,
+                                                            color: Colors.black,
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ],
+                                          ),
                                         ),
-                                      ),
-                                      Padding(
-                                        padding: const EdgeInsets.all(12.0),
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            // Product Name and Rating Row
-                                            Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
-                                              children: [
-                                                Text(
-                                                  '${sel.name}',
-                                                  style: TextStyle(
-                                                    fontSize: 16,
-                                                    fontWeight: FontWeight.bold,
-                                                  ),
-                                                ),
-                                                Text(
-                                                  'Rating',
-                                                  style: TextStyle(
-                                                    fontSize: 14,
-                                                    color: Colors.grey[600],
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                            SizedBox(height: 4),
-                                            // Price and Rating Row
-                                            Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
-                                              children: [
-                                                Text(
-                                                  '₱ ${sel.price}',
-                                                  style: TextStyle(
-                                                    fontSize: 16,
-                                                    fontWeight: FontWeight.bold,
-                                                    color: Colors.black,
-                                                  ),
-                                                ),
-                                                Text(
-                                                  '4.6',
-                                                  style: TextStyle(
-                                                    fontSize: 14,
-                                                    color: Colors.black,
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ],
+                                      );
+                                    },
+                                  )
+                                : Align(
+                                    alignment: Alignment.topCenter,
+                                    child: Column(
+                                      children: [
+                                        Icon(
+                                          Icons.no_backpack_outlined,
+                                          size: 150,
+                                          color: Colors.green.shade300,
                                         ),
-                                      ),
-                                    ],
+                                        Text(
+                                          "No Product.",
+                                          style: TextStyle(
+                                            fontSize: 50,
+                                            color: Colors.green.shade300,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        )
+                                      ],
+                                    ),
                                   ),
-                                );
-                              },
-                            ),
                           )
                         ],
                       ),

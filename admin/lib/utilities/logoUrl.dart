@@ -31,3 +31,19 @@ String getProductImageUrl(String path, String filename) {
   }
   return "https://firebasestorage.googleapis.com/v0/b/${bucket}/o/files%2Flogo%2Flogo-green.png?alt=media";
 }
+
+String getUserImageUrl(String path) {
+  String bucket = FirebaseStorage.instance.bucket;
+
+  if (path.isNotEmpty) {
+    List splitPath = path.split('/');
+    print("Split ${splitPath}");
+
+    String logoUrl =
+        "https://firebasestorage.googleapis.com/v0/b/aria-16a4d.appspot.com/o/${splitPath[0]}%2F${splitPath[1]}?alt=media";
+    print("Path ${logoUrl}");
+
+    return logoUrl;
+  }
+  return "";
+}
