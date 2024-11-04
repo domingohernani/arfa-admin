@@ -25,7 +25,6 @@ String getProductImageUrl(String path, String filename) {
 
     String logoUrl =
         "https://firebasestorage.googleapis.com/v0/b/${bucket}/o/${splitPath[0]}%2F${splitPath[1]}%2F${filename}?alt=media";
-    print("Path ${logoUrl}");
 
     return logoUrl;
   }
@@ -37,11 +36,9 @@ String getUserImageUrl(String path) {
 
   if (path.isNotEmpty) {
     List splitPath = path.split('/');
-    print("Split ${splitPath}");
 
     String logoUrl =
         "https://firebasestorage.googleapis.com/v0/b/aria-16a4d.appspot.com/o/${splitPath[0]}%2F${splitPath[1]}?alt=media";
-    print("Path ${logoUrl}");
 
     return logoUrl;
   }

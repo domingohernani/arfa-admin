@@ -177,7 +177,7 @@ class _ShoppersViewState extends State<ShoppersView> {
                           crossAxisCount: 4,
                           crossAxisSpacing: 25,
                           mainAxisSpacing: 30,
-                          childAspectRatio: 4 / 3,
+                          childAspectRatio: 4 / 4,
                         ),
                         itemCount: shoppers.length,
                         itemBuilder: (context, index) {

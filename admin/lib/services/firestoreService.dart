@@ -473,7 +473,6 @@ class FirestoreService {
       orderitems: orderitems,
     );
 
-    print("SH: ${sh.toString()}");
     return sh;
   }
 
@@ -566,7 +565,7 @@ class FirestoreService {
           Map<String, dynamic> data =
               furnituredoc.data() as Map<String, dynamic>;
 
-          print("Cartss: ${data}");
+          // print("Cartss: ${data}");
 
           cartitems.add(
             Furniture(
