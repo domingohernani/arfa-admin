@@ -177,13 +177,12 @@ class _SellersViewState extends State<SellersView> {
                           crossAxisCount: 4,
                           crossAxisSpacing: 25,
                           mainAxisSpacing: 30,
-                          childAspectRatio: 4 / 3,
+                          childAspectRatio: 4 / 4,
                         ),
-                        itemCount:
-                            sellers.length + 1, // +1 for the AddSellerCard
+                        itemCount: sellers.length + 1,
                         itemBuilder: (context, index) {
                           if (index == sellers.length) {
-                            return AddSellerCard(); // Display the add seller card
+                            return AddSellerCard();
                           }
 
                           var seller = sellers[index];
