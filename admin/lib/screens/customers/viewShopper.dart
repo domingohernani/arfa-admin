@@ -114,7 +114,7 @@ class _ViewShopperProfileState extends State<ViewShopperProfile> {
                               child: Row(
                                 children: [
                                   Container(
-                                    height: 150,
+                                    height: 160,
                                     width: 150,
                                     decoration: BoxDecoration(
                                       border: Border.all(
@@ -175,6 +175,7 @@ class _ViewShopperProfileState extends State<ViewShopperProfile> {
                               top: 210,
                               child: Container(
                                 width: MediaQuery.of(context).size.width * .45,
+                                padding: EdgeInsets.only(bottom: 10),
                                 child: Column(
                                   children: [
                                     Divider(
@@ -199,6 +200,8 @@ class _ViewShopperProfileState extends State<ViewShopperProfile> {
                                       padding:
                                           EdgeInsets.symmetric(horizontal: 25),
                                       child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
                                         children: [
                                           Container(
                                             child: Row(
@@ -251,7 +254,9 @@ class _ViewShopperProfileState extends State<ViewShopperProfile> {
                                             thickness: 0.5,
                                           ),
                                           Container(
-                                            child: Row(
+                                            child: Wrap(
+                                              crossAxisAlignment:
+                                                  WrapCrossAlignment.start,
                                               children: [
                                                 Text(
                                                   "Address: ",
@@ -357,6 +362,9 @@ class _ViewShopperProfileState extends State<ViewShopperProfile> {
                                                 ),
                                               ],
                                             ),
+                                          ),
+                                          Divider(
+                                            thickness: 0.5,
                                           ),
                                         ],
                                       ),

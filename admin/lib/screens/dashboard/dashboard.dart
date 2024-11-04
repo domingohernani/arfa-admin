@@ -144,7 +144,7 @@ class _DashboardViewState extends State<DashboardView> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       _DataCard(
-                        title: "₱ ${reports.monthlyrevenue.toString()}",
+                        title: "₱ ${reports.monthlyrevenue.toStringAsFixed(2)}",
                         subTitle: "Monthly Revenue",
                         percentage: "98.00",
                         iconData: Icons.arrow_drop_up_outlined,
