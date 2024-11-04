@@ -276,7 +276,7 @@ class _ShoppersViewState extends State<ShoppersView> {
                                         ),
                                         SizedBox(height: 5),
                                         Text(
-                                          "Email: ${shopper.email}", // Assuming 'email' field exists
+                                          "Email: ${shopper.email}",
                                           style: TextStyle(
                                             fontSize: 14,
                                             fontWeight: FontWeight.bold,

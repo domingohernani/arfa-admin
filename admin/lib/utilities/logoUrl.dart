@@ -1,5 +1,4 @@
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:flutter/material.dart';
 
 String getLogoUrl(String path) {
   String bucket = FirebaseStorage.instance.bucket;
@@ -21,7 +20,6 @@ String getProductImageUrl(String path, String filename) {
 
   if (path.isNotEmpty) {
     List splitPath = path.split('/');
-    print("Split ${splitPath}");
 
     String logoUrl =
         "https://firebasestorage.googleapis.com/v0/b/${bucket}/o/${splitPath[0]}%2F${splitPath[1]}%2F${filename}?alt=media";
@@ -32,8 +30,6 @@ String getProductImageUrl(String path, String filename) {
 }
 
 String getUserImageUrl(String path) {
-  String bucket = FirebaseStorage.instance.bucket;
-
   if (path.isNotEmpty) {
     List splitPath = path.split('/');
 

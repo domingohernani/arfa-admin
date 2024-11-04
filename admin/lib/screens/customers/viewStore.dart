@@ -1,3 +1,4 @@
+import 'package:admin/components/viewDocument.dart';
 import 'package:admin/models/singleShopData.dart';
 import 'package:admin/services/firestoreService.dart';
 import 'package:admin/themes/theme.dart';
@@ -154,7 +155,18 @@ class _ViewStoreProileState extends State<ViewStoreProile> {
                                                 BorderRadius.circular(5),
                                           ),
                                           child: TextButton(
-                                            onPressed: () {},
+                                            onPressed: () async {
+                                              await showDialog(
+                                                context: context,
+                                                builder: (context) {
+                                                  return ViewDocumentModal(
+                                                    idurl: seller.shopvalidid,
+                                                    permiturl:
+                                                        seller.shoppermit,
+                                                  );
+                                                },
+                                              );
+                                            },
                                             style: TextButton.styleFrom(
                                               shape: RoundedRectangleBorder(),
                                               backgroundColor: primary,
@@ -277,7 +289,7 @@ class _ViewStoreProileState extends State<ViewStoreProile> {
                                       crossAxisCount: 4,
                                       crossAxisSpacing: 25,
                                       mainAxisSpacing: 30,
-                                      childAspectRatio: 4 / 4,
+                                      childAspectRatio: 4 / 4.2,
                                     ),
                                     itemCount: seller.furniture
                                         .length, // +1 for the AddSellerCard
@@ -321,12 +333,19 @@ class _ViewStoreProileState extends State<ViewStoreProile> {
                                                           MainAxisAlignment
                                                               .spaceBetween,
                                                       children: [
-                                                        Text(
-                                                          '${sel.name}',
-                                                          style: TextStyle(
-                                                            fontSize: 16,
-                                                            fontWeight:
-                                                                FontWeight.bold,
+                                                        Expanded(
+                                                          child: Text(
+                                                            '${sel.name}',
+                                                            maxLines: 2,
+                                                            overflow:
+                                                                TextOverflow
+                                                                    .ellipsis,
+                                                            style: TextStyle(
+                                                              fontSize: 16,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold,
+                                                            ),
                                                           ),
                                                         ),
                                                         Text(
