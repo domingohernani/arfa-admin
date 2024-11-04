@@ -171,6 +171,7 @@ class _ShoppersViewState extends State<ShoppersView> {
                       List<Shopper> shoppers = snapshot.data!;
 
                       return GridView.builder(
+                        shrinkWrap: true,
                         gridDelegate:
                             const SliverGridDelegateWithFixedCrossAxisCount(
                           crossAxisCount: 4,
