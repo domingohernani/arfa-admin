@@ -277,7 +277,7 @@ class _ViewStoreProileState extends State<ViewStoreProile> {
                                       crossAxisCount: 4,
                                       crossAxisSpacing: 25,
                                       mainAxisSpacing: 30,
-                                      childAspectRatio: 4 / 3,
+                                      childAspectRatio: 4 / 4,
                                     ),
                                     itemCount: seller.furniture
                                         .length, // +1 for the AddSellerCard
