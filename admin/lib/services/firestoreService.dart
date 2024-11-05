@@ -5,6 +5,8 @@ import 'package:admin/models/adminData.dart';
 import 'package:admin/models/furnituresData.dart';
 import 'package:admin/models/monthlyData.dart';
 import 'package:admin/models/ordersData.dart';
+import 'package:admin/models/productData.dart';
+import 'package:admin/models/reviewsData.dart';
 import 'package:admin/models/sellersData.dart';
 import 'package:admin/models/shoppersData.dart';
 import 'package:admin/models/shopsData.dart';
@@ -158,27 +160,39 @@ class FirestoreService {
 
   Future<List<Furniture>> getFurnituresData() async {
     List<Furniture> furnitures = [];
-    // Map<String, Map<String, dynamic>> shopsInfo = {};
 
     try {
       QuerySnapshot snapshotFurnitures =
           await _firestore_db.collection('furnitures').get();
 
-      // for (var shopDoc in snapshotShops.docs) {
-      //   Map<String, dynamic> data = shopDoc.data() as Map<String, dynamic>;
-
-      //   String sellerId = data['userId'] ?? "";
-      //   shopsInfo[sellerId] = {
-      //     'name': data['name'] ?? "",
-      //     'validId': data['validId'] ?? "",
-      //     'businessPermit': data['businessPermit'] ?? "",
-      //   };
-      // }
-
       for (var furnituredoc in snapshotFurnitures.docs) {
         Map<String, dynamic> data = furnituredoc.data() as Map<String, dynamic>;
+        List<Review> review = [];
+        List<Stock> stockwithvariant = [];
+
+        QuerySnapshot snapshotReviews = await _firestore_db
+            .collection("furnitures")
+            .doc(data['id'])
+            .collection("reviews")
+            .get();
+
+        for (var reviewdoc in snapshotReviews.docs) {
+          Map<String, dynamic> data =
+              furnituredoc.data() as Map<String, dynamic>;
+
+          review.add(
+            Review(
+              shopperid: "shopperid",
+              description: "description",
+              rating: 0,
+              title: "title",
+              date: DateTime.now(),
+            ),
+          );
+        }
 
         furnitures.add(Furniture(
+          productid: data['id'] ?? "",
           sellerid: data["ownerId"] ?? "",
           name: data["name"] ?? "",
           description: data["description"] ?? "",
@@ -194,12 +208,84 @@ class FirestoreService {
           imagepreviewfilename: data["imgPreviewFilename"] ?? "",
           issale: data["isSale"],
           modelurl: data["modelUrl"] ?? "",
+          review: review ?? [],
+          stockwithvariant: stockwithvariant ?? [],
         ));
       }
     } catch (error) {
       print(error);
     }
     return furnitures;
+  }
+
+  Future<Furniture?> getSingleFurnituresData(String prodid) async {
+    Furniture? furniture;
+    List<Review> review = [];
+
+    try {
+      QuerySnapshot snapshotFurnitures = await _firestore_db
+          .collection('furnitures')
+          .where("id", isEqualTo: prodid)
+          .get();
+
+      for (var furnituredoc in snapshotFurnitures.docs) {
+        Map<String, dynamic> data = furnituredoc.data() as Map<String, dynamic>;
+        List<Stock> stockwithvariant = [];
+
+        QuerySnapshot snapshotReviews = await _firestore_db
+            .collection("furnitures")
+            .doc(data['id'])
+            .collection("reviews")
+            .get();
+
+        for (var reviewdoc in snapshotReviews.docs) {
+          Map<String, dynamic> reviewdata =
+              reviewdoc.data() as Map<String, dynamic>;
+
+          String userref = reviewdata['user'].toString();
+          String tempid = userref.split('/')[1];
+          String id = tempid.substring(0, tempid.length - 1);
+
+          review.add(
+            Review(
+              shopperid: id ?? "",
+              description: reviewdata['description'],
+              rating: 0,
+              title: reviewdata['title'],
+              date: reviewdata['date'].toDate(),
+            ),
+          );
+        }
+
+        print("Len: ${review}");
+
+        furniture = Furniture(
+          productid: data['id'] ?? "",
+          sellerid: data["ownerId"] ?? "",
+          name: data["name"] ?? "",
+          description: data["description"] ?? "",
+          price: data["price"] ?? 0,
+          stock: data["stock"] ?? 0,
+          category: data["category"] ?? "",
+          createdat: data["createdAt"],
+          depth: data["depth"] ?? 0,
+          width: data["width"] ?? 0,
+          discountedprice: data["discountedPrice"] ?? 0,
+          height: data["height"] ?? 0,
+          imageurl: getProductImageUrl(
+                  data['imagesUrl'], data['imgPreviewFilename']) ??
+              "",
+          imagepreviewfilename: data["imgPreviewFilename"] ?? "",
+          issale: data["isSale"],
+          modelurl: data["modelUrl"] ?? "",
+          review: review ?? [],
+          stockwithvariant: stockwithvariant ?? [],
+        );
+      }
+    } catch (error) {
+      print(error);
+    }
+    return furniture;
   }
 
   Future<List<Shop>> getShopData() async {
@@ -411,26 +497,54 @@ class FirestoreService {
       for (var furnituredoc in snapshotFurnitures.docs) {
         Map<String, dynamic> data = furnituredoc.data() as Map<String, dynamic>;
 
+        List<Review> review = [];
+        List<Stock> stockwithvariant = [];
+
+        QuerySnapshot snapshotReviews = await _firestore_db
+            .collection("furnitures")
+            .doc(data['id'])
+            .collection("reviews")
+            .get();
+
+        for (var reviewdoc in snapshotReviews.docs) {
+          Map<String, dynamic> data =
+              furnituredoc.data() as Map<String, dynamic>;
+
+          review.add(
+            Review(
+              shopperid: "shopperid",
+              description: "description",
+              rating: 0,
+              title: "title",
+              date: DateTime.now(),
+            ),
+          );
+        }
+
         furnitures.add(
           Furniture(
-              sellerid: data['ownerId'] ?? "",
-              name: data['name'] ?? "",
-              description: data['description'] ?? "",
-              price: data['price'] ?? 0,
-              stock: data['stocks'] ?? 0,
-              category: data['category'] ?? "",
-              createdat:
-                  data['createdAt'] ?? Timestamp.fromDate(DateTime(1970, 1, 1)),
-              depth: data['depth'] ?? 0,
-              width: data['width'] ?? 0,
-              discountedprice: data['discountedprice'] ?? 0,
-              height: data['height'] ?? 0,
-              imageurl: getProductImageUrl(
-                      data['imagesUrl'], data['imgPreviewFilename']) ??
-                  "",
-              imagepreviewfilename: data['imgPreviewFilename'] ?? "",
-              issale: data['isSale'] ?? false,
-              modelurl: data['modelUrl'] ?? ""),
+            productid: data['id'] ?? "",
+            sellerid: data['ownerId'] ?? "",
+            name: data['name'] ?? "",
+            description: data['description'] ?? "",
+            price: data['price'] ?? 0,
+            stock: data['stocks'] ?? 0,
+            category: data['category'] ?? "",
+            createdat:
+                data['createdAt'] ?? Timestamp.fromDate(DateTime(1970, 1, 1)),
+            depth: data['depth'] ?? 0,
+            width: data['width'] ?? 0,
+            discountedprice: data['discountedprice'] ?? 0,
+            height: data['height'] ?? 0,
+            imageurl: getProductImageUrl(
+                    data['imagesUrl'], data['imgPreviewFilename']) ??
+                "",
+            imagepreviewfilename: data['imgPreviewFilename'] ?? "",
+            issale: data['isSale'] ?? false,
+            modelurl: data['modelUrl'] ?? "",
+            review: review,
+            stockwithvariant: stockwithvariant,
+          ),
         );
       }
       // print("Furni: ${furnitures.length}");
@@ -531,8 +645,33 @@ class FirestoreService {
           Map<String, dynamic> data =
               furnituredoc.data() as Map<String, dynamic>;
 
+          List<Review> review = [];
+          List<Stock> stockwithvariant = [];
+
+          QuerySnapshot snapshotReviews = await _firestore_db
+              .collection("furnitures")
+              .doc(data['id'])
+              .collection("reviews")
+              .get();
+
+          for (var reviewdoc in snapshotReviews.docs) {
+            Map<String, dynamic> data =
+                furnituredoc.data() as Map<String, dynamic>;
+
+            review.add(
+              Review(
+                shopperid: "shopperid",
+                description: "description",
+                rating: 0,
+                title: "title",
+                date: DateTime.now(),
+              ),
+            );
+          }
+
           wishlists.add(
             Furniture(
+              productid: data['id'] ?? "",
               sellerid: data["ownerId"] ?? "",
               name: data["name"] ?? "",
               description: data["description"] ?? "",
@@ -550,6 +689,8 @@ class FirestoreService {
               imagepreviewfilename: data["imgPreviewFilename"] ?? "",
               issale: data["isSale"],
               modelurl: data["modelUrl"] ?? "",
+              review: review,
+              stockwithvariant: stockwithvariant,
             ),
           );
         }
@@ -566,9 +707,33 @@ class FirestoreService {
               furnituredoc.data() as Map<String, dynamic>;
 
           // print("Cartss: ${data}");
+          List<Review> review = [];
+          List<Stock> stockwithvariant = [];
+
+          QuerySnapshot snapshotReviews = await _firestore_db
+              .collection("furnitures")
+              .doc(data['id'])
+              .collection("reviews")
+              .get();
+
+          for (var reviewdoc in snapshotReviews.docs) {
+            Map<String, dynamic> data =
+                furnituredoc.data() as Map<String, dynamic>;
+
+            review.add(
+              Review(
+                shopperid: "shopperid",
+                description: "description",
+                rating: 0,
+                title: "title",
+                date: DateTime.now(),
+              ),
+            );
+          }
 
           cartitems.add(
             Furniture(
+              productid: data['id'] ?? "",
               sellerid: data["ownerId"] ?? "",
               name: data["name"] ?? "",
               description: data["description"] ?? "",
@@ -586,6 +751,8 @@ class FirestoreService {
               imagepreviewfilename: data["imgPreviewFilename"] ?? "",
               issale: data["isSale"],
               modelurl: data["modelUrl"] ?? "",
+              review: review,
+              stockwithvariant: stockwithvariant,
             ),
           );
         }
@@ -698,13 +865,14 @@ class FirestoreService {
     }
 
     MonthlyReport report = MonthlyReport(
-        id: " ",
-        newusers: newusers,
-        currentusers: existingusers,
-        monthlyrevenue: revenue,
-        monthlyorders: monthlyorders,
-        month: month,
-        year: year);
+      id: " ",
+      newusers: newusers,
+      currentusers: existingusers,
+      monthlyrevenue: revenue,
+      monthlyorders: monthlyorders,
+      month: month,
+      year: year,
+    );
 
     return report;
   }

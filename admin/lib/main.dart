@@ -1,3 +1,4 @@
+import 'package:admin/screens/customers/viewProduct.dart';
 import 'package:admin/screens/menu.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -34,8 +35,8 @@ class _MainState extends State<Main> {
             ),
       ),
       home: Scaffold(
-        // body: ViewShopperProfile(
-        //   id: "PN4ftzuqJgV3Vd0qX1COByRZpbL2",
+        // body: ViewProductDetailsModal(
+        //   productid: "kWNyAinXBaxYN5cLVKDS",
         // ),
         body: MenuScreen(
           uid: "qLpxJlrrP0eK7Z1jVsGAHKWPYL73",
