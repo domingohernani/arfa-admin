@@ -318,13 +318,13 @@ class _MenuScreenState extends State<MenuScreen> {
                           ),
                         )),
                   ),
-                  SideMenuItem(
-                    title: 'Requests',
-                    onTap: (index, _) {
-                      sideMenu.changePage(index);
-                    },
-                    icon: const Icon(Icons.download),
-                  ),
+                  // SideMenuItem(
+                  //   title: 'Requests',
+                  //   onTap: (index, _) {
+                  //     sideMenu.changePage(index);
+                  //   },
+                  //   icon: const Icon(Icons.download),
+                  // ),
 
                   // SideMenuItem(
                   //   onTap:(index, _){
@@ -355,7 +355,7 @@ class _MenuScreenState extends State<MenuScreen> {
                     SellersView(),
                     ShoppersView(),
                     ReportsView(),
-                    RequestsView(),
+                    // RequestsView(),
 
                     // Container(
                     //   color: Colors.white,

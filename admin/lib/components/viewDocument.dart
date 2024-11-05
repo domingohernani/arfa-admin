@@ -1,6 +1,7 @@
 import 'package:admin/themes/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ViewDocumentModal extends StatefulWidget {
   final String? idurl, permiturl;
@@ -14,6 +15,21 @@ class _ViewDocumentModalState extends State<ViewDocumentModal> {
   final GlobalKey<SfPdfViewerState> _idpdfViewerKey = GlobalKey();
   final GlobalKey<SfPdfViewerState> _permitpdfViewerKey = GlobalKey();
   bool _isLoading = true;
+
+  Future<void> _openPdfInBrowser(String url) async {
+    try {
+      // Check if the URL can be launched
+      if (await canLaunch(url)) {
+        await launch(
+          url,
+        );
+      } else {
+        throw 'Could not launch $url';
+      }
+    } catch (e) {
+      print("Error opening PDF: $e");
+    }
+  }
 
   @override
   void initState() {
@@ -41,7 +57,8 @@ class _ViewDocumentModalState extends State<ViewDocumentModal> {
               Text(
                 "UPLOADED DOCUMENTS",
                 style: TextStyle(
-                  fontSize: 20,
+                  fontSize: 22,
+                  color: primary,
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -50,30 +67,83 @@ class _ViewDocumentModalState extends State<ViewDocumentModal> {
                 decoration: BoxDecoration(
                   border: Border.all(
                     color: primary,
+                    width: 3,
                   ),
                   borderRadius: BorderRadius.circular(5),
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Container(
-                      width: 120,
-                      alignment: Alignment.center,
-                      padding: EdgeInsets.all(5),
-                      decoration: BoxDecoration(
-                        color: Colors.green,
-                        borderRadius: BorderRadius.only(
-                          bottomRight: Radius.circular(5),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Container(
+                          width: 120,
+                          alignment: Alignment.center,
+                          padding: EdgeInsets.all(5),
+                          decoration: BoxDecoration(
+                            color: Colors.green,
+                            borderRadius: BorderRadius.only(
+                              bottomRight: Radius.circular(5),
+                            ),
+                          ),
+                          child: Text(
+                            "Valid ID",
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                              color: textWhite,
+                            ),
+                          ),
                         ),
-                      ),
-                      child: Text(
-                        "Valid ID",
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                          color: textWhite,
+                        Container(
+                          height: 30,
+                          alignment: Alignment.center,
+                          padding: EdgeInsets.all(5),
+                          decoration: BoxDecoration(
+                            border: Border(
+                                top: BorderSide(
+                                  color: primary,
+                                ),
+                                left: BorderSide(
+                                  color: primary,
+                                ),
+                                bottom: BorderSide(
+                                  color: primary,
+                                )),
+                            borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(5),
+                              bottomLeft: Radius.circular(5),
+                            ),
+                          ),
+                          child: TextButton(
+                            onPressed: () {
+                              _openPdfInBrowser(widget.idurl.toString());
+                            },
+                            child: Row(
+                              children: [
+                                Icon(
+                                  Icons.open_in_browser_rounded,
+                                  size: 20,
+                                  color: primary,
+                                ),
+                                SizedBox(
+                                  width: 3,
+                                ),
+                                Text(
+                                  "Open in Browser",
+                                  style: TextStyle(
+                                    color: primary,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            style: TextButton.styleFrom(
+                              shape: RoundedRectangleBorder(),
+                            ),
+                          ),
                         ),
-                      ),
+                      ],
                     ),
                     SizedBox(
                       height: 10,
@@ -86,17 +156,12 @@ class _ViewDocumentModalState extends State<ViewDocumentModal> {
                           SfPdfViewer.network(
                             widget.idurl.toString(),
                             key: _idpdfViewerKey,
-                            initialZoomLevel: 2,
                             canShowScrollHead: true,
                             canShowPageLoadingIndicator: true,
                             scrollDirection: PdfScrollDirection.vertical,
                             onDocumentLoaded: (details) {
                               setState(() =>
                                   _isLoading = false); // Hide loader on load
-                            },
-                            onDocumentLoadFailed: (details) {
-                              print(
-                                  "PDF failed to load: ${details.description}");
                             },
                           ),
                           if (_isLoading)
@@ -117,30 +182,83 @@ class _ViewDocumentModalState extends State<ViewDocumentModal> {
                 decoration: BoxDecoration(
                   border: Border.all(
                     color: primary,
+                    width: 3,
                   ),
                   borderRadius: BorderRadius.circular(5),
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Container(
-                      width: 200,
-                      alignment: Alignment.center,
-                      padding: EdgeInsets.all(5),
-                      decoration: BoxDecoration(
-                        color: Colors.green,
-                        borderRadius: BorderRadius.only(
-                          bottomRight: Radius.circular(5),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Container(
+                          width: 200,
+                          alignment: Alignment.center,
+                          padding: EdgeInsets.all(5),
+                          decoration: BoxDecoration(
+                            color: Colors.green,
+                            borderRadius: BorderRadius.only(
+                              bottomRight: Radius.circular(5),
+                            ),
+                          ),
+                          child: Text(
+                            "Business Permit",
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                              color: textWhite,
+                            ),
+                          ),
                         ),
-                      ),
-                      child: Text(
-                        "Business Permit",
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                          color: textWhite,
+                        Container(
+                          height: 30,
+                          alignment: Alignment.center,
+                          padding: EdgeInsets.all(5),
+                          decoration: BoxDecoration(
+                            border: Border(
+                                top: BorderSide(
+                                  color: primary,
+                                ),
+                                left: BorderSide(
+                                  color: primary,
+                                ),
+                                bottom: BorderSide(
+                                  color: primary,
+                                )),
+                            borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(5),
+                              bottomLeft: Radius.circular(5),
+                            ),
+                          ),
+                          child: TextButton(
+                            onPressed: () {
+                              _openPdfInBrowser(widget.permiturl.toString());
+                            },
+                            child: Row(
+                              children: [
+                                Icon(
+                                  Icons.open_in_browser_rounded,
+                                  size: 20,
+                                  color: primary,
+                                ),
+                                SizedBox(
+                                  width: 3,
+                                ),
+                                Text(
+                                  "Open in Browser",
+                                  style: TextStyle(
+                                    color: primary,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            style: TextButton.styleFrom(
+                              shape: RoundedRectangleBorder(),
+                            ),
+                          ),
                         ),
-                      ),
+                      ],
                     ),
                     SizedBox(
                       height: 10,
@@ -153,17 +271,12 @@ class _ViewDocumentModalState extends State<ViewDocumentModal> {
                           SfPdfViewer.network(
                             widget.permiturl.toString(),
                             key: _permitpdfViewerKey,
-                            initialZoomLevel: 2,
                             canShowScrollHead: true,
                             canShowPageLoadingIndicator: true,
                             scrollDirection: PdfScrollDirection.vertical,
                             onDocumentLoaded: (details) {
                               setState(() =>
                                   _isLoading = false); // Hide loader on load
-                            },
-                            onDocumentLoadFailed: (details) {
-                              print(
-                                  "PDF failed to load: ${details.description}");
                             },
                           ),
                           if (_isLoading)
