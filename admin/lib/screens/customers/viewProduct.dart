@@ -1,4 +1,5 @@
 import 'package:admin/models/furnituresData.dart';
+import 'package:admin/models/productData.dart';
 import 'package:admin/services/firestoreService.dart';
 import 'package:admin/themes/theme.dart';
 import 'package:flutter/material.dart';
@@ -86,6 +87,9 @@ class _ViewProductDetailsModalState extends State<ViewProductDetailsModal> {
                   }
 
                   final furniture = snapshot.data!;
+
+                  Stock stock = furniture.stockwithvariant.first;
+
                   return Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -148,8 +152,6 @@ class _ViewProductDetailsModalState extends State<ViewProductDetailsModal> {
                                 textAlign: TextAlign.justify,
                               ),
                               const SizedBox(height: 15),
-
-                              // Price Section
                               Container(
                                 padding: EdgeInsets.all(10),
                                 decoration: BoxDecoration(
@@ -190,6 +192,27 @@ class _ViewProductDetailsModalState extends State<ViewProductDetailsModal> {
                                         ),
                                       ),
                               ),
+                              const SizedBox(height: 15),
+                              Row(
+                                children: [
+                                  Text(
+                                    "Stocks: ",
+                                    style: TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    width: 10,
+                                  ),
+                                  Text(
+                                    "${stock.latestQuantity}",
+                                    style: TextStyle(fontSize: 20),
+                                    textAlign: TextAlign.justify,
+                                  ),
+                                ],
+                              ),
+
                               const SizedBox(height: 25),
                               Text(
                                 "Reviews: ",

@@ -221,6 +221,7 @@ class FirestoreService {
   Future<Furniture?> getSingleFurnituresData(String prodid) async {
     Furniture? furniture;
     List<Review> review = [];
+    List<Stock> stockwithvariant = [];
 
     try {
       QuerySnapshot snapshotFurnitures = await _firestore_db
@@ -230,7 +231,6 @@ class FirestoreService {
 
       for (var furnituredoc in snapshotFurnitures.docs) {
         Map<String, dynamic> data = furnituredoc.data() as Map<String, dynamic>;
-        List<Stock> stockwithvariant = [];
 
         QuerySnapshot snapshotReviews = await _firestore_db
             .collection("furnitures")
@@ -257,7 +257,29 @@ class FirestoreService {
           );
         }
 
-        print("Len: ${review}");
+        QuerySnapshot snapshotStocks = await _firestore_db
+            .collection("furnitures")
+            .doc(data['id'])
+            .collection("stocks")
+            .orderBy("updatedAt", descending: true) // Sort by last updated
+            .limit(1) // Get only the most recent document
+            .get();
+
+        for (var stocksdoc in snapshotStocks.docs) {
+          Map<String, dynamic> stocksdata =
+              stocksdoc.data() as Map<String, dynamic>;
+
+          stockwithvariant.add(
+            Stock(
+                id: data['id'] ?? "",
+                variant: stocksdata['variant'] ?? "",
+                previousQuantity: stocksdata['oldQuantity'] ?? 0,
+                addedQuantity: stocksdata['quantityAdded'] ?? 0,
+                latestQuantity: stocksdata['newQuantity'] ?? 0,
+                updatedAt: stocksdata['updatedAt'] ??
+                    Timestamp.fromDate(DateTime(1970, 1, 1))),
+          );
+        }
 
         furniture = Furniture(
           productid: data['id'] ?? "",
