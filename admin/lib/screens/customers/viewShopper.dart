@@ -1,6 +1,7 @@
 import 'package:admin/models/furnituresData.dart';
 import 'package:admin/models/singleShopData.dart';
 import 'package:admin/models/singleUser.dart';
+import 'package:admin/screens/customers/viewProduct.dart';
 import 'package:admin/services/firestoreService.dart';
 import 'package:admin/themes/theme.dart';
 import 'package:admin/utilities/logoUrl.dart';
@@ -411,86 +412,103 @@ class _ViewShopperProfileState extends State<ViewShopperProfile> {
                                     itemBuilder: (context, index) {
                                       var wishlist = shopper.wishlists[index];
 
-                                      return Container(
-                                        height: 400,
-                                        child: Card(
-                                          elevation: 4,
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(16),
-                                          ),
-                                          child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              // Product Image
-                                              ClipRRect(
-                                                borderRadius:
-                                                    BorderRadius.vertical(
-                                                        top: Radius.circular(
-                                                            16)),
-                                                child: Image.network(
-                                                  wishlist
-                                                      .imageurl, // Replace with your image URL
-                                                  height: 120,
-                                                  width: double.infinity,
-                                                  fit: BoxFit.cover,
+                                      return GestureDetector(
+                                        onTap: () async {
+                                          showDialog(
+                                            context: context,
+                                            builder: (context) {
+                                              return ViewProductDetailsModal(
+                                                  productid:
+                                                      wishlist.productid);
+                                            },
+                                          );
+                                        },
+                                        child: Container(
+                                          height: 400,
+                                          child: Card(
+                                            elevation: 4,
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(16),
+                                            ),
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                // Product Image
+                                                ClipRRect(
+                                                  borderRadius:
+                                                      BorderRadius.vertical(
+                                                          top: Radius.circular(
+                                                              16)),
+                                                  child: Image.network(
+                                                    wishlist
+                                                        .imageurl, // Replace with your image URL
+                                                    height: 120,
+                                                    width: double.infinity,
+                                                    fit: BoxFit.cover,
+                                                  ),
                                                 ),
-                                              ),
-                                              Padding(
-                                                padding:
-                                                    const EdgeInsets.all(12.0),
-                                                child: Column(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: [
-                                                    Row(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .spaceBetween,
-                                                      children: [
-                                                        Text(
-                                                          '${wishlist.name}',
-                                                          maxLines: 2,
-                                                          overflow: TextOverflow
-                                                              .ellipsis,
-                                                          style: TextStyle(
-                                                            fontSize: 12,
-                                                            fontWeight:
-                                                                FontWeight.bold,
+                                                Padding(
+                                                  padding: const EdgeInsets.all(
+                                                      12.0),
+                                                  child: Column(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    children: [
+                                                      Row(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .spaceBetween,
+                                                        children: [
+                                                          Text(
+                                                            '${wishlist.name}',
+                                                            maxLines: 2,
+                                                            overflow:
+                                                                TextOverflow
+                                                                    .ellipsis,
+                                                            style: TextStyle(
+                                                              fontSize: 12,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold,
+                                                            ),
                                                           ),
-                                                        ),
-                                                        // Text(
-                                                        //   'Rating',
-                                                        //   style: TextStyle(
-                                                        //     fontSize: 14,
-                                                        //     color: Colors
-                                                        //         .grey[600],
-                                                        //   ),
-                                                        // ),
-                                                      ],
-                                                    ),
-                                                    SizedBox(height: 4),
-                                                    Row(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .spaceBetween,
-                                                      children: [
-                                                        Text(
-                                                          '₱ ${wishlist.price}',
-                                                          style: TextStyle(
-                                                            fontSize: 16,
-                                                            fontWeight:
-                                                                FontWeight.bold,
-                                                            color: Colors.black,
+                                                          // Text(
+                                                          //   'Rating',
+                                                          //   style: TextStyle(
+                                                          //     fontSize: 14,
+                                                          //     color: Colors
+                                                          //         .grey[600],
+                                                          //   ),
+                                                          // ),
+                                                        ],
+                                                      ),
+                                                      SizedBox(height: 4),
+                                                      Row(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .spaceBetween,
+                                                        children: [
+                                                          Text(
+                                                            '₱ ${wishlist.price}',
+                                                            style: TextStyle(
+                                                              fontSize: 16,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold,
+                                                              color:
+                                                                  Colors.black,
+                                                            ),
                                                           ),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ],
+                                                        ],
+                                                      ),
+                                                    ],
+                                                  ),
                                                 ),
-                                              ),
-                                            ],
+                                              ],
+                                            ),
                                           ),
                                         ),
                                       );
@@ -521,7 +539,7 @@ class _ViewShopperProfileState extends State<ViewShopperProfile> {
                       ),
                     ),
                     Container(
-                      padding: EdgeInsets.all(25),
+                      padding: EdgeInsets.symmetric(horizontal: 25),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -556,85 +574,101 @@ class _ViewShopperProfileState extends State<ViewShopperProfile> {
                                     itemBuilder: (context, index) {
                                       var cart = shopper.cartitems[index];
 
-                                      return Container(
-                                        height: 200,
-                                        child: Card(
-                                          elevation: 4,
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(16),
-                                          ),
-                                          child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              // Product Image
-                                              ClipRRect(
-                                                borderRadius:
-                                                    BorderRadius.vertical(
-                                                        top: Radius.circular(
-                                                            16)),
-                                                child: Image.network(
-                                                  cart.imageurl, // Replace with your image URL
-                                                  height: 120,
-                                                  width: double.infinity,
-                                                  fit: BoxFit.cover,
+                                      return GestureDetector(
+                                        onTap: () async {
+                                          showDialog(
+                                            context: context,
+                                            builder: (context) {
+                                              return ViewProductDetailsModal(
+                                                  productid: cart.productid);
+                                            },
+                                          );
+                                        },
+                                        child: Container(
+                                          height: 200,
+                                          child: Card(
+                                            elevation: 4,
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(16),
+                                            ),
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                // Product Image
+                                                ClipRRect(
+                                                  borderRadius:
+                                                      BorderRadius.vertical(
+                                                          top: Radius.circular(
+                                                              16)),
+                                                  child: Image.network(
+                                                    cart.imageurl, // Replace with your image URL
+                                                    height: 120,
+                                                    width: double.infinity,
+                                                    fit: BoxFit.cover,
+                                                  ),
                                                 ),
-                                              ),
-                                              Padding(
-                                                padding:
-                                                    const EdgeInsets.all(12.0),
-                                                child: Column(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: [
-                                                    Row(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .spaceBetween,
-                                                      children: [
-                                                        Text(
-                                                          '${cart.name}',
-                                                          maxLines: 2,
-                                                          overflow: TextOverflow
-                                                              .ellipsis,
-                                                          style: TextStyle(
-                                                            fontSize: 12,
-                                                            fontWeight:
-                                                                FontWeight.bold,
+                                                Padding(
+                                                  padding: const EdgeInsets.all(
+                                                      12.0),
+                                                  child: Column(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    children: [
+                                                      Row(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .spaceBetween,
+                                                        children: [
+                                                          Text(
+                                                            '${cart.name}',
+                                                            maxLines: 2,
+                                                            overflow:
+                                                                TextOverflow
+                                                                    .ellipsis,
+                                                            style: TextStyle(
+                                                              fontSize: 12,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold,
+                                                            ),
                                                           ),
-                                                        ),
-                                                        // Text(
-                                                        //   'Rating',
-                                                        //   style: TextStyle(
-                                                        //     fontSize: 14,
-                                                        //     color: Colors
-                                                        //         .grey[600],
-                                                        //   ),
-                                                        // ),
-                                                      ],
-                                                    ),
-                                                    SizedBox(height: 4),
-                                                    Row(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .spaceBetween,
-                                                      children: [
-                                                        Text(
-                                                          '₱ ${cart.price}',
-                                                          style: TextStyle(
-                                                            fontSize: 16,
-                                                            fontWeight:
-                                                                FontWeight.bold,
-                                                            color: Colors.black,
+                                                          // Text(
+                                                          //   'Rating',
+                                                          //   style: TextStyle(
+                                                          //     fontSize: 14,
+                                                          //     color: Colors
+                                                          //         .grey[600],
+                                                          //   ),
+                                                          // ),
+                                                        ],
+                                                      ),
+                                                      SizedBox(height: 4),
+                                                      Row(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .spaceBetween,
+                                                        children: [
+                                                          Text(
+                                                            '₱ ${cart.price}',
+                                                            style: TextStyle(
+                                                              fontSize: 16,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold,
+                                                              color:
+                                                                  Colors.black,
+                                                            ),
                                                           ),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ],
+                                                        ],
+                                                      ),
+                                                    ],
+                                                  ),
                                                 ),
-                                              ),
-                                            ],
+                                              ],
+                                            ),
                                           ),
                                         ),
                                       );

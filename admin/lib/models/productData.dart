@@ -3,7 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Stock {
   final String id;
-  final int variant;
+  final String variant;
   final int previousQuantity;
   final int addedQuantity;
   final int latestQuantity;

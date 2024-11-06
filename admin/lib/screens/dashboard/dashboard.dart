@@ -8,6 +8,7 @@ import 'package:admin/models/shopsData.dart';
 import 'package:admin/screens/customers/viewStore.dart';
 import 'package:admin/services/firestoreService.dart';
 import 'package:admin/themes/theme.dart';
+import 'package:admin/utilities/exportCSV.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'package:flutter/material.dart';
@@ -26,51 +27,9 @@ class _DashboardViewState extends State<DashboardView> {
 
   MonthlyReport? _report;
 
-  void fetchShopInfo() async {
-    final fs = FirestoreService();
-
-    fs.getShoppersData().then(
-          (value) {},
-        );
-
-    fs.getFurnituresData().then(
-      (value) {
-        // print("Furnitures length: ${value.length}");
-      },
-    );
-
-    fs.getSellersData().then(
-      (value) {
-        // print("Sellers length: ${value.length}");
-      },
-    );
-
-    fs.getShopData();
-
-    fs.getOrdersData().then(
-      (value) {
-        // print("Orders length: ${value.length}");
-      },
-    );
-
-    fs.getMonthlyReport().then(
-          (value) {},
-        );
-
-    // DateTime now = DateTime.now();
-    // DateTime firstSecondNextMonth = DateTime(now.year, now.month + 1, 1);
-    // DateTime lastSecondThisMonth =
-    //     firstSecondNextMonth.subtract(Duration(seconds: 1));
-
-    // if (now.isAtSameMomentAs(lastSecondThisMonth)) {
-    //   fs.setMonthlyReport();
-    // }
-  }
-
   @override
   void initState() {
     super.initState();
-    fetchShopInfo();
   }
 
   @override

@@ -1,8 +1,13 @@
+import 'dart:io';
+
 import 'package:admin/components/bargraph.dart';
 import 'package:admin/components/linegraph.dart';
 import 'package:admin/themes/theme.dart';
+import 'package:admin/utilities/exportCSV.dart';
 
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:open_file/open_file.dart';
 
 class ReportsView extends StatefulWidget {
   const ReportsView({super.key});
@@ -42,7 +47,7 @@ class _ReportsViewState extends State<ReportsView> {
                   ),
                 ),
                 OutlinedButton(
-                  onPressed: () {},
+                  onPressed: () => exportReportCSV(context),
                   child: const Row(
                     children: [
                       Icon(
