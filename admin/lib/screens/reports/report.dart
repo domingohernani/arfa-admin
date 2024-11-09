@@ -2,6 +2,9 @@ import 'dart:io';
 
 import 'package:admin/components/bargraph.dart';
 import 'package:admin/components/linegraph.dart';
+import 'package:admin/models/shopsData.dart';
+import 'package:admin/screens/customers/viewStore.dart';
+import 'package:admin/services/firestoreService.dart';
 import 'package:admin/themes/theme.dart';
 import 'package:admin/utilities/exportCSV.dart';
 
@@ -19,6 +22,7 @@ class ReportsView extends StatefulWidget {
 class _ReportsViewState extends State<ReportsView> {
   String? selectedValue;
   List<String> items = ['Option 1', 'Option 2', 'Option 3', 'Option 4'];
+  FirestoreService _fs = FirestoreService();
 
   @override
   Widget build(BuildContext context) {
@@ -196,26 +200,56 @@ class _ReportsViewState extends State<ReportsView> {
             SizedBox(
               height: 20,
             ),
-            const Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                _DataCard(
-                  title: "110",
-                  subTitle: "Existing User",
-                  cardIcon: Icons.groups_2_outlined,
-                ),
-                _DataCard(
-                  title: "39",
-                  subTitle: "New Users",
-                  cardIcon: Icons.person_add_alt_1_outlined,
-                ),
-                _DataCard(
-                  title: "1,100",
-                  subTitle: "Orders",
-                  cardIcon: Icons.shopping_bag_outlined,
-                ),
-              ],
+            FutureBuilder(
+              future: _fs.getMonthlyReport(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Center(child: CircularProgressIndicator());
+                } else if (snapshot.hasError) {
+                  return Center(child: Text('Error: ${snapshot.error}'));
+                } else if (!snapshot.hasData) {
+                  return Center(child: Text('No sellers found.'));
+                }
+
+                var reports = snapshot.data!;
+
+                return Container(
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      _DataCard(
+                        title: "₱ ${reports.monthlyrevenue.toStringAsFixed(2)}",
+                        subTitle: "Monthly Revenue",
+                        percentage: "98.00",
+                        iconData: Icons.arrow_drop_up_outlined,
+                        cardIcon: Icons.attach_money_outlined,
+                      ),
+                      _DataCard(
+                        title: "${reports.monthlyorders}",
+                        subTitle: "Orders",
+                        percentage: "98.00",
+                        iconData: Icons.arrow_drop_up_outlined,
+                        cardIcon: Icons.shopping_bag_outlined,
+                      ),
+                      _DataCard(
+                        title: "${reports.newusers}",
+                        subTitle: "New Users",
+                        percentage: "98.00",
+                        iconData: Icons.arrow_drop_up_outlined,
+                        cardIcon: Icons.person_add_alt_1_outlined,
+                      ),
+                      _DataCard(
+                        title: "${reports.currentusers}",
+                        subTitle: "Existing Users",
+                        percentage: "98.00",
+                        iconData: Icons.arrow_drop_up_outlined,
+                        cardIcon: Icons.groups_2_outlined,
+                      ),
+                    ],
+                  ),
+                );
+              },
             ),
             const SizedBox(
               height: 20,
@@ -310,85 +344,165 @@ class _ReportsViewState extends State<ReportsView> {
             SizedBox(
               height: 20,
             ),
-            Container(
-              padding: const EdgeInsets.only(
-                top: 10,
-                left: 20,
-                bottom: 10,
-                right: 25,
-              ),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(10),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.2),
-                    spreadRadius: 1,
-                    blurRadius: 5,
-                    offset: const Offset(2, 4),
+            FutureBuilder<List<Shop>>(
+              future: _fs.getShopData(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Center(child: CircularProgressIndicator());
+                } else if (snapshot.hasError) {
+                  return Center(child: Text('Error: ${snapshot.error}'));
+                } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                  return Center(child: Text('No sellers found.'));
+                }
+
+                List<Shop> shops = snapshot.data!;
+
+                return Container(
+                  width: double.infinity,
+                  padding: EdgeInsets.symmetric(
+                    vertical: paddingView_vertical,
+                    horizontal: paddingView_horizontal,
                   ),
-                ],
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text(
-                    "Top Seller by Units Sold",
-                    style: TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.w500,
-                    ),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(10),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.2),
+                        spreadRadius: 1,
+                        blurRadius: 5,
+                        offset: const Offset(2, 4),
+                      ),
+                    ],
                   ),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  Container(
-                    padding: EdgeInsets.symmetric(horizontal: 50),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text("Name"),
-                        Text("Revenue"),
-                        Text("Units Sold"),
-                      ],
-                    ),
-                  ),
-                  Divider(
-                    thickness: 1,
-                    color: Colors.black,
-                  ),
-                  Container(
-                    width: width,
-                    height: 400,
-                    child: ListView.builder(
-                      itemCount: 15,
-                      itemBuilder: (context, index) {
-                        return Column(
-                          children: [
-                            Container(
-                              padding: EdgeInsets.symmetric(horizontal: 50),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text("Ryan Shop"),
-                                  Text("P 100,000.00"),
-                                  Text("1,100"),
-                                ],
-                              ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "Top Sellers",
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Table(
+                        border: TableBorder.symmetric(
+                            inside: BorderSide(color: Colors.grey)),
+                        columnWidths: {
+                          0: FlexColumnWidth(),
+                          1: FlexColumnWidth(),
+                          2: FlexColumnWidth(),
+                          3: FixedColumnWidth(100.0),
+                        },
+                        defaultVerticalAlignment:
+                            TableCellVerticalAlignment.middle,
+                        children: [
+                          TableRow(
+                            decoration: BoxDecoration(
+                              color: Colors.grey.shade200,
                             ),
-                            Divider(
-                              color: Colors.grey,
-                              thickness: 0.5,
-                            )
-                          ],
-                        );
-                      },
-                    ),
-                  )
-                ],
-              ),
-            ),
+                            children: [
+                              Center(
+                                  child: Padding(
+                                padding: EdgeInsets.all(12.0),
+                                child: Text("Shop Name",
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.bold)),
+                              )),
+                              Center(
+                                  child: Padding(
+                                padding: EdgeInsets.all(8.0),
+                                child: Text("Revenue",
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.bold)),
+                              )),
+                              // Center(
+                              //     child: Padding(
+                              //   padding: EdgeInsets.all(8.0),
+                              //   child: Text("Total Products",
+                              //       style: TextStyle(fontWeight: FontWeight.bold)),
+                              // )),
+                              Center(
+                                  child: Padding(
+                                padding: EdgeInsets.all(8.0),
+                                child: Text("Products Sold",
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.bold)),
+                              )),
+                              Center(
+                                  child: Padding(
+                                padding: EdgeInsets.all(8.0),
+                                child: Text("Action",
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.bold)),
+                              )),
+                            ],
+                          ),
+                          ...shops.map(
+                            (shop) {
+                              return TableRow(
+                                children: [
+                                  TableCell(
+                                      child: Padding(
+                                    padding: EdgeInsets.symmetric(
+                                        vertical: 4, horizontal: 10),
+                                    child: Text("${shop.shopname}"),
+                                  )),
+                                  TableCell(
+                                      child: Padding(
+                                    padding: EdgeInsets.symmetric(
+                                        vertical: 4, horizontal: 10),
+                                    child: Text(
+                                        "${shop.revenue}"), // Replace with actual revenue data if available
+                                  )),
+                                  // TableCell(
+                                  //     child: Padding(
+                                  //   padding: EdgeInsets.all(8.0),
+                                  //   child: Text(
+                                  //       "${shop.revenue}"), // Replace with actual revenue data if available
+                                  // )),
+                                  TableCell(
+                                      child: Padding(
+                                    padding: EdgeInsets.symmetric(
+                                        vertical: 4, horizontal: 10),
+                                    child: Text(
+                                        "${shop.orders}"), // Replace with actual products sold data if available
+                                  )),
+                                  TableCell(
+                                    child: Container(
+                                      width: 50,
+                                      padding: EdgeInsets.symmetric(
+                                          vertical: 4, horizontal: 10),
+                                      child: IconButton(
+                                        onPressed: () async {
+                                          await showDialog(
+                                            context: context,
+                                            builder: (context) {
+                                              return ViewStoreProile(
+                                                id: shop.shopid,
+                                              );
+                                            },
+                                          );
+                                        },
+                                        icon: Icon(
+                                            Icons.arrow_right_alt_outlined),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              );
+                            },
+                          ).toList(),
+                        ],
+                      ),
+                    ],
+                  ),
+                );
+              },
+            )
           ],
         ),
       ),
@@ -401,17 +515,25 @@ class _DataCard extends StatelessWidget {
       {super.key,
       required this.title,
       required this.subTitle,
+      required this.percentage,
+      required this.iconData,
       required this.cardIcon});
 
   final String title;
   final String subTitle;
+  final String percentage;
+  final IconData iconData;
   final IconData cardIcon;
 
   @override
   Widget build(BuildContext context) {
+    var height = MediaQuery.of(context).size.height;
+    var width =
+        MediaQuery.of(context).size.width - sidebarSize - paddingHorizontal;
     return Container(
       height: 90,
-      padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 40),
+      width: width * 0.24,
+      padding: const EdgeInsets.symmetric(horizontal: 10),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(8),
@@ -427,24 +549,10 @@ class _DataCard extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          Icon(
-            cardIcon,
-            color: primaryBg,
-            size: 40,
-          ),
-          const SizedBox(
-            width: 30,
-          ),
           Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                subTitle,
-                style: const TextStyle(
-                  fontSize: 13,
-                ),
-              ),
               Text(
                 title,
                 style: const TextStyle(
@@ -452,7 +560,37 @@ class _DataCard extends StatelessWidget {
                   fontSize: 17,
                 ),
               ),
+              Text(
+                subTitle,
+                style: const TextStyle(
+                  fontSize: 13,
+                ),
+              ),
+              Row(
+                children: [
+                  Text(
+                    "+ $percentage",
+                    style: const TextStyle(
+                      fontWeight: FontWeight.w500,
+                      fontSize: 15,
+                      color: Colors.green,
+                    ),
+                  ),
+                  Icon(
+                    iconData,
+                    color: Colors.green,
+                  )
+                ],
+              ),
             ],
+          ),
+          const SizedBox(
+            width: 30,
+          ),
+          Icon(
+            cardIcon,
+            color: primaryBg,
+            size: 40,
           ),
         ],
       ),
