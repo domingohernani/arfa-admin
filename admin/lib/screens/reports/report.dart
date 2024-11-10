@@ -1,7 +1,8 @@
 import 'dart:io';
 
 import 'package:admin/components/bargraph.dart';
-import 'package:admin/components/linegraph.dart';
+import 'package:admin/components/linegraphOrders.dart';
+import 'package:admin/components/linegraphUsers.dart';
 import 'package:admin/models/shopsData.dart';
 import 'package:admin/screens/customers/viewStore.dart';
 import 'package:admin/services/firestoreService.dart';
@@ -21,7 +22,20 @@ class ReportsView extends StatefulWidget {
 
 class _ReportsViewState extends State<ReportsView> {
   String? selectedValue;
-  List<String> items = ['Option 1', 'Option 2', 'Option 3', 'Option 4'];
+  List<String> items = [
+    'January',
+    'February',
+    'March',
+    'April',
+    'May',
+    'June',
+    'July',
+    'August',
+    'September',
+    'October',
+    'November',
+    'December'
+  ];
   FirestoreService _fs = FirestoreService();
 
   @override
@@ -192,7 +206,7 @@ class _ReportsViewState extends State<ReportsView> {
                   Container(
                     height: 350,
                     width: width,
-                    child: LineGraph(),
+                    child: LineGraphUsers(),
                   ),
                 ],
               ),
