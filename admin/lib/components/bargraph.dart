@@ -202,13 +202,7 @@ class BarGraph extends StatelessWidget {
                   showTitles: true,
                   reservedSize: 30,
                   getTitlesWidget: (value, meta) {
-                    final weeks = [
-                      'Week 1',
-                      'Week 2',
-                      'Week 3',
-                      'Week 4',
-                      'Week 5'
-                    ];
+                    final weeks = ['W1', 'W2', 'W3', 'W4', 'W5'];
                     return SideTitleWidget(
                       axisSide: meta.axisSide,
                       child: Text(
@@ -256,7 +250,7 @@ class BarGraph extends StatelessWidget {
   List<int> calculateWeeklySales(List<OrderItem> salesData) {
     List<int> weeklySales = List.filled(5, 0);
     DateTime now = DateTime.now();
-    int currentMonth = now.month - 1;
+    int currentMonth = now.month;
     int currentYear = now.year;
 
     for (var sale in salesData) {
