@@ -312,7 +312,6 @@ class FirestoreService {
 
   Future<List<Shop>> getShopData() async {
     List<Shop> shop = [];
-
     int count = 0;
 
     try {
@@ -341,15 +340,11 @@ class FirestoreService {
               orderdata['orderStatus'] == "Delivered") {
             int priceSubtotal = 0;
 
-            // print("${count++} ${shopdata['userId']} : ${orderdata['shopId']}");
             for (var item in orderItems) {
-              // int quantity = 0;
               int totalItemPrice = item['totalItemPrice'];
               int quantity = item['quantity'];
               totalproductsold += quantity;
               priceSubtotal += totalItemPrice;
-
-              // print("Product: ${item['name']}, Quantity : ${item['quantity']}");
             }
             totalproductprice += priceSubtotal;
           }
@@ -364,12 +359,14 @@ class FirestoreService {
             shopname: shopname,
             revenue: revenue,
             orders: totalproductsold));
-        // print(
-        //     "ID:${shopid}, Shop:${shopname}, total:${totalproductsold}, revenue:${revenue.toStringAsFixed(2)}");
       }
+
+      // Sort the shops based on quantity sold (in descending order)
+      shop.sort((a, b) => b.orders.compareTo(a.orders));
     } catch (error) {
       print(error);
     }
+
     return shop;
   }
 
@@ -892,11 +889,37 @@ class FirestoreService {
       currentusers: existingusers,
       monthlyrevenue: revenue,
       monthlyorders: monthlyorders,
-      month: month,
+      month: monthToText(month),
       year: year,
     );
 
     return report;
+  }
+
+  Future<List<MonthlyReport>> getListOfReport() async {
+    List<MonthlyReport> monthlyreport = [];
+
+    try {
+      QuerySnapshot snapshotReports =
+          await _firestore_db.collection('reports').get();
+
+      for (var snapshotdoc in snapshotReports.docs) {
+        Map<String, dynamic> data = snapshotdoc.data() as Map<String, dynamic>;
+
+        monthlyreport.add(MonthlyReport(
+            id: data['id'] ?? "",
+            newusers: data['newUsers'] ?? "",
+            currentusers: data['currentUsers'] ?? "",
+            monthlyrevenue: data['monthlyRevenue'] ?? "",
+            monthlyorders: data['monthlyOrders'] ?? "",
+            month: data['month'] ?? "",
+            year: data['year'] ?? ""));
+      }
+    } catch (error) {
+      print(error);
+    }
+
+    return monthlyreport;
   }
 
   void signOut() async {

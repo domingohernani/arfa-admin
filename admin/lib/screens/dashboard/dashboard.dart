@@ -1,5 +1,5 @@
 import 'package:admin/components/bargraph.dart';
-import 'package:admin/components/linegraph.dart';
+import 'package:admin/components/linegraphOrders.dart';
 import 'package:admin/dataInitialization.dart';
 import 'package:admin/models/furnituresData.dart';
 import 'package:admin/models/monthlyData.dart';
@@ -201,14 +201,19 @@ class _DashboardViewState extends State<DashboardView> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       const Text(
-                        "Orders Over Time",
+                        "Orders Every Month",
                         style: TextStyle(
-                          fontSize: 15,
-                          fontWeight: FontWeight.w500,
+                          fontSize: 17,
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
                       SizedBox(
-                        height: 20,
+                        height: 10,
+                      ),
+                      Text(
+                          "This metric shows how many orders are placed each day over a month, helping you see trends in customer demand."),
+                      SizedBox(
+                        height: 30,
                       ),
                       Container(
                         height: 300,
@@ -244,10 +249,15 @@ class _DashboardViewState extends State<DashboardView> {
                       const Text(
                         "Weekly Sales",
                         style: TextStyle(
-                          fontSize: 15,
-                          fontWeight: FontWeight.w500,
+                          fontSize: 17,
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Text(
+                          "This weekly metric shows daily sales trends, helping you identify the busiest days."),
                       SizedBox(
                         height: 20,
                       ),

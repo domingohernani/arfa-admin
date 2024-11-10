@@ -4,7 +4,7 @@ class MonthlyReport {
   final int currentusers;
   final double monthlyrevenue;
   final int monthlyorders;
-  final int month;
+  final String month;
   final int year;
 
   MonthlyReport({
