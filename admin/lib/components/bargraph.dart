@@ -253,6 +253,8 @@ class BarGraph extends StatelessWidget {
     int currentMonth = now.month;
     int currentYear = now.year;
 
+    print(monthToText(currentMonth));
+
     for (var sale in salesData) {
       DateTime saleDate = sale.createdat.toDate();
       int amount = sale.ordertotal;

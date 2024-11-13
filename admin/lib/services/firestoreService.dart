@@ -49,6 +49,7 @@ class FirestoreService {
     Map<String, Map<String, dynamic>> shopsInfo = {};
     Map<String, Map<String, dynamic>> shopOrder = {};
     List shopId = [];
+    int prodSold = 0;
 
     try {
       QuerySnapshot snapshotUsers =
@@ -61,18 +62,41 @@ class FirestoreService {
 
         String sellerId = data['userId'] ?? "";
         shopId.add(data['userId']);
+
+        // print("Name: ${data['name']} , logo:${getLogoUrl(data['logo'])}");
+
         shopsInfo[sellerId] = {
           'name': data['name'] ?? "",
           'validId': data['validId'] ?? "",
           'businessPermit': data['businessPermit'] ?? "",
           'logo': getLogoUrl(data['logo']) ?? "",
         };
-        // print("Name: ${data['name']} , logo:${getLogoUrl(data['logo'])}");
       }
 
       for (var userdoc in snapshotUsers.docs) {
         Map<String, dynamic> data = userdoc.data() as Map<String, dynamic>;
         Map<String, dynamic>? shopData = shopsInfo[data['id']];
+
+        QuerySnapshot snapshotOrders = await _firestore_db
+            .collection("orders")
+            .where('shopId', isEqualTo: data['id'])
+            .get();
+
+        for (var orders in snapshotOrders.docs) {
+          Map<String, dynamic> data = orders.data() as Map<String, dynamic>;
+
+          List<dynamic> orderItems = data["orderItems"];
+
+          int quantitysubtotal = 0;
+
+          for (var items in orderItems) {
+            int quantity = items["quantity"];
+
+            quantitysubtotal += quantity;
+          }
+
+          prodSold += quantitysubtotal;
+        }
 
         final user = Seller(
           id: data['id'] ?? "",
@@ -92,6 +116,7 @@ class FirestoreService {
           shopvalidid: shopData?['validId'] ?? "",
           shoppermit: shopData?['businessPermit'] ?? "",
           logo: shopData?['logo'] ?? "",
+          productSold: prodSold ?? 0,
           // Optionally handle these fields if necessary
           // location: data['location']?.toString() ?? "",
           // cart: data['cart']?.toString() ?? "",
@@ -442,6 +467,7 @@ class FirestoreService {
     String shoppermit = "";
     String shopvalidid = "";
     String logo = "";
+    Map<String, String> payout = {};
     Map<String, String> address = {};
     List<Furniture> furnitures = [];
 
@@ -477,6 +503,13 @@ class FirestoreService {
         logo = getLogoUrl(data['logo']) ?? "";
         shopvalidid = data['validId'] ?? "";
         shoppermit = data['businessPermit'] ?? "";
+        payout = {
+          "gcashname": data['payout']['gcashName'] ?? "",
+          "gcashnumber": data['payout']['gcashNumber'] ?? "",
+          "method": data['payout']['method'] ?? "",
+          "paypalname": data['payout']['paypalName'] ?? "",
+          "paypalemail": data['payout']['paypalEmail'] ?? "",
+        };
         address = {
           "street": data['address']["street"].toString() ?? '',
           "barangay": data['address']["barangay"] ?? '',
@@ -484,6 +517,7 @@ class FirestoreService {
           "province": data['address']["province"] ?? '',
           "region": data['address']["region"] ?? '',
         };
+        print("Payout: ${data['payout']['method']}");
       }
 
       // print("Data: ${shopname}");
@@ -579,6 +613,7 @@ class FirestoreService {
       email: email,
       phone: phone,
       address: address,
+      payout: payout,
       shopname: shopname,
       shoppermit: shoppermit,
       shopvalidid: shopvalidid,
@@ -851,7 +886,8 @@ class FirestoreService {
         String ordersinmonth = toMonth(data['createdAt']);
 
         if (int.parse(ordersinmonth) == month &&
-            data["orderStatus"] == "Delivered") {
+                data["orderStatus"] == "Delivered" ||
+            data["orderStatus"] == "Picked-up") {
           for (var items in orderItems) {
             int totalItemPrice = items["totalItemPrice"];
             int quantity = items["quantity"];

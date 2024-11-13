@@ -22,13 +22,14 @@ class _SellersViewState extends State<SellersView> {
   String? showValue;
   List<String> showItems = ['1', '2', '3', '4'];
   String? statusValue;
-  List<String> statusItems = ['Show All', 'Option 2', 'Option 3', 'Option 4'];
+  List<String> statusItems = ['Default', 'Top Sellers'];
 
-  FirestoreService _fs = FirestoreService();
+  final FirestoreService _fs = FirestoreService();
+  final TextEditingController searchController = TextEditingController();
+  String searchQuery = "";
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
   }
 
@@ -88,13 +89,19 @@ class _SellersViewState extends State<SellersView> {
                       width: 250,
                       height: 40,
                       child: TextField(
+                        controller: searchController,
                         decoration: const InputDecoration(
-                          hintText: "Search seller...",
+                          hintText: "Search seller by name or email...",
                           hintStyle:
                               TextStyle(fontSize: 13, color: Colors.black45),
                           prefixIcon: Icon(color: Colors.grey, Icons.search),
                         ),
                         style: const TextStyle(fontSize: 13),
+                        onChanged: (value) {
+                          setState(() {
+                            searchQuery = value.toLowerCase();
+                          });
+                        },
                       ),
                     ),
                     SizedBox(
@@ -102,30 +109,10 @@ class _SellersViewState extends State<SellersView> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          DropdownButton<String>(
-                            value: showValue,
-                            hint: const Text('Show'),
-                            icon: const Icon(Icons.arrow_drop_down),
-                            iconSize: 24,
-                            elevation: 16,
-                            style: const TextStyle(
-                                color: Colors.black45, fontSize: 13),
-                            onChanged: (String? newValue) {
-                              setState(() {
-                                showValue = newValue;
-                              });
-                            },
-                            items: showItems
-                                .map<DropdownMenuItem<String>>((String value) {
-                              return DropdownMenuItem<String>(
-                                value: value,
-                                child: Text(value),
-                              );
-                            }).toList(),
-                          ),
+                          Text("Sort by:"),
                           DropdownButton<String>(
                             value: statusValue,
-                            hint: const Text('Status'),
+                            hint: const Text('Default'),
                             icon: const Icon(Icons.arrow_drop_down),
                             iconSize: 24,
                             elevation: 16,
@@ -153,7 +140,7 @@ class _SellersViewState extends State<SellersView> {
                 Container(
                   width: double.infinity,
                   height: height - 251,
-                  child: FutureBuilder(
+                  child: FutureBuilder<List<Seller>>(
                     future: _fs.getSellersData(),
                     builder: (context, snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting) {
@@ -164,11 +151,36 @@ class _SellersViewState extends State<SellersView> {
                         return Center(child: Text("Error: ${snapshot.error}"));
                       }
 
-                      if (!snapshot.hasData || snapshot.data == null) {
+                      if (!snapshot.hasData || snapshot.data!.isEmpty) {
                         return Center(child: Text("No sellers available"));
                       }
 
-                      List<Seller> sellers = snapshot.data!;
+                      List<Seller> sellers = snapshot.data!
+                          .where((seller) =>
+                              seller.shopname
+                                  .toLowerCase()
+                                  .contains(searchQuery) ||
+                              seller.email.toLowerCase().contains(searchQuery))
+                          .toList();
+
+                      // Apply sorting based on the selected dropdown option
+                      if (statusValue == "Top Sellers") {
+                        sellers.sort(
+                            (a, b) => b.productSold.compareTo(a.productSold));
+                      }
+
+                      if (sellers.isEmpty) {
+                        return Center(
+                          child: Text(
+                            "No sellers found for \"$searchQuery\"",
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                              color: primary,
+                            ),
+                          ),
+                        );
+                      }
 
                       return GridView.builder(
                         shrinkWrap: true,
@@ -181,10 +193,6 @@ class _SellersViewState extends State<SellersView> {
                         ),
                         itemCount: sellers.length,
                         itemBuilder: (context, index) {
-                          // if (index == sellers.length) {
-                          //   return AddSellerCard();
-                          // }
-
                           var seller = sellers[index];
 
                           return Container(
@@ -205,7 +213,6 @@ class _SellersViewState extends State<SellersView> {
                               ],
                             ),
                             child: Stack(
-                              // mainAxisSize: MainAxisSize.min
                               alignment: Alignment.topCenter,
                               children: [
                                 Container(
@@ -225,11 +232,10 @@ class _SellersViewState extends State<SellersView> {
                                     height: 100,
                                     width: 100,
                                     child: CircleAvatar(
-                                      radius: 30,
                                       backgroundColor: Colors.white,
                                       child: ClipOval(
                                         child: Image.network(
-                                          '${seller.logo}',
+                                          seller.logo,
                                           fit: BoxFit.cover,
                                         ),
                                       ),
@@ -243,7 +249,7 @@ class _SellersViewState extends State<SellersView> {
                                     child: Column(
                                       children: [
                                         Text(
-                                          "${seller.shopname}", // Assuming 'name' field exists
+                                          "${seller.shopname}",
                                           style: TextStyle(
                                             fontSize: 18,
                                             fontWeight: FontWeight.bold,
@@ -252,7 +258,7 @@ class _SellersViewState extends State<SellersView> {
                                         ),
                                         SizedBox(height: 5),
                                         Text(
-                                          "ID: ${seller.id}", // Document ID
+                                          "ID: ${seller.id}",
                                           style: TextStyle(
                                             fontSize: 14,
                                             fontWeight: FontWeight.bold,
@@ -261,7 +267,7 @@ class _SellersViewState extends State<SellersView> {
                                         ),
                                         SizedBox(height: 5),
                                         Text(
-                                          "Email: ${seller.email}", // Assuming 'email' field exists
+                                          "Email: ${seller.email}",
                                           style: TextStyle(
                                             fontSize: 14,
                                             fontWeight: FontWeight.bold,
@@ -284,8 +290,7 @@ class _SellersViewState extends State<SellersView> {
                                             backgroundColor: primaryBg,
                                             shape: RoundedRectangleBorder(
                                               borderRadius:
-                                                  BorderRadius.circular(
-                                                      20), // Rounded button
+                                                  BorderRadius.circular(20),
                                             ),
                                             padding: EdgeInsets.symmetric(
                                                 horizontal: 24, vertical: 12),
@@ -313,162 +318,6 @@ class _SellersViewState extends State<SellersView> {
             ),
           ),
         ],
-      ),
-    );
-  }
-}
-
-class AddSellerCard extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return InkWell(
-      onTap: () async {
-        return showDialog(
-          context: context,
-          builder: (context) {
-            return AlertDialog(
-              title: Text(
-                "Add New Seller",
-                style: TextStyle(
-                  fontSize: 18,
-                  color: primary,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              actions: <Widget>[
-                Container(
-                  width: 400,
-                  child: Column(
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Container(
-                            height: 90,
-                            width: 90,
-                            child: CircleAvatar(
-                              backgroundColor: Colors.green,
-                            ),
-                          ),
-                          SizedBox(width: 25),
-                          OutlinedButton(
-                            onPressed: () {},
-                            child: Row(
-                              children: [
-                                Icon(Icons.add_a_photo_rounded),
-                                SizedBox(width: 10),
-                                Text(
-                                  "Upload",
-                                  style: TextStyle(fontSize: 14),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                      SizedBox(height: 25),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: [
-                          Container(
-                            width: 170,
-                            child: TextField(
-                              decoration: InputDecoration(
-                                border: OutlineInputBorder(),
-                                label: Text("Firstname"),
-                              ),
-                            ),
-                          ),
-                          Container(
-                            width: 170,
-                            child: TextField(
-                              decoration: InputDecoration(
-                                border: OutlineInputBorder(),
-                                label: Text("Lastname"),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      SizedBox(height: 25),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: [
-                          Container(
-                            width: 170,
-                            child: TextField(
-                              decoration: InputDecoration(
-                                border: OutlineInputBorder(),
-                                label: Text("Email"),
-                              ),
-                            ),
-                          ),
-                          Container(
-                            width: 170,
-                            child: TextField(
-                              decoration: InputDecoration(
-                                border: OutlineInputBorder(),
-                                label: Text("Phone"),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      SizedBox(height: 25),
-                      Container(
-                        width: double.infinity,
-                        child: ElevatedButton(
-                          onPressed: () {},
-                          child: Text(
-                            "ADD",
-                            style: TextStyle(color: Colors.white),
-                          ),
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: primary,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            );
-          },
-        );
-      },
-      child: Container(
-        width: 250,
-        height: 150,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(12), // Rounded corners
-          border: Border.all(
-            color: Colors.green, // Outline border color
-            width: 2, // Border thickness
-          ),
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            CircleAvatar(
-              radius: 30,
-              backgroundColor: Colors.green.withOpacity(0.1),
-              child: Icon(
-                Icons.add, // Add icon
-                size: 40,
-                color: Colors.green,
-              ),
-            ),
-            SizedBox(height: 10),
-            Text(
-              "Add Seller",
-              style: TextStyle(
-                color: Colors.green,
-                fontSize: 16,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-          ],
-        ),
       ),
     );
   }

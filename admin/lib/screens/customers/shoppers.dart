@@ -22,14 +22,43 @@ class _ShoppersViewState extends State<ShoppersView> {
   String? showValue;
   List<String> showItems = ['1', '2', '3', '4'];
   String? statusValue;
-  List<String> statusItems = ['Show All', 'Option 2', 'Option 3', 'Option 4'];
+  List<String> statusItems = ['Default', 'Top Shoppers'];
 
   FirestoreService _fs = FirestoreService();
+  TextEditingController _searchController = TextEditingController();
+  List<Shopper> _shoppers = [];
+  List<Shopper> _filteredShoppers = [];
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
+    _fetchShoppers();
+    _searchController.addListener(_filterShoppers);
+  }
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _fetchShoppers() async {
+    var shoppers = await _fs.getShoppersData();
+    setState(() {
+      _shoppers = shoppers;
+      _filteredShoppers = shoppers;
+    });
+  }
+
+  void _filterShoppers() {
+    String query = _searchController.text.toLowerCase();
+    setState(() {
+      _filteredShoppers = _shoppers.where((shopper) {
+        final name = '${shopper.firstname} ${shopper.lastname}'.toLowerCase();
+        final email = shopper.email.toLowerCase();
+        return name.contains(query) || email.contains(query);
+      }).toList();
+    });
   }
 
   @override
@@ -57,23 +86,14 @@ class _ShoppersViewState extends State<ShoppersView> {
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              // OutlinedButton(
-              //   onPressed: () {},
-              //   child: const Row(
-              //     children: [
-              //       Icon(Icons.add, size: 20, color: Colors.black),
-              //       SizedBox(width: 5),
-              //       Text("Add Shop", style: TextStyle(color: Colors.black)),
-              //     ],
-              //   ),
-              // ),
             ],
           ),
           const SizedBox(height: 15),
           Container(
             padding: EdgeInsets.symmetric(
-                horizontal: paddingView_horizontal,
-                vertical: paddingView_vertical),
+              horizontal: paddingView_horizontal,
+              vertical: paddingView_vertical,
+            ),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(10),
               color: Colors.white,
@@ -88,8 +108,9 @@ class _ShoppersViewState extends State<ShoppersView> {
                       width: 250,
                       height: 40,
                       child: TextField(
+                        controller: _searchController,
                         decoration: const InputDecoration(
-                          hintText: "Search seller...",
+                          hintText: "Search by name or email...",
                           hintStyle:
                               TextStyle(fontSize: 13, color: Colors.black45),
                           prefixIcon: Icon(color: Colors.grey, Icons.search),
@@ -102,30 +123,32 @@ class _ShoppersViewState extends State<ShoppersView> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          DropdownButton<String>(
-                            value: showValue,
-                            hint: const Text('Show'),
-                            icon: const Icon(Icons.arrow_drop_down),
-                            iconSize: 24,
-                            elevation: 16,
-                            style: const TextStyle(
-                                color: Colors.black45, fontSize: 13),
-                            onChanged: (String? newValue) {
-                              setState(() {
-                                showValue = newValue;
-                              });
-                            },
-                            items: showItems
-                                .map<DropdownMenuItem<String>>((String value) {
-                              return DropdownMenuItem<String>(
-                                value: value,
-                                child: Text(value),
-                              );
-                            }).toList(),
-                          ),
+                          // DropdownButton<String>(
+                          //   value: showValue,
+                          //   hint: const Text('Show'),
+                          //   icon: const Icon(Icons.arrow_drop_down),
+                          //   iconSize: 24,
+                          //   elevation: 16,
+                          //   style: const TextStyle(
+                          //       color: Colors.black45, fontSize: 13),
+                          //   onChanged: (String? newValue) {
+                          //     setState(() {
+                          //       showValue = newValue;
+                          //     });
+                          //   },
+                          //   items: showItems
+                          //       .map<DropdownMenuItem<String>>((String value) {
+                          //     return DropdownMenuItem<String>(
+                          //       value: value,
+                          //       child: Text(value),
+                          //     );
+                          //   }).toList(),
+                          // ),
+                          Text("Sort by:"),
+
                           DropdownButton<String>(
                             value: statusValue,
-                            hint: const Text('Status'),
+                            hint: const Text('Default'),
                             icon: const Icon(Icons.arrow_drop_down),
                             iconSize: 24,
                             elevation: 16,
@@ -153,176 +176,163 @@ class _ShoppersViewState extends State<ShoppersView> {
                 Container(
                   width: double.infinity,
                   height: height - 251,
-                  child: FutureBuilder(
-                    future: _fs.getShoppersData(),
-                    builder: (context, snapshot) {
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        return Center(child: CircularProgressIndicator());
-                      }
-
-                      if (snapshot.hasError) {
-                        return Center(child: Text("Error: ${snapshot.error}"));
-                      }
-
-                      if (!snapshot.hasData || snapshot.data == null) {
-                        return Center(child: Text("No sellers available"));
-                      }
-
-                      List<Shopper> shoppers = snapshot.data!;
-
-                      return GridView.builder(
-                        shrinkWrap: true,
-                        gridDelegate:
-                            const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 4,
-                          crossAxisSpacing: 25,
-                          mainAxisSpacing: 30,
-                          childAspectRatio: 4 / 4,
-                        ),
-                        itemCount: shoppers.length,
-                        itemBuilder: (context, index) {
-                          var shopper = shoppers[index];
-
-                          String userProfile = "";
-
-                          if (!shopper.profileurl.startsWith('https') &&
-                              shopper.profileurl.isNotEmpty) {
-                            userProfile = getUserImageUrl(shopper.profileurl);
-                          } else {
-                            userProfile = shopper.profileurl;
-                          }
-
-                          return Container(
-                            width: 300,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(15),
-                              border: Border.all(
-                                color: primary,
-                                width: 3,
-                              ),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.grey.withOpacity(0.2),
-                                  spreadRadius: 2,
-                                  blurRadius: 5,
-                                  offset: Offset(0, 3),
-                                ),
-                              ],
+                  child: _filteredShoppers.isEmpty
+                      ? Center(
+                          child: Text(
+                            "No shoppers found for \"${_searchController.text}\"",
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                              color: primary,
                             ),
-                            child: Stack(
-                              // mainAxisSize: MainAxisSize.min
-                              alignment: Alignment.topCenter,
-                              children: [
-                                Container(
-                                  height: 60,
-                                  width: double.infinity,
-                                  decoration: BoxDecoration(
-                                    color: Colors.green,
-                                    borderRadius: BorderRadius.only(
-                                      topLeft: Radius.circular(10),
-                                      topRight: Radius.circular(10),
-                                    ),
-                                  ),
+                          ),
+                        )
+                      : GridView.builder(
+                          shrinkWrap: true,
+                          gridDelegate:
+                              const SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 4,
+                            crossAxisSpacing: 25,
+                            mainAxisSpacing: 30,
+                            childAspectRatio: 4 / 4,
+                          ),
+                          itemCount: _filteredShoppers.length,
+                          itemBuilder: (context, index) {
+                            var shopper = _filteredShoppers[index];
+                            String userProfile =
+                                shopper.profileurl.startsWith('https') ||
+                                        shopper.profileurl.isEmpty
+                                    ? shopper.profileurl
+                                    : getUserImageUrl(shopper.profileurl);
+
+                            return Container(
+                              width: 300,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(15),
+                                border: Border.all(
+                                  color: primary,
+                                  width: 3,
                                 ),
-                                Positioned(
-                                  top: 15,
-                                  child: Container(
-                                    height: 100,
-                                    width: 100,
-                                    child: CircleAvatar(
-                                      radius: 30,
-                                      backgroundColor: Colors.white,
-                                      // child: Text("${shopper.profileurl}"),
-                                      child: ClipOval(
-                                        child: shopper.profileurl != ""
-                                            ? Image.network(
-                                                '${userProfile}', // Your logo image
-                                                fit: BoxFit.cover,
-                                              )
-                                            : Icon(
-                                                Icons.person,
-                                                size: 60,
-                                                color: Colors.green.shade300,
-                                              ),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.grey.withOpacity(0.2),
+                                    spreadRadius: 2,
+                                    blurRadius: 5,
+                                    offset: Offset(0, 3),
+                                  ),
+                                ],
+                              ),
+                              child: Stack(
+                                alignment: Alignment.topCenter,
+                                children: [
+                                  Container(
+                                    height: 60,
+                                    width: double.infinity,
+                                    decoration: BoxDecoration(
+                                      color: Colors.green,
+                                      borderRadius: BorderRadius.only(
+                                        topLeft: Radius.circular(10),
+                                        topRight: Radius.circular(10),
                                       ),
                                     ),
                                   ),
-                                ),
-                                Positioned(
-                                  top: 110,
-                                  child: Container(
-                                    padding: EdgeInsets.only(top: 20),
-                                    child: Column(
-                                      children: [
-                                        Text(
-                                          (shopper.firstname.isEmpty &&
-                                                  shopper.lastname.isEmpty)
-                                              ? "No Name"
-                                              : "${shopper.firstname} ${shopper.lastname}",
-                                          style: TextStyle(
-                                            fontSize: 18,
-                                            fontWeight: FontWeight.bold,
-                                            color: Colors.black,
-                                          ),
+                                  Positioned(
+                                    top: 15,
+                                    child: Container(
+                                      height: 100,
+                                      width: 100,
+                                      child: CircleAvatar(
+                                        radius: 30,
+                                        backgroundColor: Colors.white,
+                                        // child: Text("${shopper.profileurl}"),
+                                        child: ClipOval(
+                                          child: shopper.profileurl != ""
+                                              ? Image.network(
+                                                  '${userProfile}', // Your logo image
+                                                  fit: BoxFit.cover,
+                                                )
+                                              : Icon(
+                                                  Icons.person,
+                                                  size: 60,
+                                                  color: Colors.green.shade300,
+                                                ),
                                         ),
-                                        SizedBox(height: 5),
-                                        Text(
-                                          "Phone: ${shopper.phone}", // Document ID
-                                          style: TextStyle(
-                                            fontSize: 14,
-                                            fontWeight: FontWeight.bold,
-                                            color: Colors.black54,
-                                          ),
-                                        ),
-                                        SizedBox(height: 5),
-                                        Text(
-                                          "Email: ${shopper.email}",
-                                          style: TextStyle(
-                                            fontSize: 14,
-                                            fontWeight: FontWeight.bold,
-                                            color: Colors.black54,
-                                          ),
-                                        ),
-                                        SizedBox(height: 15),
-                                        ElevatedButton(
-                                          onPressed: () async {
-                                            print("tapped");
-                                            await showDialog(
-                                              context: context,
-                                              builder: (context) {
-                                                return ViewShopperProfile(
-                                                    id: shopper.id);
-                                              },
-                                            );
-                                          },
-                                          style: ElevatedButton.styleFrom(
-                                            backgroundColor: primaryBg,
-                                            shape: RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(
-                                                      20), // Rounded button
-                                            ),
-                                            padding: EdgeInsets.symmetric(
-                                                horizontal: 24, vertical: 12),
-                                          ),
-                                          child: Text(
-                                            "View Profile",
-                                            style: TextStyle(
-                                              color: Colors.white,
-                                            ),
-                                          ),
-                                        ),
-                                      ],
+                                      ),
                                     ),
                                   ),
-                                ),
-                              ],
-                            ),
-                          );
-                        },
-                      );
-                    },
-                  ),
+                                  Positioned(
+                                    top: 110,
+                                    child: Container(
+                                      padding: EdgeInsets.only(top: 20),
+                                      child: Column(
+                                        children: [
+                                          Text(
+                                            (shopper.firstname.isEmpty &&
+                                                    shopper.lastname.isEmpty)
+                                                ? "No Name"
+                                                : "${shopper.firstname} ${shopper.lastname}",
+                                            style: TextStyle(
+                                              fontSize: 18,
+                                              fontWeight: FontWeight.bold,
+                                              color: Colors.black,
+                                            ),
+                                          ),
+                                          SizedBox(height: 5),
+                                          Text(
+                                            "Phone: ${shopper.phone}", // Document ID
+                                            style: TextStyle(
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.bold,
+                                              color: Colors.black54,
+                                            ),
+                                          ),
+                                          SizedBox(height: 5),
+                                          Text(
+                                            "Email: ${shopper.email}",
+                                            style: TextStyle(
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.bold,
+                                              color: Colors.black54,
+                                            ),
+                                          ),
+                                          SizedBox(height: 15),
+                                          ElevatedButton(
+                                            onPressed: () async {
+                                              print("tapped");
+                                              await showDialog(
+                                                context: context,
+                                                builder: (context) {
+                                                  return ViewShopperProfile(
+                                                      id: shopper.id);
+                                                },
+                                              );
+                                            },
+                                            style: ElevatedButton.styleFrom(
+                                              backgroundColor: primaryBg,
+                                              shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(
+                                                        20), // Rounded button
+                                              ),
+                                              padding: EdgeInsets.symmetric(
+                                                  horizontal: 24, vertical: 12),
+                                            ),
+                                            child: Text(
+                                              "View Profile",
+                                              style: TextStyle(
+                                                color: Colors.white,
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            );
+                          },
+                        ),
                 ),
               ],
             ),
