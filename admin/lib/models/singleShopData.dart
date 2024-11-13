@@ -8,6 +8,7 @@ class SingleShop {
   final String lastname;
   final String email;
   final String phone;
+  final Map<String, String> payout;
 
   final String shopname;
   final String shoppermit;
@@ -42,6 +43,7 @@ class SingleShop {
     required this.lastname,
     required this.email,
     required this.phone,
+    required this.payout,
     required this.address,
     required this.shopname,
     required this.shoppermit,
