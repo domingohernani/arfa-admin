@@ -24,7 +24,7 @@ class _ShoppersViewState extends State<ShoppersView> {
   String? statusValue;
   List<String> statusItems = ['Default', 'Top Shoppers'];
 
-  FirestoreService _fs = FirestoreService();
+  final FirestoreService _fs = FirestoreService();
   TextEditingController _searchController = TextEditingController();
   List<Shopper> _shoppers = [];
   List<Shopper> _filteredShoppers = [];
@@ -144,29 +144,29 @@ class _ShoppersViewState extends State<ShoppersView> {
                           //     );
                           //   }).toList(),
                           // ),
-                          Text("Sort by:"),
+                          // Text("Sort by:"),
 
-                          DropdownButton<String>(
-                            value: statusValue,
-                            hint: const Text('Default'),
-                            icon: const Icon(Icons.arrow_drop_down),
-                            iconSize: 24,
-                            elevation: 16,
-                            style: const TextStyle(
-                                color: Colors.black45, fontSize: 13),
-                            onChanged: (String? newValue) {
-                              setState(() {
-                                statusValue = newValue;
-                              });
-                            },
-                            items: statusItems
-                                .map<DropdownMenuItem<String>>((String value) {
-                              return DropdownMenuItem<String>(
-                                value: value,
-                                child: Text(value),
-                              );
-                            }).toList(),
-                          ),
+                          // DropdownButton<String>(
+                          //   value: statusValue,
+                          //   hint: const Text('Default'),
+                          //   icon: const Icon(Icons.arrow_drop_down),
+                          //   iconSize: 24,
+                          //   elevation: 16,
+                          //   style: const TextStyle(
+                          //       color: Colors.black45, fontSize: 13),
+                          //   onChanged: (String? newValue) {
+                          //     setState(() {
+                          //       statusValue = newValue;
+                          //     });
+                          //   },
+                          //   items: statusItems
+                          //       .map<DropdownMenuItem<String>>((String value) {
+                          //     return DropdownMenuItem<String>(
+                          //       value: value,
+                          //       child: Text(value),
+                          //     );
+                          //   }).toList(),
+                          // ),
                         ],
                       ),
                     ),

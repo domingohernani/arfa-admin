@@ -3,6 +3,7 @@ import 'package:admin/components/linegraphOrders.dart';
 import 'package:admin/dataInitialization.dart';
 import 'package:admin/models/furnituresData.dart';
 import 'package:admin/models/monthlyData.dart';
+import 'package:admin/models/ordersData.dart';
 import 'package:admin/models/sellersData.dart';
 import 'package:admin/models/shopsData.dart';
 import 'package:admin/screens/customers/viewStore.dart';
@@ -10,6 +11,7 @@ import 'package:admin/services/firestoreService.dart';
 import 'package:admin/themes/theme.dart';
 import 'package:admin/utilities/exportCSV.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:fl_chart/fl_chart.dart';
 
 import 'package:flutter/material.dart';
 
@@ -27,9 +29,44 @@ class _DashboardViewState extends State<DashboardView> {
 
   MonthlyReport? _report;
 
+  Map<String, double> _deviceData = {
+    "Desktop": 0,
+    "Mobile": 0,
+    "Tablet": 0,
+  };
+
   @override
   void initState() {
     super.initState();
+    _fetchDeviceData();
+  }
+
+  void _fetchDeviceData() async {
+    try {
+      List<OrderItem> orders = await _fs.getOrdersData();
+      Map<String, int> deviceCounts = {
+        "Desktop": 0,
+        "Mobile": 0,
+        "Tablet": 0,
+      };
+
+      for (var order in orders) {
+        if (order.devicetype != null && order.devicetype.isNotEmpty) {
+          deviceCounts[order.devicetype] =
+              (deviceCounts[order.devicetype] ?? 0) + 1;
+        }
+      }
+
+      setState(() {
+        _deviceData = {
+          "Desktop": deviceCounts["Desktop"]!.toDouble(),
+          "Mobile": deviceCounts["Mobile"]!.toDouble(),
+          "Tablet": deviceCounts["Tablet"]!.toDouble(),
+        };
+      });
+    } catch (e) {
+      print("Error fetching device data: $e");
+    }
   }
 
   @override
@@ -432,7 +469,57 @@ class _DashboardViewState extends State<DashboardView> {
                   ),
                 );
               },
-            )
+            ),
+            SizedBox(
+              height: 30,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Container(
+                  width: width * 0.80,
+                  padding: const EdgeInsets.all(20),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(10),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.2),
+                        spreadRadius: 1,
+                        blurRadius: 5,
+                        offset: const Offset(2, 4),
+                      ),
+                    ],
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        "Device Usage Distribution",
+                        style: TextStyle(
+                          fontSize: 17,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(height: 10),
+                      Text(
+                          "This chart shows the distribution of devices used for placing orders."),
+                      const SizedBox(height: 20),
+                      Container(
+                        height: 300,
+                        child: PieChart(
+                          PieChartData(
+                            sections: _generatePieSections(_deviceData),
+                            centerSpaceRadius: 90,
+                            sectionsSpace: 2,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
             // FutureBuilder(
             //   future: _fs.getSellersData(),
             //   initialData: 5,
@@ -488,6 +575,32 @@ class _DashboardViewState extends State<DashboardView> {
         ),
       ),
     );
+  }
+}
+
+List<PieChartSectionData> _generatePieSections(Map<String, double> data) {
+  return data.entries
+      .map(
+        (entry) => PieChartSectionData(
+          value: entry.value,
+          title: "${entry.key}: ${entry.value.toInt()}",
+          color: _getDeviceColor(entry.key),
+          titleStyle: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+        ),
+      )
+      .toList();
+}
+
+Color _getDeviceColor(String device) {
+  switch (device) {
+    case "Desktop":
+      return Colors.blue;
+    case "Mobile":
+      return Colors.green;
+    case "Tablet":
+      return Colors.orange;
+    default:
+      return Colors.grey;
   }
 }
 

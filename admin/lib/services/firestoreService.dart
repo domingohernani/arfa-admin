@@ -425,12 +425,14 @@ class FirestoreService {
 
         orders.add(
           OrderItem(
-              shopid: data["shopId"],
-              shopperid: data["shopperId"],
-              orderstatus: data["orderStatus"],
-              ordertotal: data["orderTotal"],
-              createdat: data["createdAt"] ?? '',
-              orderitems: data["orderItems"]),
+            shopid: data["shopId"],
+            shopperid: data["shopperId"],
+            orderstatus: data["orderStatus"],
+            ordertotal: data["orderTotal"],
+            createdat: data["createdAt"] ?? '',
+            orderitems: data["orderItems"],
+            devicetype: data["deviceType"] ?? "",
+          ),
         );
       }
       // revenue = (totalprice * 5) / 100;
@@ -956,6 +958,32 @@ class FirestoreService {
     }
 
     return monthlyreport;
+  }
+
+  Future<Map<String, int>> getDeviceTypeDistribution() async {
+    Map<String, int> deviceTypeCounts = {
+      "Desktop": 0,
+      "Mobile": 0,
+      "Tablet": 0,
+    };
+
+    try {
+      QuerySnapshot snapshotOrders =
+          await _firestore_db.collection("orders").get();
+
+      for (var orderdoc in snapshotOrders.docs) {
+        Map<String, dynamic> data = orderdoc.data() as Map<String, dynamic>;
+        String deviceType = data["deviceType"] ?? "";
+
+        if (deviceTypeCounts.containsKey(deviceType)) {
+          deviceTypeCounts[deviceType] = deviceTypeCounts[deviceType]! + 1;
+        }
+      }
+    } catch (error) {
+      print(error);
+    }
+
+    return deviceTypeCounts;
   }
 
   void signOut() async {
