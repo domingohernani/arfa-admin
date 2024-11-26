@@ -80,7 +80,13 @@ class _LoginScreenState extends State<LoginScreen> {
             Container(
               width: width * 0.5,
               height: height,
-              color: primary,
+              // color: primary,
+              decoration: const BoxDecoration(
+                image: DecorationImage(
+                  image: AssetImage("assets/images/hero.jpg"),
+                  fit: BoxFit.cover, // Adjusts the image to cover the container
+                ),
+              ),
             ),
             Container(
               width: width * 0.5,
