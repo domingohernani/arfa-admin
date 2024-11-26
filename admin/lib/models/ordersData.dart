@@ -7,6 +7,7 @@ class OrderItem {
   final int ordertotal;
   final Timestamp createdat;
   final List<dynamic> orderitems;
+  final String devicetype;
 
   OrderItem({
     required this.shopid,
@@ -15,6 +16,7 @@ class OrderItem {
     required this.ordertotal,
     required this.createdat,
     required this.orderitems,
+    required this.devicetype,
   });
 
   factory OrderItem.fromFirestore(Map<String, dynamic> data) {
@@ -25,6 +27,7 @@ class OrderItem {
       ordertotal: data['ordertotal'] ?? 0,
       createdat: data['createdat'],
       orderitems: data['orderItems'] ?? [],
+      devicetype: data['deviceType'] ?? "",
     );
   }
 }
