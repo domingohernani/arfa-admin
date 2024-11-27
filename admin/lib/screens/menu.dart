@@ -82,41 +82,41 @@ class _MenuScreenState extends State<MenuScreen> {
                         child: Row(
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            const Icon(
-                              Icons.search_sharp,
-                              color: Colors.white,
-                              size: 18,
-                            ),
-                            const SizedBox(
-                              width: 5,
-                            ),
-                            SizedBox(
-                              width: 180,
-                              height: 25,
-                              child: const TextField(
-                                textAlign: TextAlign.start,
-                                decoration: InputDecoration(
-                                  hintText: "Search",
-                                  hintStyle: TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.normal,
-                                  ),
-                                  contentPadding: EdgeInsets.only(bottom: 14),
-                                  enabledBorder: UnderlineInputBorder(
-                                    borderSide: BorderSide(color: Colors.white),
-                                  ),
-                                  focusedBorder: UnderlineInputBorder(
-                                    borderSide: BorderSide(color: Colors.white),
-                                  ),
-                                ),
-                                cursorColor: Colors.white,
-                                cursorHeight: 15,
-                                maxLines: 1,
-                                style: TextStyle(
-                                  color: Colors.white,
-                                ),
-                              ),
-                            ),
+                            // const Icon(
+                            //   Icons.search_sharp,
+                            //   color: Colors.white,
+                            //   size: 18,
+                            // ),
+                            // const SizedBox(
+                            //   width: 5,
+                            // ),
+                            // SizedBox(
+                            //   width: 180,
+                            //   height: 25,
+                            //   child: const TextField(
+                            //     textAlign: TextAlign.start,
+                            //     decoration: InputDecoration(
+                            //       hintText: "Search",
+                            //       hintStyle: TextStyle(
+                            //         color: Colors.white,
+                            //         fontWeight: FontWeight.normal,
+                            //       ),
+                            //       contentPadding: EdgeInsets.only(bottom: 14),
+                            //       enabledBorder: UnderlineInputBorder(
+                            //         borderSide: BorderSide(color: Colors.white),
+                            //       ),
+                            //       focusedBorder: UnderlineInputBorder(
+                            //         borderSide: BorderSide(color: Colors.white),
+                            //       ),
+                            //     ),
+                            //     cursorColor: Colors.white,
+                            //     cursorHeight: 15,
+                            //     maxLines: 1,
+                            //     style: TextStyle(
+                            //       color: Colors.white,
+                            //     ),
+                            //   ),
+                            // ),
                           ],
                         ),
                       ),
