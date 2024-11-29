@@ -75,13 +75,23 @@ class _MenuScreenState extends State<MenuScreen> {
                         height: 30,
                         child: Image.asset("assets/logo/logo-white.png"),
                       ),
-                      SizedBox(width: width * 0.12),
+                      SizedBox(width: 50),
                       Container(
-                        width: 250,
+                        width: 350,
                         alignment: Alignment.center,
                         child: Row(
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
+                            Container(
+                              child: Text(
+                                "Augmented Reality Furniture Assistant",
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            )
                             // const Icon(
                             //   Icons.search_sharp,
                             //   color: Colors.white,

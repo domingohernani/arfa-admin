@@ -1,4 +1,5 @@
 import 'package:admin/screens/customers/viewProduct.dart';
+import 'package:admin/screens/customers/viewStore.dart';
 import 'package:admin/screens/login.dart';
 import 'package:admin/screens/menu.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -39,10 +40,11 @@ class _MainState extends State<Main> {
         // body: ViewProductDetailsModal(
         //   productid: "kWNyAinXBaxYN5cLVKDS",
         // ),
-        // body: MenuScreen(
-        //   uid: "qLpxJlrrP0eK7Z1jVsGAHKWPYL73",
-        // ),
-        body: LoginScreen(),
+        body: MenuScreen(
+          uid: "qLpxJlrrP0eK7Z1jVsGAHKWPYL73",
+        ),
+        // body: ViewStoreProile(id: "W7NmlrmaVLc5dpG2d5oBVuZAqrj1"),
+        // body: LoginScreen(),
       ),
       builder: EasyLoading.init(),
     );

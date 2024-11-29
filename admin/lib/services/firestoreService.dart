@@ -12,6 +12,7 @@ import 'package:admin/models/shoppersData.dart';
 import 'package:admin/models/shopsData.dart';
 import 'package:admin/models/singleShopData.dart';
 import 'package:admin/models/singleUser.dart';
+import 'package:admin/models/topProductsData.dart';
 import 'package:admin/utilities/dateconvertion.dart';
 import 'package:admin/utilities/logoUrl.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -958,6 +959,55 @@ class FirestoreService {
     }
 
     return monthlyreport;
+  }
+
+  Future<List<TopProduct>> getTopProducts() async {
+    List<TopProduct> topProducts = [];
+    try {
+      QuerySnapshot snapshotFurnitures =
+          await _firestore_db.collection("furnitures").get();
+      QuerySnapshot snapshotOrders =
+          await _firestore_db.collection("orders").get();
+
+      for (var furnituredoc in snapshotFurnitures.docs) {
+        Map<String, dynamic> data = furnituredoc.data() as Map<String, dynamic>;
+        int totalproductsold = 0;
+
+        for (var orderdoc in snapshotOrders.docs) {
+          Map<String, dynamic> orderData =
+              orderdoc.data() as Map<String, dynamic>;
+          List<dynamic> orderItems = orderData["orderItems"];
+
+          for (var item in orderItems) {
+            if (data['id'] == item['id']) {
+              int quantity = (item['quantity'] as num).toInt();
+              totalproductsold += quantity;
+            }
+          }
+        }
+
+        if (totalproductsold > 0) {
+          topProducts.add(
+            TopProduct(
+              id: data['id'] ?? "",
+              name: data['name'] ?? "",
+              category: data['category'] ?? "",
+              solds: totalproductsold,
+              price: (data['price'] as num).toDouble(),
+              image: getProductImageUrl(
+                      data["imagesUrl"], data["imgPreviewFilename"]) ??
+                  "",
+            ),
+          );
+        }
+      }
+
+      // Sort by solds in descending order
+      topProducts.sort((a, b) => b.solds.compareTo(a.solds));
+    } catch (ex) {
+      print(ex);
+    }
+    return topProducts;
   }
 
   Future<Map<String, int>> getDeviceTypeDistribution() async {
