@@ -9,7 +9,12 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 
 class LineGraph extends StatefulWidget {
-  LineGraph({super.key});
+  final int compareFrom; // The year for the green line
+  final int compareTo; // The year for the blue line
+
+  // Constructor to initialize compareFrom and compareTo
+  LineGraph({Key? key, required this.compareFrom, required this.compareTo})
+      : super(key: key);
 
   @override
   State<LineGraph> createState() => _LineGraphState();
@@ -19,8 +24,6 @@ class _LineGraphState extends State<LineGraph> {
   FirestoreService _fs = FirestoreService();
 
   String currentMonth = monthToText(DateTime.now().month);
-  int previousYear = DateTime.now().year - 1;
-  int currentYear = DateTime.now().year;
 
   List<String> months = [
     'Jan',
@@ -68,6 +71,14 @@ class _LineGraphState extends State<LineGraph> {
   };
 
   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    monthlyData;
+    prevMonthlyData;
+  }
+
+  @override
   Widget build(BuildContext context) {
     return FutureBuilder<List<MonthlyReport>>(
         future: _fs.getListOfReport(),
@@ -81,8 +92,12 @@ class _LineGraphState extends State<LineGraph> {
           }
           List<MonthlyReport> reports = snapshot.data!;
 
+          print("hey: ${widget.compareFrom}");
+          print("hey: ${widget.compareFrom}");
+
+          // Populate the current year's data
           for (var report in reports) {
-            if (report.year == currentYear) {
+            if (report.year == widget.compareFrom) {
               if (monthlyData.containsKey(report.month)) {
                 monthlyData[report.month] = report.monthlyorders
                     .toDouble(); // Update the month's orders
@@ -90,16 +105,15 @@ class _LineGraphState extends State<LineGraph> {
             }
           }
 
+          // Populate the previous year's data
           for (var report in reports) {
-            if (report.year == previousYear) {
+            if (report.year == widget.compareTo) {
               if (prevMonthlyData.containsKey(report.month)) {
                 prevMonthlyData[report.month] = report.monthlyorders
                     .toDouble(); // Update the month's orders
               }
             }
           }
-
-          print("Orders: ${monthlyData['January'].runtimeType}");
 
           return LineChart(
             LineChartData(
@@ -129,7 +143,7 @@ class _LineGraphState extends State<LineGraph> {
                     },
                   ),
                   axisNameSize: 30,
-                  axisNameWidget: Text("Month of ${currentMonth}"),
+                  axisNameWidget: Text("Month of $currentMonth"),
                 ),
                 topTitles: AxisTitles(
                   sideTitles: SideTitles(showTitles: false),
@@ -159,8 +173,9 @@ class _LineGraphState extends State<LineGraph> {
                     FlSpot(12, monthlyData['December']!),
                   ],
                   isCurved: true,
-                  color: secondary,
+                  color: Colors.green,
                   barWidth: 3,
+                  dotData: FlDotData(show: true),
                   belowBarData: BarAreaData(show: false),
                 ),
                 LineChartBarData(
@@ -179,8 +194,9 @@ class _LineGraphState extends State<LineGraph> {
                     FlSpot(12, prevMonthlyData['December']!),
                   ],
                   isCurved: true,
-                  color: Colors.red,
+                  color: Colors.blue,
                   barWidth: 3,
+                  dotData: FlDotData(show: true),
                   belowBarData: BarAreaData(show: false),
                 ),
               ],

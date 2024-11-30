@@ -28,6 +28,11 @@ class _DashboardViewState extends State<DashboardView> {
   List<Seller> _sellers = [];
   List<Furniture> _furnitures = [];
 
+  int? compareFromValue;
+  int? compareToValue;
+  List<int> compareFrom = [];
+  List<int> compareTo = [];
+
   MonthlyReport? _report;
 
   Map<String, double> _deviceData = {
@@ -40,6 +45,27 @@ class _DashboardViewState extends State<DashboardView> {
   void initState() {
     super.initState();
     _fetchDeviceData();
+    _generateYearLists();
+  }
+
+  void _generateYearLists() {
+    // Replace these values with actual data fetching logic if needed
+    int startYear = 2010;
+    int endYear = DateTime.now().year;
+
+    setState(() {
+      compareFrom = List.generate(
+        endYear - startYear + 1,
+        (index) => (startYear + index),
+      );
+      compareTo = List<int>.from(compareFrom); // Clone for separate use
+    });
+
+    // Set default values for dropdowns
+    if (compareFrom.isNotEmpty) {
+      compareFromValue = compareFrom.first; // Default to the first value
+      compareToValue = compareTo.last; // Default to the last value
+    }
   }
 
   void _fetchDeviceData() async {
@@ -173,42 +199,7 @@ class _DashboardViewState extends State<DashboardView> {
                 );
               },
             ),
-            // Container(
-            //   child: Row(
-            //     crossAxisAlignment: CrossAxisAlignment.start,
-            //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            //     children: [
-            //       _DataCard(
-            //         title: "₱ 100,000",
-            //         subTitle: "Monthly Revenue",
-            //         percentage: "98.00",
-            //         iconData: Icons.arrow_drop_up_outlined,
-            //         cardIcon: Icons.attach_money_outlined,
-            //       ),
-            //       _DataCard(
-            //         title: "1,000",
-            //         subTitle: "Orders",
-            //         percentage: "98.00",
-            //         iconData: Icons.arrow_drop_up_outlined,
-            //         cardIcon: Icons.shopping_bag_outlined,
-            //       ),
-            //       _DataCard(
-            //         title: "100",
-            //         subTitle: "New Users",
-            //         percentage: "98.00",
-            //         iconData: Icons.arrow_drop_up_outlined,
-            //         cardIcon: Icons.person_add_alt_1_outlined,
-            //       ),
-            //       _DataCard(
-            //         title: "1,000",
-            //         subTitle: "Existing Users",
-            //         percentage: "98.00",
-            //         iconData: Icons.arrow_drop_up_outlined,
-            //         cardIcon: Icons.groups_2_outlined,
-            //       ),
-            //     ],
-            //   ),
-            // ),
+
             const SizedBox(
               height: 20,
             ),
@@ -238,12 +229,66 @@ class _DashboardViewState extends State<DashboardView> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text(
-                        "Orders Every Month",
-                        style: TextStyle(
-                          fontSize: 17,
-                          fontWeight: FontWeight.bold,
-                        ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const Text(
+                            "Orders Every Month",
+                            style: TextStyle(
+                              fontSize: 17,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          SizedBox(
+                            width: 230,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                DropdownButton<int>(
+                                  value: compareFromValue,
+                                  hint: const Text('Default'),
+                                  icon: const Icon(Icons.arrow_drop_down),
+                                  iconSize: 24,
+                                  elevation: 16,
+                                  style: const TextStyle(fontSize: 13),
+                                  onChanged: (int? newValue) {
+                                    setState(() {
+                                      compareFromValue = newValue;
+                                    });
+                                  },
+                                  items: compareFrom
+                                      .map<DropdownMenuItem<int>>((int value) {
+                                    return DropdownMenuItem<int>(
+                                      value: value,
+                                      child: Text('${value.toString()}'),
+                                    );
+                                  }).toList(),
+                                ),
+                                Text("compare"),
+                                DropdownButton<int>(
+                                  value: compareToValue,
+                                  hint: const Text('Default'),
+                                  icon: const Icon(Icons.arrow_drop_down),
+                                  iconSize: 24,
+                                  elevation: 16,
+                                  style: const TextStyle(fontSize: 13),
+                                  onChanged: (int? newValue) {
+                                    setState(() {
+                                      compareToValue = newValue;
+                                    });
+                                  },
+                                  items: compareTo
+                                      .map<DropdownMenuItem<int>>((int value) {
+                                    return DropdownMenuItem<int>(
+                                      value: value,
+                                      child: Text("${value}"),
+                                    );
+                                  }).toList(),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
                       ),
                       SizedBox(
                         height: 10,
@@ -256,7 +301,10 @@ class _DashboardViewState extends State<DashboardView> {
                       Container(
                         height: 300,
                         width: width * 0.63,
-                        child: LineGraph(),
+                        child: LineGraph(
+                          compareFrom: compareFromValue!,
+                          compareTo: compareToValue!,
+                        ),
                       ),
                     ],
                   ),
@@ -697,10 +745,12 @@ class _DashboardViewState extends State<DashboardView> {
                       const SizedBox(height: 20),
                       Container(
                         height: 300,
+                        width: 400,
                         child: PieChart(
                           PieChartData(
                             sections: _generatePieSections(_deviceData),
-                            centerSpaceRadius: 90,
+                            startDegreeOffset: 0,
+                            centerSpaceRadius: 0,
                             sectionsSpace: 2,
                           ),
                         ),
@@ -770,14 +820,13 @@ class _DashboardViewState extends State<DashboardView> {
 
 List<PieChartSectionData> _generatePieSections(Map<String, double> data) {
   return data.entries
-      .map(
-        (entry) => PieChartSectionData(
-          value: entry.value,
-          title: "${entry.key}: ${entry.value.toInt()}",
-          color: _getDeviceColor(entry.key),
-          titleStyle: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
-        ),
-      )
+      .map((entry) => PieChartSectionData(
+            value: entry.value,
+            title: "${entry.key}: ${entry.value.toInt()}",
+            color: _getDeviceColor(entry.key),
+            radius: 150,
+            titleStyle: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+          ))
       .toList();
 }
 
@@ -815,69 +864,39 @@ class _DataCard extends StatelessWidget {
     var width =
         MediaQuery.of(context).size.width - sidebarSize - paddingHorizontal;
     return Container(
-      height: 90,
-      width: width * 0.24,
-      padding: const EdgeInsets.symmetric(horizontal: 10),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(8),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.1),
-            spreadRadius: 1,
-            blurRadius: 5,
-            offset: const Offset(2, 4),
-          ),
-        ],
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
+        height: 90,
+        width: width * 0.24,
+        padding: const EdgeInsets.symmetric(horizontal: 10),
+        decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(8),
+            boxShadow: [
+              BoxShadow(
+                  color: Colors.black.withOpacity(0.1),
+                  spreadRadius: 1,
+                  blurRadius: 5,
+                  offset: const Offset(2, 4))
+            ]),
+        child: Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
           Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                title,
-                style: const TextStyle(
-                  fontWeight: FontWeight.w700,
-                  fontSize: 17,
-                ),
-              ),
-              Text(
-                subTitle,
-                style: const TextStyle(
-                  fontSize: 13,
-                ),
-              ),
-              Row(
-                children: [
-                  Text(
-                    "+ $percentage",
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(title,
                     style: const TextStyle(
-                      fontWeight: FontWeight.w500,
-                      fontSize: 15,
-                      color: Colors.green,
-                    ),
-                  ),
-                  Icon(
-                    iconData,
-                    color: Colors.green,
-                  )
-                ],
-              ),
-            ],
-          ),
-          const SizedBox(
-            width: 30,
-          ),
-          Icon(
-            cardIcon,
-            color: primaryBg,
-            size: 40,
-          ),
-        ],
-      ),
-    );
+                        fontWeight: FontWeight.w700, fontSize: 17)),
+                Text(subTitle, style: const TextStyle(fontSize: 13)),
+                Row(children: [
+                  Text("+ $percentage",
+                      style: const TextStyle(
+                          fontWeight: FontWeight.w500,
+                          fontSize: 15,
+                          color: Colors.green)),
+                  Icon(iconData, color: Colors.green)
+                ])
+              ]),
+          const SizedBox(width: 30),
+          Icon(cardIcon, color: primaryBg, size: 40)
+        ]));
   }
 }

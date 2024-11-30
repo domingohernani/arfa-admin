@@ -348,7 +348,10 @@ class _ReportsViewState extends State<ReportsView> {
                       Container(
                         height: 300,
                         width: width * 0.63,
-                        child: LineGraph(),
+                        child: LineGraph(
+                          compareFrom: 2022,
+                          compareTo: 2023,
+                        ),
                       ),
                     ],
                   ),

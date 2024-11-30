@@ -410,20 +410,6 @@ class FirestoreService {
         int pricesubtotal = 0;
         int quantitysubtotal = 0;
 
-        // String ordersinmonth = toMonth(data['createdAt']);
-
-        // if (int.parse(ordersinmonth) == month) {
-        //   for (var items in orderItems) {
-        //     int totalItemPrice = items["totalItemPrice"];
-        //     int quantity = items["quantity"];
-        //     pricesubtotal += totalItemPrice;
-        //     quantitysubtotal += quantity;
-        //   }
-        // }
-
-        // totalprice += pricesubtotal;
-        // monthlyorders += quantitysubtotal;
-
         orders.add(
           OrderItem(
             shopid: data["shopId"],
@@ -440,21 +426,6 @@ class FirestoreService {
     } catch (error) {
       print(error);
     }
-
-    // MonthlyReport report = MonthlyReport(
-    //   id: "",
-    //   newusers: newusers,
-    //   currentusers: existingusers,
-    //   monthlyrevenue: revenue,
-    //   monthlyorders: monthlyorders,
-    //   month: month,
-    //   year: year,
-    // );
-
-    // print("New users: ${newusers}");
-    // print("Existing users: ${existingusers}");
-    // print("Revenue: ${revenue}");
-    // print("Orders: ${monthlyorders}");
 
     return orders;
   }
