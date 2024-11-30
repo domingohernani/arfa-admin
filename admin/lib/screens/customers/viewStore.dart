@@ -15,6 +15,8 @@ class ViewStoreProile extends StatefulWidget {
 
 class _ViewStoreProileState extends State<ViewStoreProile> {
   FirestoreService _fs = FirestoreService();
+  bool hasValidId = false;
+  bool hasBusinessPermit = false;
 
   @override
   Widget build(BuildContext context) {
@@ -145,41 +147,6 @@ class _ViewStoreProileState extends State<ViewStoreProile> {
                                         ),
                                         SizedBox(
                                           width: 20,
-                                        ),
-                                        Container(
-                                          decoration: BoxDecoration(
-                                            border: Border.all(
-                                              color: primaryBg,
-                                              width: 2,
-                                            ),
-                                            borderRadius:
-                                                BorderRadius.circular(5),
-                                          ),
-                                          child: TextButton(
-                                            onPressed: () async {
-                                              await showDialog(
-                                                context: context,
-                                                builder: (context) {
-                                                  return ViewDocumentModal(
-                                                    idurl: seller.shopvalidid,
-                                                    permiturl:
-                                                        seller.shoppermit,
-                                                  );
-                                                },
-                                              );
-                                            },
-                                            style: TextButton.styleFrom(
-                                              shape: RoundedRectangleBorder(),
-                                              backgroundColor: primary,
-                                            ),
-                                            child: Text(
-                                              "View Document",
-                                              style: TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                color: textWhite,
-                                              ),
-                                            ),
-                                          ),
                                         ),
                                       ],
                                     ),
@@ -456,6 +423,163 @@ class _ViewStoreProileState extends State<ViewStoreProile> {
                                                         ],
                                                       ),
                                                     ),
+                                                ],
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          width: 30,
+                                        ),
+                                        Align(
+                                          alignment: Alignment.topLeft,
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                "Valid Documents",
+                                                style: TextStyle(
+                                                  fontSize: 17,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                              SizedBox(
+                                                height: 10,
+                                              ),
+                                              Row(
+                                                children: [
+                                                  Container(
+                                                    height: 70,
+                                                    width: 500,
+                                                    margin: EdgeInsets.only(
+                                                      left: 20,
+                                                    ),
+                                                    padding:
+                                                        EdgeInsets.symmetric(
+                                                            vertical: 10),
+                                                    decoration: BoxDecoration(
+                                                      border: Border.all(
+                                                        color: primary,
+                                                      ),
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              5),
+                                                    ),
+                                                    child: Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .spaceEvenly,
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .center,
+                                                      children: [
+                                                        Container(
+                                                          child: Row(
+                                                            children: [
+                                                              Checkbox(
+                                                                value: seller
+                                                                        .shoppermit
+                                                                        .isNotEmpty
+                                                                    ? true
+                                                                    : false,
+                                                                onChanged:
+                                                                    (value) {
+                                                                  if (seller
+                                                                      .shopvalidid
+                                                                      .isNotEmpty) {
+                                                                    setState(
+                                                                        () {
+                                                                      hasValidId =
+                                                                          true;
+                                                                    });
+                                                                  }
+                                                                },
+                                                              ),
+                                                              Text("Valid Id")
+                                                            ],
+                                                          ),
+                                                        ),
+                                                        Container(
+                                                          child: Row(
+                                                            children: [
+                                                              Checkbox(
+                                                                value: seller
+                                                                        .shoppermit
+                                                                        .isNotEmpty
+                                                                    ? true
+                                                                    : false,
+                                                                onChanged:
+                                                                    (value) {
+                                                                  // if (seller
+                                                                  //     .shoppermit
+                                                                  //     .isNotEmpty) {
+                                                                  //   setState(
+                                                                  //       () {
+                                                                  //     hasBusinessPermit =
+                                                                  //         value =
+                                                                  //             true;
+                                                                  //   });
+                                                                  // }
+                                                                },
+                                                              ),
+                                                              Text(
+                                                                  "Business Permit")
+                                                            ],
+                                                          ),
+                                                        ),
+                                                        Container(
+                                                          decoration:
+                                                              BoxDecoration(
+                                                            border: Border.all(
+                                                              color: primaryBg,
+                                                              width: 2,
+                                                            ),
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        5),
+                                                          ),
+                                                          child: TextButton(
+                                                            onPressed:
+                                                                () async {
+                                                              await showDialog(
+                                                                context:
+                                                                    context,
+                                                                builder:
+                                                                    (context) {
+                                                                  return ViewDocumentModal(
+                                                                    idurl: seller
+                                                                        .shopvalidid,
+                                                                    permiturl:
+                                                                        seller
+                                                                            .shoppermit,
+                                                                  );
+                                                                },
+                                                              );
+                                                            },
+                                                            style: TextButton
+                                                                .styleFrom(
+                                                              shape:
+                                                                  RoundedRectangleBorder(),
+                                                              backgroundColor:
+                                                                  primary,
+                                                            ),
+                                                            child: Text(
+                                                              "View Document",
+                                                              style: TextStyle(
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold,
+                                                                color:
+                                                                    textWhite,
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),
                                                 ],
                                               ),
                                             ],

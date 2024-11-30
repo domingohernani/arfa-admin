@@ -6,6 +6,7 @@ import 'package:admin/models/monthlyData.dart';
 import 'package:admin/models/ordersData.dart';
 import 'package:admin/models/sellersData.dart';
 import 'package:admin/models/shopsData.dart';
+import 'package:admin/models/topProductsData.dart';
 import 'package:admin/screens/customers/viewStore.dart';
 import 'package:admin/services/firestoreService.dart';
 import 'package:admin/themes/theme.dart';
@@ -325,7 +326,6 @@ class _DashboardViewState extends State<DashboardView> {
                 List<Shop> shops = snapshot.data!;
 
                 return Container(
-                  width: double.infinity,
                   padding: EdgeInsets.symmetric(
                     vertical: paddingView_vertical,
                     horizontal: paddingView_horizontal,
@@ -362,7 +362,8 @@ class _DashboardViewState extends State<DashboardView> {
                           0: FlexColumnWidth(),
                           1: FlexColumnWidth(),
                           2: FlexColumnWidth(),
-                          3: FixedColumnWidth(100.0),
+                          3: FlexColumnWidth(),
+                          4: FixedColumnWidth(100.0),
                         },
                         defaultVerticalAlignment:
                             TableCellVerticalAlignment.middle,
@@ -372,6 +373,13 @@ class _DashboardViewState extends State<DashboardView> {
                               color: Colors.grey.shade200,
                             ),
                             children: [
+                              Center(
+                                  child: Padding(
+                                padding: EdgeInsets.all(12.0),
+                                child: Text("ID",
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.bold)),
+                              )),
                               Center(
                                   child: Padding(
                                 padding: EdgeInsets.all(12.0),
@@ -416,6 +424,12 @@ class _DashboardViewState extends State<DashboardView> {
                                       child: Padding(
                                     padding: EdgeInsets.symmetric(
                                         vertical: 4, horizontal: 10),
+                                    child: Text("${shop.shopid}"),
+                                  )),
+                                  TableCell(
+                                      child: Padding(
+                                    padding: EdgeInsets.symmetric(
+                                        vertical: 4, horizontal: 10),
                                     child: Text("${shop.shopname}"),
                                   )),
                                   TableCell(
@@ -453,6 +467,182 @@ class _DashboardViewState extends State<DashboardView> {
                                               );
                                             },
                                           );
+                                        },
+                                        icon: Icon(
+                                            Icons.arrow_right_alt_outlined),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              );
+                            },
+                          ).toList(),
+                        ],
+                      ),
+                    ],
+                  ),
+                );
+              },
+            ),
+            SizedBox(
+              height: 20,
+            ),
+            FutureBuilder<List<TopProduct>>(
+              future: _fs.getTopProducts(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Center(child: CircularProgressIndicator());
+                } else if (snapshot.hasError) {
+                  return Center(child: Text('Error: ${snapshot.error}'));
+                } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                  return Center(child: Text('No products found.'));
+                }
+
+                List<TopProduct> furniture = snapshot.data!;
+
+                return Container(
+                  padding: EdgeInsets.symmetric(
+                    vertical: paddingView_vertical,
+                    horizontal: paddingView_horizontal,
+                  ),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(10),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.2),
+                        spreadRadius: 1,
+                        blurRadius: 5,
+                        offset: const Offset(2, 4),
+                      ),
+                    ],
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "Top Products",
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Table(
+                        border: TableBorder.symmetric(
+                            inside: BorderSide(color: Colors.grey)),
+                        columnWidths: {
+                          0: FlexColumnWidth(),
+                          1: FlexColumnWidth(),
+                          2: FlexColumnWidth(),
+                          3: FlexColumnWidth(),
+                          4: FixedColumnWidth(100.0),
+                        },
+                        defaultVerticalAlignment:
+                            TableCellVerticalAlignment.middle,
+                        children: [
+                          TableRow(
+                            decoration: BoxDecoration(
+                              color: Colors.grey.shade200,
+                            ),
+                            children: [
+                              Center(
+                                  child: Padding(
+                                padding: EdgeInsets.all(12.0),
+                                child: Text("Name",
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.bold)),
+                              )),
+                              Center(
+                                  child: Padding(
+                                padding: EdgeInsets.all(8.0),
+                                child: Text("Category",
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.bold)),
+                              )),
+                              // Center(
+                              //     child: Padding(
+                              //   padding: EdgeInsets.all(8.0),
+                              //   child: Text("Total Products",
+                              //       style: TextStyle(fontWeight: FontWeight.bold)),
+                              // )),
+                              Center(
+                                  child: Padding(
+                                padding: EdgeInsets.all(8.0),
+                                child: Text("Solds",
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.bold)),
+                              )),
+                              Center(
+                                  child: Padding(
+                                padding: EdgeInsets.all(8.0),
+                                child: Text("Price",
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.bold)),
+                              )),
+                              Center(
+                                  child: Padding(
+                                padding: EdgeInsets.all(8.0),
+                                child: Text("Action",
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.bold)),
+                              )),
+                            ],
+                          ),
+                          ...furniture.map(
+                            (product) {
+                              return TableRow(
+                                children: [
+                                  TableCell(
+                                      child: Padding(
+                                    padding: EdgeInsets.symmetric(
+                                        vertical: 4, horizontal: 10),
+                                    child: Text("${product.name}"),
+                                  )),
+                                  TableCell(
+                                      child: Padding(
+                                    padding: EdgeInsets.symmetric(
+                                        vertical: 4, horizontal: 10),
+                                    child: Text(
+                                        "${product.category}"), // Replace with actual revenue data if available
+                                  )),
+                                  // TableCell(
+                                  //     child: Padding(
+                                  //   padding: EdgeInsets.all(8.0),
+                                  //   child: Text(
+                                  //       "${shop.revenue}"), // Replace with actual revenue data if available
+                                  // )),
+                                  TableCell(
+                                      child: Padding(
+                                    padding: EdgeInsets.symmetric(
+                                        vertical: 4, horizontal: 10),
+                                    child: Text(
+                                        "${product.solds}"), // Replace with actual products sold data if available
+                                  )),
+                                  TableCell(
+                                      child: Padding(
+                                    padding: EdgeInsets.symmetric(
+                                        vertical: 4, horizontal: 10),
+                                    child: Text(
+                                        "${product.price}"), // Replace with actual products sold data if available
+                                  )),
+                                  TableCell(
+                                    child: Container(
+                                      width: 50,
+                                      padding: EdgeInsets.symmetric(
+                                          vertical: 4, horizontal: 10),
+                                      child: IconButton(
+                                        onPressed: () async {
+                                          // await showDialog(
+                                          //   context: context,
+                                          //   builder: (context) {
+                                          //     return ViewStoreProile(
+                                          //       id: shop.shopid,
+                                          //     );
+                                          //   },
+                                          // );
                                         },
                                         icon: Icon(
                                             Icons.arrow_right_alt_outlined),
