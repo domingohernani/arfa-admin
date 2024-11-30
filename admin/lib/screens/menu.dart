@@ -3,6 +3,7 @@ import 'package:admin/components/sideBarNavigation.dart';
 import 'package:admin/screens/customers/shoppers.dart';
 import 'package:admin/screens/customers/viewStore.dart';
 import 'package:admin/screens/dashboard/dashboard.dart';
+import 'package:admin/screens/platform/platform.dart';
 import 'package:admin/screens/reports/report.dart';
 import 'package:admin/screens/requests/request.dart';
 import 'package:admin/screens/customers/seller.dart';
@@ -29,7 +30,7 @@ class MenuScreen extends StatefulWidget {
 class _MenuScreenState extends State<MenuScreen> {
   // Widget menuView = DashboardView();
   final FirestoreService _fs = FirestoreService();
-  PageController pageController = PageController();
+  PageController pageController = PageController(initialPage: 4);
   SideMenuController sideMenu = SideMenuController();
 
   void initState() {
@@ -328,6 +329,13 @@ class _MenuScreenState extends State<MenuScreen> {
                           ),
                         )),
                   ),
+                  SideMenuItem(
+                    title: 'Platform',
+                    onTap: (index, _) {
+                      sideMenu.changePage(index);
+                    },
+                    icon: const Icon(Icons.layers),
+                  ),
                   // SideMenuItem(
                   //   title: 'Requests',
                   //   onTap: (index, _) {
@@ -365,6 +373,8 @@ class _MenuScreenState extends State<MenuScreen> {
                     SellersView(),
                     ShoppersView(),
                     ReportsView(),
+                    PlatformScreen()
+
                     // RequestsView(),
 
                     // Container(
