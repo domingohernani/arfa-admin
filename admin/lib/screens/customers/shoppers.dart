@@ -200,11 +200,18 @@ class _ShoppersViewState extends State<ShoppersView> {
                           itemCount: _filteredShoppers.length,
                           itemBuilder: (context, index) {
                             var shopper = _filteredShoppers[index];
-                            String userProfile =
-                                shopper.profileurl.startsWith('https') ||
-                                        shopper.profileurl.isEmpty
-                                    ? shopper.profileurl
-                                    : getUserImageUrl(shopper.profileurl);
+                            var userProfileUrl = shopper.profileurl;
+
+                            String userProfile = "";
+                            if (userProfileUrl.startsWith('https') &&
+                                userProfileUrl.isNotEmpty) {
+                              userProfile = userProfileUrl;
+                            } else if (userProfileUrl.contains('/')) {
+                              userProfile = getUserImageUrl(userProfileUrl);
+                            } else {
+                              userProfile = "";
+                            }
+
                             return Container(
                               width: 300,
                               decoration: BoxDecoration(
@@ -244,11 +251,10 @@ class _ShoppersViewState extends State<ShoppersView> {
                                       child: CircleAvatar(
                                         radius: 30,
                                         backgroundColor: Colors.white,
-                                        // child: Text("${shopper.profileurl}"),
                                         child: ClipOval(
-                                          child: shopper.profileurl != ""
+                                          child: userProfile.isNotEmpty
                                               ? Image.network(
-                                                  '${userProfile}', // Your logo image
+                                                  userProfile,
                                                   fit: BoxFit.cover,
                                                 )
                                               : Icon(
@@ -279,7 +285,7 @@ class _ShoppersViewState extends State<ShoppersView> {
                                           ),
                                           const SizedBox(height: 5),
                                           Text(
-                                            "Phone: ${shopper.phone}", // Document ID
+                                            "Phone: ${shopper.phone}",
                                             style: const TextStyle(
                                               fontSize: 14,
                                               fontWeight: FontWeight.bold,
@@ -298,7 +304,6 @@ class _ShoppersViewState extends State<ShoppersView> {
                                           const SizedBox(height: 15),
                                           ElevatedButton(
                                             onPressed: () async {
-                                              print("tapped");
                                               await showDialog(
                                                 context: context,
                                                 builder: (context) {
@@ -311,13 +316,13 @@ class _ShoppersViewState extends State<ShoppersView> {
                                               backgroundColor: primaryBg,
                                               shape: RoundedRectangleBorder(
                                                 borderRadius:
-                                                    BorderRadius.circular(
-                                                        20), // Rounded button
+                                                    BorderRadius.circular(20),
                                               ),
                                               padding:
                                                   const EdgeInsets.symmetric(
-                                                      horizontal: 24,
-                                                      vertical: 12),
+                                                horizontal: 24,
+                                                vertical: 12,
+                                              ),
                                             ),
                                             child: const Text(
                                               "View Profile",
