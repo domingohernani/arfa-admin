@@ -11,8 +11,6 @@ class Shopper {
   final String profileurl;
   final Timestamp datejoined;
   final Map<String, String> location;
-  // final List<Map<String, dynamic>> cart;
-  // final String wishlist;
 
   Shopper(
       {required this.id,
@@ -23,29 +21,5 @@ class Shopper {
       required this.role,
       required this.location,
       required this.profileurl,
-      required this.datejoined
-      // required this.cart,
-      // required this.wishlist,
-      });
-
-  // factory Shopper.fromFirestore(Map<String, dynamic> data) {
-  //   return Shopper(
-  //     id: data["id"] ?? "",
-  //     firstname: data["firstName"] ?? "",
-  //     lastname: data["lastName"] ?? "",
-  //     email: data["email"] ?? "",
-  //     phone: data["phoneNumber"] ?? "",
-  //     role: data["role"] ?? "",
-  //     location: {
-  //       "street": data["street"] ?? "",
-  //       "barangay": data["barangay"] ?? "",
-  //       "city": data["city"] ?? "",
-  //       "province": data["province"] ?? "",
-  //       "region": data["region"] ?? "",
-  //     },
-  //     datejoined: data["datejoined"],
-  //     // cart: data["cart"],
-  //     // wishlist: data["wishlist"],
-  //   );
-  // }
+      required this.datejoined});
 }
