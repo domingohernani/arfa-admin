@@ -63,20 +63,20 @@ class _RequestsViewState extends State<RequestsView> {
                     children: [
                       TextButton(
                         onPressed: () {},
-                        child: Text("All Request"),
+                        child: const Text("All Request"),
                       ),
                       TextButton(
                         onPressed: () {},
-                        child: Text("Pending Request"),
+                        child: const Text("Pending Request"),
                       ),
                       TextButton(
                         onPressed: () {},
-                        child: Text("Rejected Request"),
+                        child: const Text("Rejected Request"),
                       ),
                     ],
                   ),
-                  Divider(),
-                  SizedBox(
+                  const Divider(),
+                  const SizedBox(
                     height: 10,
                   ),
                   Row(
@@ -85,7 +85,7 @@ class _RequestsViewState extends State<RequestsView> {
                       Container(
                         width: 220,
                         height: 25,
-                        child: TextField(
+                        child: const TextField(
                           textAlign: TextAlign.start,
                           decoration: InputDecoration(
                             hintText: "Search...",
@@ -148,12 +148,12 @@ class _RequestsViewState extends State<RequestsView> {
                       )
                     ],
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 20,
                   ),
                   Container(
-                    padding: EdgeInsets.symmetric(horizontal: 50),
-                    child: Row(
+                    padding: const EdgeInsets.symmetric(horizontal: 50),
+                    child: const Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text("Seller ID"),
@@ -164,7 +164,7 @@ class _RequestsViewState extends State<RequestsView> {
                       ],
                     ),
                   ),
-                  Divider(
+                  const Divider(
                     thickness: 1,
                     color: Colors.black,
                   ),
@@ -177,15 +177,16 @@ class _RequestsViewState extends State<RequestsView> {
                         return Column(
                           children: [
                             Container(
-                              padding: EdgeInsets.symmetric(horizontal: 50),
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 50),
                               child: Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text("01150${index}"),
-                                  Text("September 20, 2024"),
-                                  Text("8:20 AM"),
-                                  Text("Vincent Cueva"),
+                                  const Text("September 20, 2024"),
+                                  const Text("8:20 AM"),
+                                  const Text("Vincent Cueva"),
                                   Container(
                                     width: 80,
                                     height: 30,
@@ -193,12 +194,13 @@ class _RequestsViewState extends State<RequestsView> {
                                       color: secondary,
                                       borderRadius: BorderRadius.circular(10),
                                     ),
-                                    child: Center(child: Text("Accepted")),
+                                    child:
+                                        const Center(child: Text("Accepted")),
                                   )
                                 ],
                               ),
                             ),
-                            Divider(
+                            const Divider(
                               color: Colors.grey,
                               thickness: 0.5,
                             )

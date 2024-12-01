@@ -59,7 +59,7 @@ class _MenuScreenState extends State<MenuScreen> {
 
         return Scaffold(
           appBar: PreferredSize(
-            preferredSize: Size.fromHeight(60),
+            preferredSize: const Size.fromHeight(60),
             child: Container(
               height: 60,
               padding: const EdgeInsets.symmetric(
@@ -76,7 +76,7 @@ class _MenuScreenState extends State<MenuScreen> {
                         height: 30,
                         child: Image.asset("assets/logo/logo-white.png"),
                       ),
-                      SizedBox(width: 50),
+                      const SizedBox(width: 50),
                       Container(
                         width: 350,
                         alignment: Alignment.center,
@@ -84,7 +84,7 @@ class _MenuScreenState extends State<MenuScreen> {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             Container(
-                              child: Text(
+                              child: const Text(
                                 "Augmented Reality Furniture Assistant",
                                 style: TextStyle(
                                   color: Colors.white,
@@ -230,7 +230,7 @@ class _MenuScreenState extends State<MenuScreen> {
                   showHamburger: true,
                   hoverColor: secondary,
                   unselectedIconColor: Colors.white,
-                  unselectedTitleTextStyle: TextStyle(
+                  unselectedTitleTextStyle: const TextStyle(
                     color: Colors.white,
                   ),
                   selectedHoverColor: Colors.grey.shade200,
@@ -240,7 +240,7 @@ class _MenuScreenState extends State<MenuScreen> {
                   ),
                   selectedIconColor: Colors.black,
                   itemHeight: 45,
-                  itemOuterPadding: EdgeInsets.only(
+                  itemOuterPadding: const EdgeInsets.only(
                     right: 10,
                     left: 10,
                     bottom: 10,
@@ -252,7 +252,7 @@ class _MenuScreenState extends State<MenuScreen> {
                   child: Container(
                     height: 100,
                     width: double.infinity,
-                    margin: EdgeInsets.only(
+                    margin: const EdgeInsets.only(
                       bottom: 10,
                       right: 10,
                       left: 10,
@@ -288,7 +288,7 @@ class _MenuScreenState extends State<MenuScreen> {
                   ),
                   SideMenuExpansionItem(
                     title: 'Customers',
-                    iconWidget: Icon(
+                    iconWidget: const Icon(
                       Icons.group_rounded,
                       color: Colors.white,
                     ),
@@ -369,11 +369,11 @@ class _MenuScreenState extends State<MenuScreen> {
                 child: PageView(
                   controller: pageController,
                   children: [
-                    DashboardView(),
-                    SellersView(),
-                    ShoppersView(),
-                    ReportsView(),
-                    PlatformScreen()
+                    const DashboardView(),
+                    const SellersView(),
+                    const ShoppersView(),
+                    const ReportsView(),
+                    const PlatformScreen()
 
                     // RequestsView(),
 

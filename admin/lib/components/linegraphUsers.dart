@@ -9,7 +9,7 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 
 class LineGraphUsers extends StatefulWidget {
-  LineGraphUsers({super.key});
+  const LineGraphUsers({super.key});
 
   @override
   State<LineGraphUsers> createState() => _LineGraphUsersState();
@@ -73,11 +73,11 @@ class _LineGraphUsersState extends State<LineGraphUsers> {
         future: _fs.getListOfReport(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator());
           } else if (snapshot.hasError) {
             return Center(child: Text('Error: ${snapshot.error}'));
           } else if (!snapshot.hasData) {
-            return Center(child: Text('No data found.'));
+            return const Center(child: Text('No data found.'));
           }
           List<MonthlyReport> reports = snapshot.data!;
 
@@ -106,9 +106,9 @@ class _LineGraphUsersState extends State<LineGraphUsers> {
               gridData: const FlGridData(show: true),
               backgroundColor: Colors.white,
               titlesData: FlTitlesData(
-                leftTitles: AxisTitles(
+                leftTitles: const AxisTitles(
                   sideTitles: SideTitles(showTitles: true, reservedSize: 50),
-                  axisNameWidget: const Text("Orders"),
+                  axisNameWidget: Text("Orders"),
                 ),
                 bottomTitles: AxisTitles(
                   sideTitles: SideTitles(
@@ -131,10 +131,10 @@ class _LineGraphUsersState extends State<LineGraphUsers> {
                   axisNameSize: 30,
                   axisNameWidget: Text("Month of ${currentMonth}"),
                 ),
-                topTitles: AxisTitles(
+                topTitles: const AxisTitles(
                   sideTitles: SideTitles(showTitles: false),
                 ),
-                rightTitles: AxisTitles(
+                rightTitles: const AxisTitles(
                   sideTitles: SideTitles(showTitles: false),
                 ),
               ),

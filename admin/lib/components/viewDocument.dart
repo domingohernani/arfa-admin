@@ -46,7 +46,7 @@ class _ViewDocumentModalState extends State<ViewDocumentModal> {
       child: Container(
         width: width,
         height: height,
-        padding: EdgeInsets.all(30),
+        padding: const EdgeInsets.all(30),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(15),
           color: Colors.grey.shade200,
@@ -80,8 +80,8 @@ class _ViewDocumentModalState extends State<ViewDocumentModal> {
                         Container(
                           width: 120,
                           alignment: Alignment.center,
-                          padding: EdgeInsets.all(5),
-                          decoration: BoxDecoration(
+                          padding: const EdgeInsets.all(5),
+                          decoration: const BoxDecoration(
                             color: Colors.green,
                             borderRadius: BorderRadius.only(
                               bottomRight: Radius.circular(5),
@@ -99,7 +99,7 @@ class _ViewDocumentModalState extends State<ViewDocumentModal> {
                         Container(
                           height: 30,
                           alignment: Alignment.center,
-                          padding: EdgeInsets.all(5),
+                          padding: const EdgeInsets.all(5),
                           decoration: BoxDecoration(
                             border: Border(
                                 top: BorderSide(
@@ -111,7 +111,7 @@ class _ViewDocumentModalState extends State<ViewDocumentModal> {
                                 bottom: BorderSide(
                                   color: primary,
                                 )),
-                            borderRadius: BorderRadius.only(
+                            borderRadius: const BorderRadius.only(
                               topLeft: Radius.circular(5),
                               bottomLeft: Radius.circular(5),
                             ),
@@ -127,7 +127,7 @@ class _ViewDocumentModalState extends State<ViewDocumentModal> {
                                   size: 20,
                                   color: primary,
                                 ),
-                                SizedBox(
+                                const SizedBox(
                                   width: 3,
                                 ),
                                 Text(
@@ -139,13 +139,13 @@ class _ViewDocumentModalState extends State<ViewDocumentModal> {
                               ],
                             ),
                             style: TextButton.styleFrom(
-                              shape: RoundedRectangleBorder(),
+                              shape: const RoundedRectangleBorder(),
                             ),
                           ),
                         ),
                       ],
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 10,
                     ),
                     Container(
@@ -165,7 +165,7 @@ class _ViewDocumentModalState extends State<ViewDocumentModal> {
                             },
                           ),
                           if (_isLoading)
-                            Center(
+                            const Center(
                                 child:
                                     CircularProgressIndicator()), // Show loader
                         ],
@@ -174,7 +174,7 @@ class _ViewDocumentModalState extends State<ViewDocumentModal> {
                   ],
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 15,
               ),
               Container(
@@ -195,8 +195,8 @@ class _ViewDocumentModalState extends State<ViewDocumentModal> {
                         Container(
                           width: 200,
                           alignment: Alignment.center,
-                          padding: EdgeInsets.all(5),
-                          decoration: BoxDecoration(
+                          padding: const EdgeInsets.all(5),
+                          decoration: const BoxDecoration(
                             color: Colors.green,
                             borderRadius: BorderRadius.only(
                               bottomRight: Radius.circular(5),
@@ -214,7 +214,7 @@ class _ViewDocumentModalState extends State<ViewDocumentModal> {
                         Container(
                           height: 30,
                           alignment: Alignment.center,
-                          padding: EdgeInsets.all(5),
+                          padding: const EdgeInsets.all(5),
                           decoration: BoxDecoration(
                             border: Border(
                                 top: BorderSide(
@@ -226,7 +226,7 @@ class _ViewDocumentModalState extends State<ViewDocumentModal> {
                                 bottom: BorderSide(
                                   color: primary,
                                 )),
-                            borderRadius: BorderRadius.only(
+                            borderRadius: const BorderRadius.only(
                               topLeft: Radius.circular(5),
                               bottomLeft: Radius.circular(5),
                             ),
@@ -242,7 +242,7 @@ class _ViewDocumentModalState extends State<ViewDocumentModal> {
                                   size: 20,
                                   color: primary,
                                 ),
-                                SizedBox(
+                                const SizedBox(
                                   width: 3,
                                 ),
                                 Text(
@@ -254,13 +254,13 @@ class _ViewDocumentModalState extends State<ViewDocumentModal> {
                               ],
                             ),
                             style: TextButton.styleFrom(
-                              shape: RoundedRectangleBorder(),
+                              shape: const RoundedRectangleBorder(),
                             ),
                           ),
                         ),
                       ],
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 10,
                     ),
                     Container(
@@ -280,7 +280,7 @@ class _ViewDocumentModalState extends State<ViewDocumentModal> {
                             },
                           ),
                           if (_isLoading)
-                            Center(
+                            const Center(
                                 child:
                                     CircularProgressIndicator()), // Show loader
                         ],
@@ -289,19 +289,19 @@ class _ViewDocumentModalState extends State<ViewDocumentModal> {
                   ],
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 10,
               ),
               FloatingActionButton(
                 onPressed: () {
                   Navigator.pop(context);
                 },
-                child: Icon(
+                child: const Icon(
                   Icons.close,
                 ),
-                shape: CircleBorder(),
+                shape: const CircleBorder(),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 10,
               ),
             ],

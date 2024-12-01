@@ -152,11 +152,11 @@ class _DashboardViewState extends State<DashboardView> {
               future: _fs.getMonthlyReport(),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  return Center(child: CircularProgressIndicator());
+                  return const Center(child: const CircularProgressIndicator());
                 } else if (snapshot.hasError) {
                   return Center(child: Text('Error: ${snapshot.error}'));
                 } else if (!snapshot.hasData) {
-                  return Center(child: Text('No sellers found.'));
+                  return const Center(child: Text('No sellers found.'));
                 }
 
                 var reports = snapshot.data!;
@@ -264,7 +264,7 @@ class _DashboardViewState extends State<DashboardView> {
                                     );
                                   }).toList(),
                                 ),
-                                Text("compare"),
+                                const Text("compare"),
                                 DropdownButton<int>(
                                   value: compareToValue,
                                   hint: const Text('Default'),
@@ -290,12 +290,12 @@ class _DashboardViewState extends State<DashboardView> {
                           ),
                         ],
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 10,
                       ),
-                      Text(
+                      const Text(
                           "This metric shows how many orders are placed each day over a month, helping you see trends in customer demand."),
-                      SizedBox(
+                      const SizedBox(
                         height: 30,
                       ),
                       Container(
@@ -339,12 +339,12 @@ class _DashboardViewState extends State<DashboardView> {
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 10,
                       ),
-                      Text(
+                      const Text(
                           "This weekly metric shows daily sales trends, helping you identify the busiest days."),
-                      SizedBox(
+                      const SizedBox(
                         height: 20,
                       ),
                       Container(
@@ -357,18 +357,18 @@ class _DashboardViewState extends State<DashboardView> {
                 ),
               ],
             ),
-            SizedBox(
+            const SizedBox(
               height: 20,
             ),
             FutureBuilder<List<Shop>>(
               future: _fs.getShopData(),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  return Center(child: CircularProgressIndicator());
+                  return const Center(child: CircularProgressIndicator());
                 } else if (snapshot.hasError) {
                   return Center(child: Text('Error: ${snapshot.error}'));
                 } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                  return Center(child: Text('No sellers found.'));
+                  return const Center(child: Text('No sellers found.'));
                 }
 
                 List<Shop> shops = snapshot.data!;
@@ -393,25 +393,25 @@ class _DashboardViewState extends State<DashboardView> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
+                      const Text(
                         "Top Sellers",
                         style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 10,
                       ),
                       Table(
-                        border: TableBorder.symmetric(
+                        border: const TableBorder.symmetric(
                             inside: BorderSide(color: Colors.grey)),
                         columnWidths: {
-                          0: FlexColumnWidth(),
-                          1: FlexColumnWidth(),
-                          2: FlexColumnWidth(),
-                          3: FlexColumnWidth(),
-                          4: FixedColumnWidth(100.0),
+                          0: const FlexColumnWidth(),
+                          1: const FlexColumnWidth(),
+                          2: const FlexColumnWidth(),
+                          3: const FlexColumnWidth(),
+                          4: const FixedColumnWidth(100.0),
                         },
                         defaultVerticalAlignment:
                             TableCellVerticalAlignment.middle,
@@ -421,21 +421,21 @@ class _DashboardViewState extends State<DashboardView> {
                               color: Colors.grey.shade200,
                             ),
                             children: [
-                              Center(
+                              const Center(
                                   child: Padding(
                                 padding: EdgeInsets.all(12.0),
                                 child: Text("ID",
                                     style:
                                         TextStyle(fontWeight: FontWeight.bold)),
                               )),
-                              Center(
+                              const Center(
                                   child: Padding(
                                 padding: EdgeInsets.all(12.0),
                                 child: Text("Shop Name",
                                     style:
                                         TextStyle(fontWeight: FontWeight.bold)),
                               )),
-                              Center(
+                              const Center(
                                   child: Padding(
                                 padding: EdgeInsets.all(8.0),
                                 child: Text("Revenue",
@@ -448,14 +448,14 @@ class _DashboardViewState extends State<DashboardView> {
                               //   child: Text("Total Products",
                               //       style: TextStyle(fontWeight: FontWeight.bold)),
                               // )),
-                              Center(
+                              const Center(
                                   child: Padding(
                                 padding: EdgeInsets.all(8.0),
                                 child: Text("Products Sold",
                                     style:
                                         TextStyle(fontWeight: FontWeight.bold)),
                               )),
-                              Center(
+                              const Center(
                                   child: Padding(
                                 padding: EdgeInsets.all(8.0),
                                 child: Text("Action",
@@ -470,19 +470,19 @@ class _DashboardViewState extends State<DashboardView> {
                                 children: [
                                   TableCell(
                                       child: Padding(
-                                    padding: EdgeInsets.symmetric(
+                                    padding: const EdgeInsets.symmetric(
                                         vertical: 4, horizontal: 10),
                                     child: Text("${shop.shopid}"),
                                   )),
                                   TableCell(
                                       child: Padding(
-                                    padding: EdgeInsets.symmetric(
+                                    padding: const EdgeInsets.symmetric(
                                         vertical: 4, horizontal: 10),
                                     child: Text("${shop.shopname}"),
                                   )),
                                   TableCell(
                                       child: Padding(
-                                    padding: EdgeInsets.symmetric(
+                                    padding: const EdgeInsets.symmetric(
                                         vertical: 4, horizontal: 10),
                                     child: Text(
                                         "${shop.revenue}"), // Replace with actual revenue data if available
@@ -495,7 +495,7 @@ class _DashboardViewState extends State<DashboardView> {
                                   // )),
                                   TableCell(
                                       child: Padding(
-                                    padding: EdgeInsets.symmetric(
+                                    padding: const EdgeInsets.symmetric(
                                         vertical: 4, horizontal: 10),
                                     child: Text(
                                         "${shop.orders}"), // Replace with actual products sold data if available
@@ -503,7 +503,7 @@ class _DashboardViewState extends State<DashboardView> {
                                   TableCell(
                                     child: Container(
                                       width: 50,
-                                      padding: EdgeInsets.symmetric(
+                                      padding: const EdgeInsets.symmetric(
                                           vertical: 4, horizontal: 10),
                                       child: IconButton(
                                         onPressed: () async {
@@ -516,7 +516,7 @@ class _DashboardViewState extends State<DashboardView> {
                                             },
                                           );
                                         },
-                                        icon: Icon(
+                                        icon: const Icon(
                                             Icons.arrow_right_alt_outlined),
                                       ),
                                     ),
@@ -532,18 +532,18 @@ class _DashboardViewState extends State<DashboardView> {
                 );
               },
             ),
-            SizedBox(
+            const SizedBox(
               height: 20,
             ),
             FutureBuilder<List<TopProduct>>(
               future: _fs.getTopProducts(),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  return Center(child: CircularProgressIndicator());
+                  return const Center(child: CircularProgressIndicator());
                 } else if (snapshot.hasError) {
                   return Center(child: Text('Error: ${snapshot.error}'));
                 } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                  return Center(child: Text('No products found.'));
+                  return const Center(child: Text('No products found.'));
                 }
 
                 List<TopProduct> furniture = snapshot.data!;
@@ -568,25 +568,25 @@ class _DashboardViewState extends State<DashboardView> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
+                      const Text(
                         "Top Products",
                         style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 10,
                       ),
                       Table(
-                        border: TableBorder.symmetric(
+                        border: const TableBorder.symmetric(
                             inside: BorderSide(color: Colors.grey)),
                         columnWidths: {
-                          0: FlexColumnWidth(),
-                          1: FlexColumnWidth(),
-                          2: FlexColumnWidth(),
-                          3: FlexColumnWidth(),
-                          4: FixedColumnWidth(100.0),
+                          0: const FlexColumnWidth(),
+                          1: const FlexColumnWidth(),
+                          2: const FlexColumnWidth(),
+                          3: const FlexColumnWidth(),
+                          4: const FixedColumnWidth(100.0),
                         },
                         defaultVerticalAlignment:
                             TableCellVerticalAlignment.middle,
@@ -596,14 +596,14 @@ class _DashboardViewState extends State<DashboardView> {
                               color: Colors.grey.shade200,
                             ),
                             children: [
-                              Center(
+                              const Center(
                                   child: Padding(
                                 padding: EdgeInsets.all(12.0),
                                 child: Text("Name",
                                     style:
                                         TextStyle(fontWeight: FontWeight.bold)),
                               )),
-                              Center(
+                              const Center(
                                   child: Padding(
                                 padding: EdgeInsets.all(8.0),
                                 child: Text("Category",
@@ -616,21 +616,21 @@ class _DashboardViewState extends State<DashboardView> {
                               //   child: Text("Total Products",
                               //       style: TextStyle(fontWeight: FontWeight.bold)),
                               // )),
-                              Center(
+                              const Center(
                                   child: Padding(
                                 padding: EdgeInsets.all(8.0),
                                 child: Text("Solds",
                                     style:
                                         TextStyle(fontWeight: FontWeight.bold)),
                               )),
-                              Center(
+                              const Center(
                                   child: Padding(
                                 padding: EdgeInsets.all(8.0),
                                 child: Text("Price",
                                     style:
                                         TextStyle(fontWeight: FontWeight.bold)),
                               )),
-                              Center(
+                              const Center(
                                   child: Padding(
                                 padding: EdgeInsets.all(8.0),
                                 child: Text("Action",
@@ -645,13 +645,13 @@ class _DashboardViewState extends State<DashboardView> {
                                 children: [
                                   TableCell(
                                       child: Padding(
-                                    padding: EdgeInsets.symmetric(
+                                    padding: const EdgeInsets.symmetric(
                                         vertical: 4, horizontal: 10),
                                     child: Text("${product.name}"),
                                   )),
                                   TableCell(
                                       child: Padding(
-                                    padding: EdgeInsets.symmetric(
+                                    padding: const EdgeInsets.symmetric(
                                         vertical: 4, horizontal: 10),
                                     child: Text(
                                         "${product.category}"), // Replace with actual revenue data if available
@@ -664,14 +664,14 @@ class _DashboardViewState extends State<DashboardView> {
                                   // )),
                                   TableCell(
                                       child: Padding(
-                                    padding: EdgeInsets.symmetric(
+                                    padding: const EdgeInsets.symmetric(
                                         vertical: 4, horizontal: 10),
                                     child: Text(
                                         "${product.solds}"), // Replace with actual products sold data if available
                                   )),
                                   TableCell(
                                       child: Padding(
-                                    padding: EdgeInsets.symmetric(
+                                    padding: const EdgeInsets.symmetric(
                                         vertical: 4, horizontal: 10),
                                     child: Text(
                                         "${product.price}"), // Replace with actual products sold data if available
@@ -679,7 +679,7 @@ class _DashboardViewState extends State<DashboardView> {
                                   TableCell(
                                     child: Container(
                                       width: 50,
-                                      padding: EdgeInsets.symmetric(
+                                      padding: const EdgeInsets.symmetric(
                                           vertical: 4, horizontal: 10),
                                       child: IconButton(
                                         onPressed: () async {
@@ -692,7 +692,7 @@ class _DashboardViewState extends State<DashboardView> {
                                           //   },
                                           // );
                                         },
-                                        icon: Icon(
+                                        icon: const Icon(
                                             Icons.arrow_right_alt_outlined),
                                       ),
                                     ),
@@ -708,7 +708,7 @@ class _DashboardViewState extends State<DashboardView> {
                 );
               },
             ),
-            SizedBox(
+            const SizedBox(
               height: 30,
             ),
             Row(
@@ -740,7 +740,7 @@ class _DashboardViewState extends State<DashboardView> {
                         ),
                       ),
                       const SizedBox(height: 10),
-                      Text(
+                      const Text(
                           "This chart shows the distribution of devices used for placing orders."),
                       const SizedBox(height: 20),
                       Container(
@@ -825,7 +825,8 @@ List<PieChartSectionData> _generatePieSections(Map<String, double> data) {
             title: "${entry.key}: ${entry.value.toInt()}",
             color: _getDeviceColor(entry.key),
             radius: 150,
-            titleStyle: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+            titleStyle:
+                const TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
           ))
       .toList();
 }

@@ -109,7 +109,7 @@ class _SellersViewState extends State<SellersView> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text("Sort by:"),
+                          const Text("Sort by:"),
                           DropdownButton<String>(
                             value: statusValue,
                             hint: const Text('Default'),
@@ -144,7 +144,7 @@ class _SellersViewState extends State<SellersView> {
                     future: _fs.getSellersData(),
                     builder: (context, snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting) {
-                        return Center(child: CircularProgressIndicator());
+                        return const Center(child: CircularProgressIndicator());
                       }
 
                       if (snapshot.hasError) {
@@ -152,7 +152,8 @@ class _SellersViewState extends State<SellersView> {
                       }
 
                       if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                        return Center(child: Text("No sellers available"));
+                        return const Center(
+                            child: Text("No sellers available"));
                       }
 
                       List<Seller> sellers = snapshot.data!
@@ -208,7 +209,7 @@ class _SellersViewState extends State<SellersView> {
                                   color: Colors.grey.withOpacity(0.2),
                                   spreadRadius: 2,
                                   blurRadius: 5,
-                                  offset: Offset(0, 3),
+                                  offset: const Offset(0, 3),
                                 ),
                               ],
                             ),
@@ -218,7 +219,7 @@ class _SellersViewState extends State<SellersView> {
                                 Container(
                                   height: 60,
                                   width: double.infinity,
-                                  decoration: BoxDecoration(
+                                  decoration: const BoxDecoration(
                                     color: Colors.green,
                                     borderRadius: BorderRadius.only(
                                       topLeft: Radius.circular(10),
@@ -245,36 +246,36 @@ class _SellersViewState extends State<SellersView> {
                                 Positioned(
                                   top: 110,
                                   child: Container(
-                                    padding: EdgeInsets.only(top: 20),
+                                    padding: const EdgeInsets.only(top: 20),
                                     child: Column(
                                       children: [
                                         Text(
                                           "${seller.shopname}",
-                                          style: TextStyle(
+                                          style: const TextStyle(
                                             fontSize: 18,
                                             fontWeight: FontWeight.bold,
                                             color: Colors.black,
                                           ),
                                         ),
-                                        SizedBox(height: 5),
+                                        const SizedBox(height: 5),
                                         Text(
                                           "ID: ${seller.id}",
-                                          style: TextStyle(
+                                          style: const TextStyle(
                                             fontSize: 14,
                                             fontWeight: FontWeight.bold,
                                             color: Colors.black54,
                                           ),
                                         ),
-                                        SizedBox(height: 5),
+                                        const SizedBox(height: 5),
                                         Text(
                                           "Email: ${seller.email}",
-                                          style: TextStyle(
+                                          style: const TextStyle(
                                             fontSize: 14,
                                             fontWeight: FontWeight.bold,
                                             color: Colors.black54,
                                           ),
                                         ),
-                                        SizedBox(height: 15),
+                                        const SizedBox(height: 15),
                                         ElevatedButton(
                                           onPressed: () async {
                                             await showDialog(

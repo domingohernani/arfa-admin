@@ -161,11 +161,11 @@ class BarGraph extends StatelessWidget {
       future: _fs.getOrdersData(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(child: CircularProgressIndicator());
+          return const Center(child: CircularProgressIndicator());
         } else if (snapshot.hasError) {
           return Center(child: Text('Error: ${snapshot.error}'));
         } else if (!snapshot.hasData) {
-          return Center(child: Text('No data found.'));
+          return const Center(child: Text('No data found.'));
         }
 
         final salesData = snapshot.data;
@@ -173,10 +173,10 @@ class BarGraph extends StatelessWidget {
 
         return BarChart(
           BarChartData(
-            gridData: FlGridData(show: false),
+            gridData: const FlGridData(show: false),
             titlesData: FlTitlesData(
               leftTitles: AxisTitles(
-                axisNameWidget: Text("Sales"),
+                axisNameWidget: const Text("Sales"),
                 sideTitles: SideTitles(
                   showTitles: true,
                   reservedSize: 50,
@@ -191,7 +191,8 @@ class BarGraph extends StatelessWidget {
                       axisSide: meta.axisSide,
                       child: Text(
                         text,
-                        style: TextStyle(fontSize: 12, color: Colors.black),
+                        style:
+                            const TextStyle(fontSize: 12, color: Colors.black),
                       ),
                     );
                   },
@@ -207,7 +208,7 @@ class BarGraph extends StatelessWidget {
                       axisSide: meta.axisSide,
                       child: Text(
                         weeks[value.toInt() % weeks.length],
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontSize: 14,
                           color: Colors.black,
                         ),
@@ -215,12 +216,12 @@ class BarGraph extends StatelessWidget {
                     );
                   },
                 ),
-                axisNameWidget: Text("Weeks"),
+                axisNameWidget: const Text("Weeks"),
               ),
-              topTitles: AxisTitles(
+              topTitles: const AxisTitles(
                 sideTitles: SideTitles(showTitles: false),
               ),
-              rightTitles: AxisTitles(
+              rightTitles: const AxisTitles(
                 sideTitles: SideTitles(showTitles: false),
               ),
             ),

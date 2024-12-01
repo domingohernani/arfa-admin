@@ -34,7 +34,7 @@ class _ViewProductDetailsModalState extends State<ViewProductDetailsModal> {
               color: Colors.black.withOpacity(0.2),
               spreadRadius: 1,
               blurRadius: 8,
-              offset: Offset(4, 4),
+              offset: const Offset(4, 4),
             ),
           ],
         ),
@@ -75,7 +75,7 @@ class _ViewProductDetailsModalState extends State<ViewProductDetailsModal> {
                 future: _fs.getSingleFurnituresData(widget.productid),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
-                    return Center(child: CircularProgressIndicator());
+                    return const Center(child: CircularProgressIndicator());
                   }
 
                   if (snapshot.hasError) {
@@ -83,7 +83,8 @@ class _ViewProductDetailsModalState extends State<ViewProductDetailsModal> {
                   }
 
                   if (!snapshot.hasData || snapshot.data == null) {
-                    return Center(child: Text("No product details available"));
+                    return const Center(
+                        child: Text("No product details available"));
                   }
 
                   final furniture = snapshot.data!;
@@ -136,10 +137,10 @@ class _ViewProductDetailsModalState extends State<ViewProductDetailsModal> {
                                   fontStyle: FontStyle.italic,
                                 ),
                               ),
-                              Divider(thickness: 1.5),
+                              const Divider(thickness: 1.5),
 
                               // Description Section
-                              Text(
+                              const Text(
                                 "Description: ",
                                 style: TextStyle(
                                   fontSize: 18,
@@ -148,12 +149,12 @@ class _ViewProductDetailsModalState extends State<ViewProductDetailsModal> {
                               ),
                               Text(
                                 furniture.description,
-                                style: TextStyle(fontSize: 15),
+                                style: const TextStyle(fontSize: 15),
                                 textAlign: TextAlign.justify,
                               ),
                               const SizedBox(height: 15),
                               Container(
-                                padding: EdgeInsets.all(10),
+                                padding: const EdgeInsets.all(10),
                                 decoration: BoxDecoration(
                                   border: Border.all(color: primary, width: 2),
                                   borderRadius: BorderRadius.circular(10),
@@ -173,7 +174,7 @@ class _ViewProductDetailsModalState extends State<ViewProductDetailsModal> {
                                           ),
                                           Text(
                                             "₱ ${furniture.price}",
-                                            style: TextStyle(
+                                            style: const TextStyle(
                                               fontSize: 15,
                                               fontWeight: FontWeight.bold,
                                               color: Colors.grey,
@@ -195,26 +196,26 @@ class _ViewProductDetailsModalState extends State<ViewProductDetailsModal> {
                               const SizedBox(height: 15),
                               Row(
                                 children: [
-                                  Text(
+                                  const Text(
                                     "Stocks: ",
                                     style: TextStyle(
                                       fontSize: 18,
                                       fontWeight: FontWeight.bold,
                                     ),
                                   ),
-                                  SizedBox(
+                                  const SizedBox(
                                     width: 10,
                                   ),
                                   Text(
                                     "${stock.latestQuantity}",
-                                    style: TextStyle(fontSize: 20),
+                                    style: const TextStyle(fontSize: 20),
                                     textAlign: TextAlign.justify,
                                   ),
                                 ],
                               ),
 
                               const SizedBox(height: 25),
-                              Text(
+                              const Text(
                                 "Reviews: ",
                                 style: TextStyle(
                                   fontSize: 18,
@@ -230,7 +231,7 @@ class _ViewProductDetailsModalState extends State<ViewProductDetailsModal> {
                                           final rev = furniture.review[index];
                                           return Card(
                                             child: Padding(
-                                              padding: EdgeInsets.all(10),
+                                              padding: const EdgeInsets.all(10),
                                               child: Row(
                                                 mainAxisAlignment:
                                                     MainAxisAlignment
@@ -243,15 +244,14 @@ class _ViewProductDetailsModalState extends State<ViewProductDetailsModal> {
                                                         CrossAxisAlignment
                                                             .start,
                                                     children: [
-                                                      Row(
+                                                      const Row(
                                                         children: [
                                                           CircleAvatar(
                                                             radius: 20,
                                                             child: Icon(
                                                                 Icons.person),
                                                           ),
-                                                          const SizedBox(
-                                                              width: 10),
+                                                          SizedBox(width: 10),
                                                           Text(
                                                             "Ryan King Ballesteros",
                                                             style: TextStyle(
@@ -265,14 +265,14 @@ class _ViewProductDetailsModalState extends State<ViewProductDetailsModal> {
                                                       ),
                                                       const SizedBox(height: 5),
                                                       Container(
-                                                        margin: EdgeInsets.only(
-                                                            left: 50),
+                                                        margin: const EdgeInsets
+                                                            .only(left: 50),
                                                         child: Column(
                                                           crossAxisAlignment:
                                                               CrossAxisAlignment
                                                                   .start,
                                                           children: [
-                                                            Text(
+                                                            const Text(
                                                               "Title: ",
                                                               style: TextStyle(
                                                                 fontWeight:
@@ -285,12 +285,13 @@ class _ViewProductDetailsModalState extends State<ViewProductDetailsModal> {
                                                         ),
                                                       ),
                                                       Container(
-                                                        margin: EdgeInsets.only(
-                                                            left: 50),
+                                                        margin: const EdgeInsets
+                                                            .only(left: 50),
                                                         child: Text(
                                                           rev.description,
-                                                          style: TextStyle(
-                                                              fontSize: 15),
+                                                          style:
+                                                              const TextStyle(
+                                                                  fontSize: 15),
                                                           maxLines: 5,
                                                           overflow: TextOverflow
                                                               .ellipsis,
@@ -306,7 +307,8 @@ class _ViewProductDetailsModalState extends State<ViewProductDetailsModal> {
                                                           BorderRadius.circular(
                                                               5),
                                                     ),
-                                                    padding: EdgeInsets.all(5),
+                                                    padding:
+                                                        const EdgeInsets.all(5),
                                                     child: Column(
                                                       children: [
                                                         Text(
@@ -337,7 +339,7 @@ class _ViewProductDetailsModalState extends State<ViewProductDetailsModal> {
                                         },
                                       ),
                                     )
-                                  : Center(
+                                  : const Center(
                                       child: Text("No reviews available.")),
                             ],
                           ),

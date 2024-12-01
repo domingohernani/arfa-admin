@@ -31,11 +31,11 @@ class _TermsAndConditionUploaderState extends State<TermsAndConditionUploader> {
           actions: [
             TextButton(
               onPressed: () => Navigator.of(context).pop(false),
-              child: Text('Cancel'),
+              child: const Text('Cancel'),
             ),
             ElevatedButton(
               onPressed: () => Navigator.of(context).pop(true),
-              child: Text('Confirm'),
+              child: const Text('Confirm'),
             ),
           ],
         );
@@ -118,7 +118,7 @@ class _TermsAndConditionUploaderState extends State<TermsAndConditionUploader> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
+            const Text(
               'Terms and Conditions',
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
             ),
@@ -132,7 +132,7 @@ class _TermsAndConditionUploaderState extends State<TermsAndConditionUploader> {
                 color: Colors.grey[700],
               ),
             ),
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
             GestureDetector(
               onTap: () =>
                   _launchURL('https://arfaph.vercel.app/terms-and-conditions'),
@@ -144,23 +144,23 @@ class _TermsAndConditionUploaderState extends State<TermsAndConditionUploader> {
                 ),
               ),
             ),
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
             if (_isUploading)
-              CircularProgressIndicator()
+              const CircularProgressIndicator()
             else
               SizedBox(
                 width: 200,
                 child: ElevatedButton.icon(
                   onPressed: confirmAndUpload,
-                  icon: Icon(Icons.upload),
-                  label: Text('Upload File'),
+                  icon: const Icon(Icons.upload),
+                  label: const Text('Upload File'),
                 ),
               ),
             if (_uploadStatus != null)
               Text(
                 _uploadStatus!,
                 textAlign: TextAlign.center,
-                style: TextStyle(color: Colors.blue),
+                style: const TextStyle(color: Colors.blue),
               ),
           ],
         ),
