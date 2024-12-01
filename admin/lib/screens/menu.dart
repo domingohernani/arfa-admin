@@ -4,6 +4,7 @@ import 'package:admin/screens/customers/shoppers.dart';
 import 'package:admin/screens/customers/viewStore.dart';
 import 'package:admin/screens/dashboard/dashboard.dart';
 import 'package:admin/screens/platform/platform.dart';
+import 'package:admin/screens/refund/refund.dart';
 import 'package:admin/screens/reports/report.dart';
 import 'package:admin/screens/requests/request.dart';
 import 'package:admin/screens/customers/seller.dart';
@@ -310,6 +311,13 @@ class _MenuScreenState extends State<MenuScreen> {
                     ],
                   ),
                   SideMenuItem(
+                    title: 'Refunds',
+                    onTap: (index, _) {
+                      sideMenu.changePage(index);
+                    },
+                    icon: const Icon(Icons.swap_horiz),
+                  ),
+                  SideMenuItem(
                     title: 'Reports',
                     onTap: (index, _) {
                       sideMenu.changePage(index);
@@ -372,6 +380,7 @@ class _MenuScreenState extends State<MenuScreen> {
                     const DashboardView(),
                     const SellersView(),
                     const ShoppersView(),
+                    Refund(),
                     const ReportsView(),
                     const PlatformScreen()
 
