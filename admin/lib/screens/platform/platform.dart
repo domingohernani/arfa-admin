@@ -1,3 +1,4 @@
+import 'package:admin/components/commissionRate.dart';
 import 'package:admin/components/cookiespolicy.dart';
 import 'package:admin/components/tax.dart';
 import 'package:admin/components/termsAndCondition.dart';
@@ -27,18 +28,18 @@ class PlatformScreen extends StatelessWidget {
                   child: CookiesPoliciesUploader(),
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 390,
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                  padding: EdgeInsets.symmetric(horizontal: 16.0),
                   child: TaxScreen(),
                 ),
               ),
-              SizedBox(
-                height: 220,
+              const SizedBox(
+                height: 390,
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                  child: TaxScreen(),
+                  padding: EdgeInsets.symmetric(horizontal: 16.0),
+                  child: CommissionRateScreen(),
                 ),
               ),
             ],

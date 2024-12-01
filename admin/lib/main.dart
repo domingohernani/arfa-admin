@@ -36,7 +36,7 @@ class _MainState extends State<Main> {
               fontFamily: 'Raleway',
             ),
       ),
-      home: Scaffold(
+      home: const Scaffold(
         // body: ViewProductDetailsModal(
         //   productid: "kWNyAinXBaxYN5cLVKDS",
         // ),

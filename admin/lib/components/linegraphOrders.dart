@@ -13,7 +13,8 @@ class LineGraph extends StatefulWidget {
   final int compareTo; // The year for the blue line
 
   // Constructor to initialize compareFrom and compareTo
-  LineGraph({Key? key, required this.compareFrom, required this.compareTo})
+  const LineGraph(
+      {Key? key, required this.compareFrom, required this.compareTo})
       : super(key: key);
 
   @override
@@ -84,11 +85,11 @@ class _LineGraphState extends State<LineGraph> {
         future: _fs.getListOfReport(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator());
           } else if (snapshot.hasError) {
             return Center(child: Text('Error: ${snapshot.error}'));
           } else if (!snapshot.hasData) {
-            return Center(child: Text('No sellers found.'));
+            return const Center(child: Text('No sellers found.'));
           }
           List<MonthlyReport> reports = snapshot.data!;
 
@@ -120,9 +121,9 @@ class _LineGraphState extends State<LineGraph> {
               gridData: const FlGridData(show: true),
               backgroundColor: Colors.white,
               titlesData: FlTitlesData(
-                leftTitles: AxisTitles(
+                leftTitles: const AxisTitles(
                   sideTitles: SideTitles(showTitles: true, reservedSize: 50),
-                  axisNameWidget: const Text("Orders"),
+                  axisNameWidget: Text("Orders"),
                 ),
                 bottomTitles: AxisTitles(
                   sideTitles: SideTitles(
@@ -145,10 +146,10 @@ class _LineGraphState extends State<LineGraph> {
                   axisNameSize: 30,
                   axisNameWidget: Text("Month of $currentMonth"),
                 ),
-                topTitles: AxisTitles(
+                topTitles: const AxisTitles(
                   sideTitles: SideTitles(showTitles: false),
                 ),
-                rightTitles: AxisTitles(
+                rightTitles: const AxisTitles(
                   sideTitles: SideTitles(showTitles: false),
                 ),
               ),
@@ -175,7 +176,7 @@ class _LineGraphState extends State<LineGraph> {
                   isCurved: true,
                   color: Colors.green,
                   barWidth: 3,
-                  dotData: FlDotData(show: true),
+                  dotData: const FlDotData(show: true),
                   belowBarData: BarAreaData(show: false),
                 ),
                 LineChartBarData(
@@ -196,7 +197,7 @@ class _LineGraphState extends State<LineGraph> {
                   isCurved: true,
                   color: Colors.blue,
                   barWidth: 3,
-                  dotData: FlDotData(show: true),
+                  dotData: const FlDotData(show: true),
                   belowBarData: BarAreaData(show: false),
                 ),
               ],

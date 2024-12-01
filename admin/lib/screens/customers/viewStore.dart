@@ -29,7 +29,7 @@ class _ViewStoreProileState extends State<ViewStoreProile> {
         future: _fs.getSingleStoreData(widget.id),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator());
           }
 
           if (snapshot.hasError) {
@@ -37,7 +37,7 @@ class _ViewStoreProileState extends State<ViewStoreProile> {
           }
 
           if (!snapshot.hasData || snapshot.data == null) {
-            return Center(child: Text("No sellers available"));
+            return const Center(child: Text("No sellers available"));
           }
 
           var seller = snapshot.data!;
@@ -76,7 +76,7 @@ class _ViewStoreProileState extends State<ViewStoreProile> {
                                   style: ElevatedButton.styleFrom(
                                     backgroundColor: secondary,
                                   ),
-                                  child: Text(
+                                  child: const Text(
                                     "Close",
                                     style: TextStyle(
                                       // color: textWhite,
@@ -120,7 +120,7 @@ class _ViewStoreProileState extends State<ViewStoreProile> {
                                     ),
                                   ),
                                   Container(
-                                    margin: EdgeInsets.only(
+                                    margin: const EdgeInsets.only(
                                       top: 60,
                                       left: 20,
                                     ),
@@ -132,20 +132,20 @@ class _ViewStoreProileState extends State<ViewStoreProile> {
                                           children: [
                                             Text(
                                               "${seller.shopname}",
-                                              style: TextStyle(
+                                              style: const TextStyle(
                                                 fontSize: 25,
                                                 fontWeight: FontWeight.bold,
                                               ),
                                             ),
                                             Text(
                                               "Seller ID: ${seller.id}",
-                                              style: TextStyle(
+                                              style: const TextStyle(
                                                 fontWeight: FontWeight.bold,
                                               ),
                                             ),
                                           ],
                                         ),
-                                        SizedBox(
+                                        const SizedBox(
                                           width: 20,
                                         ),
                                       ],
@@ -161,18 +161,18 @@ class _ViewStoreProileState extends State<ViewStoreProile> {
                                 width: MediaQuery.of(context).size.width * .85,
                                 child: Column(
                                   children: [
-                                    Divider(
+                                    const Divider(
                                       color: Colors.black,
                                       thickness: 0.5,
                                     ),
-                                    SizedBox(
+                                    const SizedBox(
                                       height: 15,
                                     ),
                                     Row(
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
                                       children: [
-                                        Column(
+                                        const Column(
                                           crossAxisAlignment:
                                               CrossAxisAlignment.start,
                                           children: [
@@ -180,14 +180,14 @@ class _ViewStoreProileState extends State<ViewStoreProile> {
                                             Text("Units Sold: "),
                                           ],
                                         ),
-                                        SizedBox(
+                                        const SizedBox(
                                           width: 130,
                                         ),
                                         Column(
                                           crossAxisAlignment:
                                               CrossAxisAlignment.start,
                                           children: [
-                                            Text(
+                                            const Text(
                                               "Contacts",
                                               style: TextStyle(
                                                 fontSize: 16,
@@ -199,14 +199,14 @@ class _ViewStoreProileState extends State<ViewStoreProile> {
                                             Text("Email: ${seller.email}"),
                                           ],
                                         ),
-                                        SizedBox(
+                                        const SizedBox(
                                           width: 130,
                                         ),
                                         Column(
                                           crossAxisAlignment:
                                               CrossAxisAlignment.start,
                                           children: [
-                                            Text(
+                                            const Text(
                                               "Address",
                                               style: TextStyle(
                                                 fontSize: 16,
@@ -221,7 +221,7 @@ class _ViewStoreProileState extends State<ViewStoreProile> {
                                         ),
                                       ],
                                     ),
-                                    Divider(),
+                                    const Divider(),
                                     Row(
                                       children: [
                                         Align(
@@ -230,14 +230,14 @@ class _ViewStoreProileState extends State<ViewStoreProile> {
                                             crossAxisAlignment:
                                                 CrossAxisAlignment.start,
                                             children: [
-                                              Text(
+                                              const Text(
                                                 "Payment Details",
                                                 style: TextStyle(
                                                   fontSize: 17,
                                                   fontWeight: FontWeight.bold,
                                                 ),
                                               ),
-                                              SizedBox(
+                                              const SizedBox(
                                                 height: 10,
                                               ),
                                               Row(
@@ -247,9 +247,9 @@ class _ViewStoreProileState extends State<ViewStoreProile> {
                                                     Container(
                                                       height: 70,
                                                       width: 500,
-                                                      padding:
-                                                          EdgeInsets.symmetric(
-                                                              vertical: 10),
+                                                      padding: const EdgeInsets
+                                                          .symmetric(
+                                                          vertical: 10),
                                                       decoration: BoxDecoration(
                                                         border: Border.all(
                                                           color: primary,
@@ -275,7 +275,7 @@ class _ViewStoreProileState extends State<ViewStoreProile> {
                                                                     .blue
                                                                     .shade800,
                                                               ),
-                                                              Text(
+                                                              const Text(
                                                                 "Paypal",
                                                                 style:
                                                                     TextStyle(
@@ -286,7 +286,7 @@ class _ViewStoreProileState extends State<ViewStoreProile> {
                                                               ),
                                                             ],
                                                           ),
-                                                          VerticalDivider(),
+                                                          const VerticalDivider(),
                                                           Container(
                                                             width: 350,
                                                             child: Column(
@@ -299,7 +299,7 @@ class _ViewStoreProileState extends State<ViewStoreProile> {
                                                               children: [
                                                                 Row(
                                                                   children: [
-                                                                    Text(
+                                                                    const Text(
                                                                       "Name: ",
                                                                       style:
                                                                           TextStyle(
@@ -313,7 +313,7 @@ class _ViewStoreProileState extends State<ViewStoreProile> {
                                                                 ),
                                                                 Row(
                                                                   children: [
-                                                                    Text(
+                                                                    const Text(
                                                                       "Account: ",
                                                                       style:
                                                                           TextStyle(
@@ -331,7 +331,7 @@ class _ViewStoreProileState extends State<ViewStoreProile> {
                                                         ],
                                                       ),
                                                     ),
-                                                  SizedBox(
+                                                  const SizedBox(
                                                     width: 20,
                                                   ),
                                                   if (seller.payout['method'] ==
@@ -339,9 +339,9 @@ class _ViewStoreProileState extends State<ViewStoreProile> {
                                                     Container(
                                                       height: 70,
                                                       width: 500,
-                                                      padding:
-                                                          EdgeInsets.symmetric(
-                                                              vertical: 10),
+                                                      padding: const EdgeInsets
+                                                          .symmetric(
+                                                          vertical: 10),
                                                       decoration: BoxDecoration(
                                                         border: Border.all(
                                                           color: primary,
@@ -367,7 +367,7 @@ class _ViewStoreProileState extends State<ViewStoreProile> {
                                                                   "assets/payment/gcash.png",
                                                                 ),
                                                               ),
-                                                              Text(
+                                                              const Text(
                                                                 "Gcash",
                                                                 style:
                                                                     TextStyle(
@@ -378,7 +378,7 @@ class _ViewStoreProileState extends State<ViewStoreProile> {
                                                               ),
                                                             ],
                                                           ),
-                                                          VerticalDivider(),
+                                                          const VerticalDivider(),
                                                           Container(
                                                             width: 350,
                                                             child: Column(
@@ -391,7 +391,7 @@ class _ViewStoreProileState extends State<ViewStoreProile> {
                                                               children: [
                                                                 Row(
                                                                   children: [
-                                                                    Text(
+                                                                    const Text(
                                                                       "Name: ",
                                                                       style:
                                                                           TextStyle(
@@ -405,7 +405,7 @@ class _ViewStoreProileState extends State<ViewStoreProile> {
                                                                 ),
                                                                 Row(
                                                                   children: [
-                                                                    Text(
+                                                                    const Text(
                                                                       "Account: ",
                                                                       style:
                                                                           TextStyle(
@@ -428,7 +428,7 @@ class _ViewStoreProileState extends State<ViewStoreProile> {
                                             ],
                                           ),
                                         ),
-                                        SizedBox(
+                                        const SizedBox(
                                           width: 30,
                                         ),
                                         Align(
@@ -437,14 +437,14 @@ class _ViewStoreProileState extends State<ViewStoreProile> {
                                             crossAxisAlignment:
                                                 CrossAxisAlignment.start,
                                             children: [
-                                              Text(
+                                              const Text(
                                                 "Valid Documents",
                                                 style: TextStyle(
                                                   fontSize: 17,
                                                   fontWeight: FontWeight.bold,
                                                 ),
                                               ),
-                                              SizedBox(
+                                              const SizedBox(
                                                 height: 10,
                                               ),
                                               Row(
@@ -452,12 +452,13 @@ class _ViewStoreProileState extends State<ViewStoreProile> {
                                                   Container(
                                                     height: 70,
                                                     width: 500,
-                                                    margin: EdgeInsets.only(
+                                                    margin:
+                                                        const EdgeInsets.only(
                                                       left: 20,
                                                     ),
-                                                    padding:
-                                                        EdgeInsets.symmetric(
-                                                            vertical: 10),
+                                                    padding: const EdgeInsets
+                                                        .symmetric(
+                                                        vertical: 10),
                                                     decoration: BoxDecoration(
                                                       border: Border.all(
                                                         color: primary,
@@ -496,7 +497,8 @@ class _ViewStoreProileState extends State<ViewStoreProile> {
                                                                   }
                                                                 },
                                                               ),
-                                                              Text("Valid Id")
+                                                              const Text(
+                                                                  "Valid Id")
                                                             ],
                                                           ),
                                                         ),
@@ -523,7 +525,7 @@ class _ViewStoreProileState extends State<ViewStoreProile> {
                                                                   // }
                                                                 },
                                                               ),
-                                                              Text(
+                                                              const Text(
                                                                   "Business Permit")
                                                             ],
                                                           ),
@@ -561,7 +563,7 @@ class _ViewStoreProileState extends State<ViewStoreProile> {
                                                             style: TextButton
                                                                 .styleFrom(
                                                               shape:
-                                                                  RoundedRectangleBorder(),
+                                                                  const RoundedRectangleBorder(),
                                                               backgroundColor:
                                                                   primary,
                                                             ),
@@ -594,24 +596,24 @@ class _ViewStoreProileState extends State<ViewStoreProile> {
                       ),
                     ),
                     Container(
-                      padding: EdgeInsets.all(25),
+                      padding: const EdgeInsets.all(25),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
+                          const Text(
                             "Products By Seller",
                             style: TextStyle(
                               fontSize: 20,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
-                          SizedBox(
+                          const SizedBox(
                             height: 15,
                           ),
                           Container(
                             width: double.infinity,
                             height: MediaQuery.of(context).size.height,
-                            padding: EdgeInsets.all(25),
+                            padding: const EdgeInsets.all(25),
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(10),
                               color: Colors.white,
@@ -655,7 +657,8 @@ class _ViewStoreProileState extends State<ViewStoreProile> {
                                                 // Product Image
                                                 ClipRRect(
                                                   borderRadius:
-                                                      BorderRadius.vertical(
+                                                      const BorderRadius
+                                                          .vertical(
                                                           top: Radius.circular(
                                                               16)),
                                                   child: Image.network(
@@ -685,7 +688,8 @@ class _ViewStoreProileState extends State<ViewStoreProile> {
                                                               overflow:
                                                                   TextOverflow
                                                                       .ellipsis,
-                                                              style: TextStyle(
+                                                              style:
+                                                                  const TextStyle(
                                                                 fontSize: 16,
                                                                 fontWeight:
                                                                     FontWeight
@@ -703,7 +707,7 @@ class _ViewStoreProileState extends State<ViewStoreProile> {
                                                           ),
                                                         ],
                                                       ),
-                                                      SizedBox(height: 4),
+                                                      const SizedBox(height: 4),
                                                       Row(
                                                         mainAxisAlignment:
                                                             MainAxisAlignment
@@ -711,7 +715,8 @@ class _ViewStoreProileState extends State<ViewStoreProile> {
                                                         children: [
                                                           Text(
                                                             '₱ ${sel.price}',
-                                                            style: TextStyle(
+                                                            style:
+                                                                const TextStyle(
                                                               fontSize: 16,
                                                               fontWeight:
                                                                   FontWeight
@@ -720,7 +725,7 @@ class _ViewStoreProileState extends State<ViewStoreProile> {
                                                                   Colors.black,
                                                             ),
                                                           ),
-                                                          Text(
+                                                          const Text(
                                                             '4.6',
                                                             style: TextStyle(
                                                               fontSize: 14,

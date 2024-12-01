@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:admin/models/sellersData.dart';
 import 'package:admin/models/shoppersData.dart';
@@ -76,10 +77,10 @@ class _ShoppersViewState extends State<ShoppersView> {
       ),
       child: Column(
         children: [
-          Row(
+          const Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text(
+              Text(
                 "Shoppers Information",
                 style: TextStyle(
                   fontSize: 18,
@@ -118,7 +119,7 @@ class _ShoppersViewState extends State<ShoppersView> {
                         style: const TextStyle(fontSize: 13),
                       ),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       width: 160,
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -204,7 +205,6 @@ class _ShoppersViewState extends State<ShoppersView> {
                                         shopper.profileurl.isEmpty
                                     ? shopper.profileurl
                                     : getUserImageUrl(shopper.profileurl);
-
                             return Container(
                               width: 300,
                               decoration: BoxDecoration(
@@ -218,7 +218,7 @@ class _ShoppersViewState extends State<ShoppersView> {
                                     color: Colors.grey.withOpacity(0.2),
                                     spreadRadius: 2,
                                     blurRadius: 5,
-                                    offset: Offset(0, 3),
+                                    offset: const Offset(0, 3),
                                   ),
                                 ],
                               ),
@@ -228,7 +228,7 @@ class _ShoppersViewState extends State<ShoppersView> {
                                   Container(
                                     height: 60,
                                     width: double.infinity,
-                                    decoration: BoxDecoration(
+                                    decoration: const BoxDecoration(
                                       color: Colors.green,
                                       borderRadius: BorderRadius.only(
                                         topLeft: Radius.circular(10),
@@ -263,7 +263,7 @@ class _ShoppersViewState extends State<ShoppersView> {
                                   Positioned(
                                     top: 110,
                                     child: Container(
-                                      padding: EdgeInsets.only(top: 20),
+                                      padding: const EdgeInsets.only(top: 20),
                                       child: Column(
                                         children: [
                                           Text(
@@ -271,31 +271,31 @@ class _ShoppersViewState extends State<ShoppersView> {
                                                     shopper.lastname.isEmpty)
                                                 ? "No Name"
                                                 : "${shopper.firstname} ${shopper.lastname}",
-                                            style: TextStyle(
+                                            style: const TextStyle(
                                               fontSize: 18,
                                               fontWeight: FontWeight.bold,
                                               color: Colors.black,
                                             ),
                                           ),
-                                          SizedBox(height: 5),
+                                          const SizedBox(height: 5),
                                           Text(
                                             "Phone: ${shopper.phone}", // Document ID
-                                            style: TextStyle(
+                                            style: const TextStyle(
                                               fontSize: 14,
                                               fontWeight: FontWeight.bold,
                                               color: Colors.black54,
                                             ),
                                           ),
-                                          SizedBox(height: 5),
+                                          const SizedBox(height: 5),
                                           Text(
                                             "Email: ${shopper.email}",
-                                            style: TextStyle(
+                                            style: const TextStyle(
                                               fontSize: 14,
                                               fontWeight: FontWeight.bold,
                                               color: Colors.black54,
                                             ),
                                           ),
-                                          SizedBox(height: 15),
+                                          const SizedBox(height: 15),
                                           ElevatedButton(
                                             onPressed: () async {
                                               print("tapped");
@@ -314,10 +314,12 @@ class _ShoppersViewState extends State<ShoppersView> {
                                                     BorderRadius.circular(
                                                         20), // Rounded button
                                               ),
-                                              padding: EdgeInsets.symmetric(
-                                                  horizontal: 24, vertical: 12),
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      horizontal: 24,
+                                                      vertical: 12),
                                             ),
-                                            child: Text(
+                                            child: const Text(
                                               "View Profile",
                                               style: TextStyle(
                                                 color: Colors.white,
@@ -371,14 +373,14 @@ class AddSellerCard extends StatelessWidget {
                           Container(
                             height: 90,
                             width: 90,
-                            child: CircleAvatar(
+                            child: const CircleAvatar(
                               backgroundColor: Colors.green,
                             ),
                           ),
-                          SizedBox(width: 25),
+                          const SizedBox(width: 25),
                           OutlinedButton(
                             onPressed: () {},
-                            child: Row(
+                            child: const Row(
                               children: [
                                 Icon(Icons.add_a_photo_rounded),
                                 SizedBox(width: 10),
@@ -391,13 +393,13 @@ class AddSellerCard extends StatelessWidget {
                           ),
                         ],
                       ),
-                      SizedBox(height: 25),
+                      const SizedBox(height: 25),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
                           Container(
                             width: 170,
-                            child: TextField(
+                            child: const TextField(
                               decoration: InputDecoration(
                                 border: OutlineInputBorder(),
                                 label: Text("Firstname"),
@@ -406,7 +408,7 @@ class AddSellerCard extends StatelessWidget {
                           ),
                           Container(
                             width: 170,
-                            child: TextField(
+                            child: const TextField(
                               decoration: InputDecoration(
                                 border: OutlineInputBorder(),
                                 label: Text("Lastname"),
@@ -415,13 +417,13 @@ class AddSellerCard extends StatelessWidget {
                           ),
                         ],
                       ),
-                      SizedBox(height: 25),
+                      const SizedBox(height: 25),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
                           Container(
                             width: 170,
-                            child: TextField(
+                            child: const TextField(
                               decoration: InputDecoration(
                                 border: OutlineInputBorder(),
                                 label: Text("Email"),
@@ -430,7 +432,7 @@ class AddSellerCard extends StatelessWidget {
                           ),
                           Container(
                             width: 170,
-                            child: TextField(
+                            child: const TextField(
                               decoration: InputDecoration(
                                 border: OutlineInputBorder(),
                                 label: Text("Phone"),
@@ -439,12 +441,12 @@ class AddSellerCard extends StatelessWidget {
                           ),
                         ],
                       ),
-                      SizedBox(height: 25),
+                      const SizedBox(height: 25),
                       Container(
                         width: double.infinity,
                         child: ElevatedButton(
                           onPressed: () {},
-                          child: Text(
+                          child: const Text(
                             "ADD",
                             style: TextStyle(color: Colors.white),
                           ),
@@ -477,14 +479,14 @@ class AddSellerCard extends StatelessWidget {
             CircleAvatar(
               radius: 30,
               backgroundColor: Colors.green.withOpacity(0.1),
-              child: Icon(
+              child: const Icon(
                 Icons.add, // Add icon
                 size: 40,
                 color: Colors.green,
               ),
             ),
-            SizedBox(height: 10),
-            Text(
+            const SizedBox(height: 10),
+            const Text(
               "Add Seller",
               style: TextStyle(
                 color: Colors.green,

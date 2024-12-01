@@ -28,7 +28,7 @@ class _ViewShopperProfileState extends State<ViewShopperProfile> {
         future: _fs.getSingleUserData(widget.id),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator());
           }
 
           if (snapshot.hasError) {
@@ -36,7 +36,7 @@ class _ViewShopperProfileState extends State<ViewShopperProfile> {
           }
 
           if (!snapshot.hasData || snapshot.data == null) {
-            return Center(child: Text("No users available"));
+            return const Center(child: Text("No users available"));
           }
 
           var shopper = snapshot.data!;
@@ -86,7 +86,7 @@ class _ViewShopperProfileState extends State<ViewShopperProfile> {
                                   style: ElevatedButton.styleFrom(
                                     backgroundColor: secondary,
                                   ),
-                                  child: Text(
+                                  child: const Text(
                                     "Close",
                                     style: TextStyle(
                                       // color: textWhite,
@@ -137,7 +137,7 @@ class _ViewShopperProfileState extends State<ViewShopperProfile> {
                                           ),
                                   ),
                                   Container(
-                                    margin: EdgeInsets.only(
+                                    margin: const EdgeInsets.only(
                                       top: 60,
                                       left: 20,
                                     ),
@@ -152,14 +152,14 @@ class _ViewShopperProfileState extends State<ViewShopperProfile> {
                                                       shopper.lastname.isEmpty)
                                                   ? "No Name"
                                                   : "${shopper.firstname} ${shopper.lastname}",
-                                              style: TextStyle(
+                                              style: const TextStyle(
                                                 fontSize: 25,
                                                 fontWeight: FontWeight.bold,
                                               ),
                                             ),
                                             Text(
                                               "ID: ${shopper.id}",
-                                              style: TextStyle(
+                                              style: const TextStyle(
                                                 fontWeight: FontWeight.bold,
                                               ),
                                             ),
@@ -176,14 +176,14 @@ class _ViewShopperProfileState extends State<ViewShopperProfile> {
                               top: 210,
                               child: Container(
                                 width: MediaQuery.of(context).size.width * .45,
-                                padding: EdgeInsets.only(bottom: 10),
+                                padding: const EdgeInsets.only(bottom: 10),
                                 child: Column(
                                   children: [
-                                    Divider(
+                                    const Divider(
                                       color: Colors.black,
                                       thickness: 0.5,
                                     ),
-                                    SizedBox(
+                                    const SizedBox(
                                       height: 15,
                                     ),
                                     Text(
@@ -194,12 +194,12 @@ class _ViewShopperProfileState extends State<ViewShopperProfile> {
                                         fontWeight: FontWeight.bold,
                                       ),
                                     ),
-                                    SizedBox(
+                                    const SizedBox(
                                       height: 10,
                                     ),
                                     Container(
-                                      padding:
-                                          EdgeInsets.symmetric(horizontal: 25),
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 25),
                                       child: Column(
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
@@ -207,51 +207,51 @@ class _ViewShopperProfileState extends State<ViewShopperProfile> {
                                           Container(
                                             child: Row(
                                               children: [
-                                                Text(
+                                                const Text(
                                                   "Email: ",
                                                   style: TextStyle(
                                                     fontSize: 16,
                                                     fontWeight: FontWeight.bold,
                                                   ),
                                                 ),
-                                                SizedBox(
+                                                const SizedBox(
                                                   width: 5,
                                                 ),
                                                 Text(
                                                   "${shopper.email}",
-                                                  style: TextStyle(
+                                                  style: const TextStyle(
                                                     fontSize: 16,
                                                   ),
                                                 ),
                                               ],
                                             ),
                                           ),
-                                          Divider(
+                                          const Divider(
                                             thickness: 0.5,
                                           ),
                                           Container(
                                             child: Row(
                                               children: [
-                                                Text(
+                                                const Text(
                                                   "Phone Number: ",
                                                   style: TextStyle(
                                                     fontSize: 16,
                                                     fontWeight: FontWeight.bold,
                                                   ),
                                                 ),
-                                                SizedBox(
+                                                const SizedBox(
                                                   width: 5,
                                                 ),
                                                 Text(
                                                   "${shopper.phone}",
-                                                  style: TextStyle(
+                                                  style: const TextStyle(
                                                     fontSize: 16,
                                                   ),
                                                 ),
                                               ],
                                             ),
                                           ),
-                                          Divider(
+                                          const Divider(
                                             thickness: 0.5,
                                           ),
                                           Container(
@@ -259,7 +259,7 @@ class _ViewShopperProfileState extends State<ViewShopperProfile> {
                                               crossAxisAlignment:
                                                   WrapCrossAlignment.start,
                                               children: [
-                                                Text(
+                                                const Text(
                                                   "Address: ",
                                                   style: TextStyle(
                                                     fontSize: 16,
@@ -271,7 +271,7 @@ class _ViewShopperProfileState extends State<ViewShopperProfile> {
                                                           .isNotEmpty
                                                       ? "${shopper.address['street']}, "
                                                       : "",
-                                                  style: TextStyle(
+                                                  style: const TextStyle(
                                                     fontSize: 16,
                                                   ),
                                                 ),
@@ -280,7 +280,7 @@ class _ViewShopperProfileState extends State<ViewShopperProfile> {
                                                           .isNotEmpty
                                                       ? "${shopper.address['barangay']}, "
                                                       : "",
-                                                  style: TextStyle(
+                                                  style: const TextStyle(
                                                     fontSize: 16,
                                                   ),
                                                 ),
@@ -289,7 +289,7 @@ class _ViewShopperProfileState extends State<ViewShopperProfile> {
                                                           .isNotEmpty
                                                       ? "${shopper.address['city']}, "
                                                       : "",
-                                                  style: TextStyle(
+                                                  style: const TextStyle(
                                                     fontSize: 16,
                                                   ),
                                                 ),
@@ -298,7 +298,7 @@ class _ViewShopperProfileState extends State<ViewShopperProfile> {
                                                           .isNotEmpty
                                                       ? "${shopper.address['province']}, "
                                                       : "",
-                                                  style: TextStyle(
+                                                  style: const TextStyle(
                                                     fontSize: 16,
                                                   ),
                                                 ),
@@ -307,64 +307,64 @@ class _ViewShopperProfileState extends State<ViewShopperProfile> {
                                                           .isNotEmpty
                                                       ? "${shopper.address['region']}, "
                                                       : "",
-                                                  style: TextStyle(
+                                                  style: const TextStyle(
                                                     fontSize: 16,
                                                   ),
                                                 ),
                                               ],
                                             ),
                                           ),
-                                          Divider(
+                                          const Divider(
                                             thickness: 0.5,
                                           ),
                                           Container(
                                             child: Row(
                                               children: [
-                                                Text(
+                                                const Text(
                                                   "Date Created: ",
                                                   style: TextStyle(
                                                     fontSize: 16,
                                                     fontWeight: FontWeight.bold,
                                                   ),
                                                 ),
-                                                SizedBox(
+                                                const SizedBox(
                                                   width: 5,
                                                 ),
                                                 Text(
                                                   "${DateFormat('yyyy-MM-dd').format(shopper.datejoined.toDate())}",
-                                                  style: TextStyle(
+                                                  style: const TextStyle(
                                                     fontSize: 16,
                                                   ),
                                                 ),
                                               ],
                                             ),
                                           ),
-                                          Divider(
+                                          const Divider(
                                             thickness: 0.5,
                                           ),
                                           Container(
                                             child: Row(
                                               children: [
-                                                Text(
+                                                const Text(
                                                   "Time Created: ",
                                                   style: TextStyle(
                                                     fontSize: 16,
                                                     fontWeight: FontWeight.bold,
                                                   ),
                                                 ),
-                                                SizedBox(
+                                                const SizedBox(
                                                   width: 5,
                                                 ),
                                                 Text(
                                                   "${DateFormat('HH:mm:ss').format(shopper.datejoined.toDate())}",
-                                                  style: TextStyle(
+                                                  style: const TextStyle(
                                                     fontSize: 16,
                                                   ),
                                                 ),
                                               ],
                                             ),
                                           ),
-                                          Divider(
+                                          const Divider(
                                             thickness: 0.5,
                                           ),
                                         ],
@@ -377,23 +377,23 @@ class _ViewShopperProfileState extends State<ViewShopperProfile> {
                       ),
                     ),
                     Container(
-                      padding: EdgeInsets.all(25),
+                      padding: const EdgeInsets.all(25),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
+                          const Text(
                             "Wishlists",
                             style: TextStyle(
                               fontSize: 20,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
-                          SizedBox(
+                          const SizedBox(
                             height: 15,
                           ),
                           Container(
                             width: double.infinity,
-                            padding: EdgeInsets.all(25),
+                            padding: const EdgeInsets.all(25),
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(10),
                               color: Colors.white,
@@ -438,7 +438,8 @@ class _ViewShopperProfileState extends State<ViewShopperProfile> {
                                                 // Product Image
                                                 ClipRRect(
                                                   borderRadius:
-                                                      BorderRadius.vertical(
+                                                      const BorderRadius
+                                                          .vertical(
                                                           top: Radius.circular(
                                                               16)),
                                                   child: Image.network(
@@ -468,7 +469,8 @@ class _ViewShopperProfileState extends State<ViewShopperProfile> {
                                                             overflow:
                                                                 TextOverflow
                                                                     .ellipsis,
-                                                            style: TextStyle(
+                                                            style:
+                                                                const TextStyle(
                                                               fontSize: 12,
                                                               fontWeight:
                                                                   FontWeight
@@ -485,7 +487,7 @@ class _ViewShopperProfileState extends State<ViewShopperProfile> {
                                                           // ),
                                                         ],
                                                       ),
-                                                      SizedBox(height: 4),
+                                                      const SizedBox(height: 4),
                                                       Row(
                                                         mainAxisAlignment:
                                                             MainAxisAlignment
@@ -493,7 +495,8 @@ class _ViewShopperProfileState extends State<ViewShopperProfile> {
                                                         children: [
                                                           Text(
                                                             '₱ ${wishlist.price}',
-                                                            style: TextStyle(
+                                                            style:
+                                                                const TextStyle(
                                                               fontSize: 16,
                                                               fontWeight:
                                                                   FontWeight
@@ -539,23 +542,23 @@ class _ViewShopperProfileState extends State<ViewShopperProfile> {
                       ),
                     ),
                     Container(
-                      padding: EdgeInsets.symmetric(horizontal: 25),
+                      padding: const EdgeInsets.symmetric(horizontal: 25),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
+                          const Text(
                             "Cart",
                             style: TextStyle(
                               fontSize: 20,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
-                          SizedBox(
+                          const SizedBox(
                             height: 15,
                           ),
                           Container(
                             width: double.infinity,
-                            padding: EdgeInsets.all(25),
+                            padding: const EdgeInsets.all(25),
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(10),
                               color: Colors.white,
@@ -599,7 +602,8 @@ class _ViewShopperProfileState extends State<ViewShopperProfile> {
                                                 // Product Image
                                                 ClipRRect(
                                                   borderRadius:
-                                                      BorderRadius.vertical(
+                                                      const BorderRadius
+                                                          .vertical(
                                                           top: Radius.circular(
                                                               16)),
                                                   child: Image.network(
@@ -628,7 +632,8 @@ class _ViewShopperProfileState extends State<ViewShopperProfile> {
                                                             overflow:
                                                                 TextOverflow
                                                                     .ellipsis,
-                                                            style: TextStyle(
+                                                            style:
+                                                                const TextStyle(
                                                               fontSize: 12,
                                                               fontWeight:
                                                                   FontWeight
@@ -645,7 +650,7 @@ class _ViewShopperProfileState extends State<ViewShopperProfile> {
                                                           // ),
                                                         ],
                                                       ),
-                                                      SizedBox(height: 4),
+                                                      const SizedBox(height: 4),
                                                       Row(
                                                         mainAxisAlignment:
                                                             MainAxisAlignment
@@ -653,7 +658,8 @@ class _ViewShopperProfileState extends State<ViewShopperProfile> {
                                                         children: [
                                                           Text(
                                                             '₱ ${cart.price}',
-                                                            style: TextStyle(
+                                                            style:
+                                                                const TextStyle(
                                                               fontSize: 16,
                                                               fontWeight:
                                                                   FontWeight

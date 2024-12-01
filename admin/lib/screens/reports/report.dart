@@ -125,11 +125,12 @@ class _ReportsViewState extends State<ReportsView> {
                       ),
                       DropdownButton<String>(
                         value: selectedValue,
-                        hint: Text('Last 12 Months'),
-                        icon: Icon(Icons.arrow_drop_down), // Dropdown icon
+                        hint: const Text('Last 12 Months'),
+                        icon:
+                            const Icon(Icons.arrow_drop_down), // Dropdown icon
                         iconSize: 24,
                         elevation: 16,
-                        style: TextStyle(
+                        style: const TextStyle(
                           color: Colors.black45,
                           fontSize: 13,
                         ),
@@ -149,7 +150,7 @@ class _ReportsViewState extends State<ReportsView> {
                     ],
                   ),
                   Container(
-                    margin: EdgeInsets.only(left: 40),
+                    margin: const EdgeInsets.only(left: 40),
                     child: Row(
                       children: [
                         Row(
@@ -162,10 +163,10 @@ class _ReportsViewState extends State<ReportsView> {
                                 borderRadius: BorderRadius.circular(3),
                               ),
                             ),
-                            SizedBox(
+                            const SizedBox(
                               width: 5,
                             ),
-                            Text(
+                            const Text(
                               "Returning Customers",
                               style: TextStyle(
                                 fontSize: 13,
@@ -186,10 +187,10 @@ class _ReportsViewState extends State<ReportsView> {
                                 borderRadius: BorderRadius.circular(3),
                               ),
                             ),
-                            SizedBox(
+                            const SizedBox(
                               width: 5,
                             ),
-                            Text(
+                            const Text(
                               "New Customers",
                               style: TextStyle(
                                 fontSize: 13,
@@ -200,29 +201,29 @@ class _ReportsViewState extends State<ReportsView> {
                       ],
                     ),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 20,
                   ),
                   Container(
                     height: 350,
                     width: width,
-                    child: LineGraphUsers(),
+                    child: const LineGraphUsers(),
                   ),
                 ],
               ),
             ),
-            SizedBox(
+            const SizedBox(
               height: 20,
             ),
             FutureBuilder(
               future: _fs.getMonthlyReport(),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  return Center(child: CircularProgressIndicator());
+                  return const Center(child: CircularProgressIndicator());
                 } else if (snapshot.hasError) {
                   return Center(child: Text('Error: ${snapshot.error}'));
                 } else if (!snapshot.hasData) {
-                  return Center(child: Text('No sellers found.'));
+                  return const Center(child: Text('No sellers found.'));
                 }
 
                 var reports = snapshot.data!;
@@ -301,7 +302,7 @@ class _ReportsViewState extends State<ReportsView> {
                           fontWeight: FontWeight.w500,
                         ),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 20,
                       ),
                       Container(
@@ -342,13 +343,13 @@ class _ReportsViewState extends State<ReportsView> {
                           fontWeight: FontWeight.w500,
                         ),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 20,
                       ),
                       Container(
                         height: 300,
                         width: width * 0.63,
-                        child: LineGraph(
+                        child: const LineGraph(
                           compareFrom: 2022,
                           compareTo: 2023,
                         ),
@@ -358,18 +359,18 @@ class _ReportsViewState extends State<ReportsView> {
                 ),
               ],
             ),
-            SizedBox(
+            const SizedBox(
               height: 20,
             ),
             FutureBuilder<List<Shop>>(
               future: _fs.getShopData(),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  return Center(child: CircularProgressIndicator());
+                  return const Center(child: CircularProgressIndicator());
                 } else if (snapshot.hasError) {
                   return Center(child: Text('Error: ${snapshot.error}'));
                 } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                  return Center(child: Text('No sellers found.'));
+                  return const Center(child: Text('No sellers found.'));
                 }
 
                 List<Shop> shops = snapshot.data!;
@@ -395,20 +396,20 @@ class _ReportsViewState extends State<ReportsView> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
+                      const Text(
                         "Top Sellers",
                         style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 10,
                       ),
                       Table(
-                        border: TableBorder.symmetric(
+                        border: const TableBorder.symmetric(
                             inside: BorderSide(color: Colors.grey)),
-                        columnWidths: {
+                        columnWidths: const {
                           0: FlexColumnWidth(),
                           1: FlexColumnWidth(),
                           2: FlexColumnWidth(),
@@ -421,7 +422,7 @@ class _ReportsViewState extends State<ReportsView> {
                             decoration: BoxDecoration(
                               color: Colors.grey.shade200,
                             ),
-                            children: [
+                            children: const [
                               Center(
                                   child: Padding(
                                 padding: EdgeInsets.all(12.0),
@@ -464,13 +465,13 @@ class _ReportsViewState extends State<ReportsView> {
                                 children: [
                                   TableCell(
                                       child: Padding(
-                                    padding: EdgeInsets.symmetric(
+                                    padding: const EdgeInsets.symmetric(
                                         vertical: 4, horizontal: 10),
                                     child: Text("${shop.shopname}"),
                                   )),
                                   TableCell(
                                       child: Padding(
-                                    padding: EdgeInsets.symmetric(
+                                    padding: const EdgeInsets.symmetric(
                                         vertical: 4, horizontal: 10),
                                     child: Text(
                                         "${shop.revenue}"), // Replace with actual revenue data if available
@@ -483,7 +484,7 @@ class _ReportsViewState extends State<ReportsView> {
                                   // )),
                                   TableCell(
                                       child: Padding(
-                                    padding: EdgeInsets.symmetric(
+                                    padding: const EdgeInsets.symmetric(
                                         vertical: 4, horizontal: 10),
                                     child: Text(
                                         "${shop.orders}"), // Replace with actual products sold data if available
@@ -491,7 +492,7 @@ class _ReportsViewState extends State<ReportsView> {
                                   TableCell(
                                     child: Container(
                                       width: 50,
-                                      padding: EdgeInsets.symmetric(
+                                      padding: const EdgeInsets.symmetric(
                                           vertical: 4, horizontal: 10),
                                       child: IconButton(
                                         onPressed: () async {
@@ -504,7 +505,7 @@ class _ReportsViewState extends State<ReportsView> {
                                             },
                                           );
                                         },
-                                        icon: Icon(
+                                        icon: const Icon(
                                             Icons.arrow_right_alt_outlined),
                                       ),
                                     ),
