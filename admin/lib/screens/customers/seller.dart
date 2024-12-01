@@ -58,16 +58,6 @@ class _SellersViewState extends State<SellersView> {
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              OutlinedButton(
-                onPressed: () {},
-                child: const Row(
-                  children: [
-                    Icon(Icons.add, size: 20, color: Colors.black),
-                    SizedBox(width: 5),
-                    Text("Add Shop", style: TextStyle(color: Colors.black)),
-                  ],
-                ),
-              ),
             ],
           ),
           const SizedBox(height: 15),

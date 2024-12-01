@@ -145,7 +145,7 @@ class _MenuScreenState extends State<MenuScreen> {
                           onPressed: () {},
                           icon: const Icon(
                             Icons.message_outlined,
-                            color: Colors.white,
+                            color: Color(0xFF05583C),
                             size: 20,
                           ),
                         ),
@@ -153,7 +153,7 @@ class _MenuScreenState extends State<MenuScreen> {
                           onPressed: () {},
                           icon: const Icon(
                             Icons.notifications_outlined,
-                            color: Colors.white,
+                            color: Color(0xFF05583C),
                             size: 20,
                           ),
                         ),
@@ -196,14 +196,14 @@ class _MenuScreenState extends State<MenuScreen> {
                               ),
                               itemBuilder: (BuildContext context) =>
                                   <PopupMenuEntry<String>>[
-                                const PopupMenuItem<String>(
-                                  value: 'Profile',
-                                  child: Text('Profile'),
-                                ),
-                                const PopupMenuItem<String>(
-                                  value: 'Settings',
-                                  child: Text('Settings'),
-                                ),
+                                // const PopupMenuItem<String>(
+                                //   value: 'Profile',
+                                //   child: Text('Profile'),
+                                // ),
+                                // const PopupMenuItem<String>(
+                                //   value: 'Settings',
+                                //   child: Text('Settings'),
+                                // ),
                                 const PopupMenuItem<String>(
                                   value: 'Logout',
                                   child: Text('Logout'),
@@ -278,13 +278,13 @@ class _MenuScreenState extends State<MenuScreen> {
                       sideMenu.changePage(index);
                     },
                     icon: const Icon(Icons.home),
-                    badgeContent: const Text(
-                      '3',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 12,
-                      ),
-                    ),
+                    // badgeContent: const Text(
+                    //   '3',
+                    //   style: TextStyle(
+                    //     color: Colors.white,
+                    //     fontSize: 12,
+                    //   ),
+                    // ),
                     tooltipContent: "Dashboard",
                   ),
                   SideMenuExpansionItem(
@@ -323,19 +323,6 @@ class _MenuScreenState extends State<MenuScreen> {
                       sideMenu.changePage(index);
                     },
                     icon: const Icon(Icons.file_copy_rounded),
-                    trailing: Container(
-                        decoration: const BoxDecoration(
-                            color: Colors.amber,
-                            borderRadius: BorderRadius.all(Radius.circular(6))),
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 6.0, vertical: 3),
-                          child: Text(
-                            'New',
-                            style: TextStyle(
-                                fontSize: 11, color: Colors.grey[800]),
-                          ),
-                        )),
                   ),
                   SideMenuItem(
                     title: 'Platform',
@@ -364,10 +351,6 @@ class _MenuScreenState extends State<MenuScreen> {
                   //     sideMenu.changePage(index);
                   //   },
                   // ),
-                  const SideMenuItem(
-                    title: 'Exit',
-                    icon: Icon(Icons.exit_to_app),
-                  ),
                 ],
               ),
               const VerticalDivider(
