@@ -236,14 +236,14 @@ class _ReportsViewState extends State<ReportsView> {
                       _DataCard(
                         title: "₱ ${reports.monthlyrevenue.toStringAsFixed(2)}",
                         subTitle: "Monthly Revenue",
-                        percentage: "98.00",
+                        percentage: "85.00",
                         iconData: Icons.arrow_drop_up_outlined,
                         cardIcon: Icons.attach_money_outlined,
                       ),
                       _DataCard(
                         title: "${reports.monthlyorders}",
                         subTitle: "Orders",
-                        percentage: "98.00",
+                        percentage: "96.00",
                         iconData: Icons.arrow_drop_up_outlined,
                         cardIcon: Icons.shopping_bag_outlined,
                       ),
@@ -257,7 +257,7 @@ class _ReportsViewState extends State<ReportsView> {
                       _DataCard(
                         title: "${reports.currentusers}",
                         subTitle: "Existing Users",
-                        percentage: "98.00",
+                        percentage: "87.00",
                         iconData: Icons.arrow_drop_up_outlined,
                         cardIcon: Icons.groups_2_outlined,
                       ),

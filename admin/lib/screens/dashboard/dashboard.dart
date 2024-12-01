@@ -123,6 +123,7 @@ class _DashboardViewState extends State<DashboardView> {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
+<<<<<<< HEAD
                 // OutlinedButton(
                 //   onPressed: () {},
                 //   child: const Row(
@@ -144,6 +145,8 @@ class _DashboardViewState extends State<DashboardView> {
                 //     ],
                 //   ),
                 // ),
+=======
+>>>>>>> 8a1091e79462d04e45c50d2d3dfd43d57441a9de
               ],
             ),
             const SizedBox(
