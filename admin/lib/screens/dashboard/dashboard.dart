@@ -5,6 +5,7 @@ import 'package:admin/models/furnituresData.dart';
 import 'package:admin/models/monthlyData.dart';
 import 'package:admin/models/ordersData.dart';
 import 'package:admin/models/sellersData.dart';
+import 'package:admin/models/shoppersData.dart';
 import 'package:admin/models/shopsData.dart';
 import 'package:admin/models/topProductsData.dart';
 import 'package:admin/screens/customers/viewStore.dart';
@@ -166,33 +167,687 @@ class _DashboardViewState extends State<DashboardView> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      _DataCard(
-                        title: "₱ ${reports.monthlyrevenue.toStringAsFixed(2)}",
-                        subTitle: "Monthly Revenue",
-                        percentage: "85.00",
-                        iconData: Icons.arrow_drop_up_outlined,
-                        cardIcon: Icons.attach_money_outlined,
+                      GestureDetector(
+                        onTap: () async {
+                          showDialog(
+                            context: context,
+                            builder: (context) {
+                              return AlertDialog(
+                                content: Container(
+                                  width: 900,
+                                  height: double.infinity,
+                                  child: SingleChildScrollView(
+                                    child: Column(
+                                      children: [
+                                        Text(
+                                          "Monthly Revenue",
+                                          style: TextStyle(
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.bold,
+                                            color: primary,
+                                          ),
+                                        ),
+                                        const SizedBox(
+                                          height: 20,
+                                        ),
+                                        FutureBuilder<List<Shop>>(
+                                          future:
+                                              _fs.getShopDataForCurrentMonth(),
+                                          builder: (context, snapshot) {
+                                            if (snapshot.connectionState ==
+                                                ConnectionState.waiting) {
+                                              return const Center(
+                                                child:
+                                                    CircularProgressIndicator(),
+                                              );
+                                            } else if (snapshot.hasError) {
+                                              return Center(
+                                                child: Text(
+                                                    'Error: ${snapshot.error}'),
+                                              );
+                                            } else if (!snapshot.hasData ||
+                                                snapshot.data!.isEmpty) {
+                                              return const Center(
+                                                child:
+                                                    Text('No sellers found.'),
+                                              );
+                                            }
+
+                                            // Extract data from the snapshot
+                                            List<Shop> shops = snapshot.data!;
+
+                                            return Container(
+                                              // decoration: BoxDecoration(
+                                              //   color: Colors.white,
+                                              //   borderRadius:
+                                              //       BorderRadius.circular(10),
+                                              //   boxShadow: [
+                                              //     BoxShadow(
+                                              //       color: Colors.black
+                                              //           .withOpacity(0.2),
+                                              //       spreadRadius: 1,
+                                              //       blurRadius: 5,
+                                              //       offset: const Offset(2, 4),
+                                              //     ),
+                                              //   ],
+                                              // ),
+                                              child: Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  const SizedBox(height: 10),
+                                                  Table(
+                                                    border: const TableBorder
+                                                        .symmetric(
+                                                      inside: BorderSide(
+                                                          color: Colors.grey),
+                                                    ),
+                                                    columnWidths: const {
+                                                      0: FlexColumnWidth(),
+                                                      1: FlexColumnWidth(),
+                                                      2: FlexColumnWidth(),
+                                                      3: FlexColumnWidth(),
+                                                    },
+                                                    defaultVerticalAlignment:
+                                                        TableCellVerticalAlignment
+                                                            .middle,
+                                                    children: [
+                                                      // Header Row
+                                                      TableRow(
+                                                        decoration:
+                                                            BoxDecoration(
+                                                          color: Colors
+                                                              .grey.shade200,
+                                                        ),
+                                                        children: const [
+                                                          Center(
+                                                            child: Padding(
+                                                              padding:
+                                                                  EdgeInsets
+                                                                      .all(
+                                                                          12.0),
+                                                              child: Text(
+                                                                "ID",
+                                                                style: TextStyle(
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .bold),
+                                                              ),
+                                                            ),
+                                                          ),
+                                                          Center(
+                                                            child: Padding(
+                                                              padding:
+                                                                  EdgeInsets
+                                                                      .all(
+                                                                          12.0),
+                                                              child: Text(
+                                                                "Shop Name",
+                                                                style: TextStyle(
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .bold),
+                                                              ),
+                                                            ),
+                                                          ),
+                                                          Center(
+                                                            child: Padding(
+                                                              padding:
+                                                                  EdgeInsets
+                                                                      .all(8.0),
+                                                              child: Text(
+                                                                "Revenue",
+                                                                style: TextStyle(
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .bold),
+                                                              ),
+                                                            ),
+                                                          ),
+                                                          Center(
+                                                            child: Padding(
+                                                              padding:
+                                                                  EdgeInsets
+                                                                      .all(8.0),
+                                                              child: Text(
+                                                                "Products Sold",
+                                                                style: TextStyle(
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .bold),
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                      // Data Rows
+                                                      ...shops.map(
+                                                        (shop) {
+                                                          return TableRow(
+                                                            children: [
+                                                              TableCell(
+                                                                child: Padding(
+                                                                  padding:
+                                                                      const EdgeInsets
+                                                                          .symmetric(
+                                                                    vertical: 4,
+                                                                    horizontal:
+                                                                        10,
+                                                                  ),
+                                                                  child: Text(shop
+                                                                      .shopid),
+                                                                ),
+                                                              ),
+                                                              TableCell(
+                                                                child: Padding(
+                                                                  padding:
+                                                                      const EdgeInsets
+                                                                          .symmetric(
+                                                                    vertical: 4,
+                                                                    horizontal:
+                                                                        10,
+                                                                  ),
+                                                                  child: Text(shop
+                                                                      .shopname),
+                                                                ),
+                                                              ),
+                                                              TableCell(
+                                                                child: Padding(
+                                                                  padding:
+                                                                      const EdgeInsets
+                                                                          .symmetric(
+                                                                    vertical: 4,
+                                                                    horizontal:
+                                                                        10,
+                                                                  ),
+                                                                  child: Text(
+                                                                    shop.revenue
+                                                                        .toStringAsFixed(
+                                                                            2),
+                                                                  ), // Displays revenue as a formatted string
+                                                                ),
+                                                              ),
+                                                              TableCell(
+                                                                child: Padding(
+                                                                  padding:
+                                                                      const EdgeInsets
+                                                                          .symmetric(
+                                                                    vertical: 4,
+                                                                    horizontal:
+                                                                        10,
+                                                                  ),
+                                                                  child: Text(shop
+                                                                      .orders
+                                                                      .toString()),
+                                                                ),
+                                                              ),
+                                                            ],
+                                                          );
+                                                        },
+                                                      ).toList(),
+                                                    ],
+                                                  ),
+                                                ],
+                                              ),
+                                            );
+                                          },
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              );
+                            },
+                          );
+                        },
+                        child: _DataCard(
+                          title:
+                              "₱ ${reports.monthlyrevenue.toStringAsFixed(2)}",
+                          subTitle: "Monthly Revenue",
+                          percentage: "85.00",
+                          iconData: Icons.arrow_drop_up_outlined,
+                          cardIcon: Icons.attach_money_outlined,
+                        ),
                       ),
-                      _DataCard(
-                        title: "${reports.monthlyorders}",
-                        subTitle: "Orders",
-                        percentage: "96.00",
-                        iconData: Icons.arrow_drop_up_outlined,
-                        cardIcon: Icons.shopping_bag_outlined,
+                      GestureDetector(
+                        onTap: () async {
+                          showDialog(
+                            context: context,
+                            builder: (context) {
+                              return AlertDialog(
+                                content: Container(
+                                  width: 900,
+                                  height: double.infinity,
+                                  child: SingleChildScrollView(
+                                    child: Column(
+                                      children: [
+                                        Text(
+                                          "Monthly Orders",
+                                          style: TextStyle(
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.bold,
+                                            color: primary,
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          height: 10,
+                                        ),
+                                        FutureBuilder<List<OrderItem>>(
+                                          future: _fs.getOrdersData(),
+                                          builder: (context, snapshot) {
+                                            if (snapshot.connectionState ==
+                                                ConnectionState.waiting) {
+                                              return const Center(
+                                                  child:
+                                                      CircularProgressIndicator());
+                                            } else if (snapshot.hasError) {
+                                              return Center(
+                                                  child: Text(
+                                                      'Error: ${snapshot.error}'));
+                                            } else if (!snapshot.hasData ||
+                                                snapshot.data!.isEmpty) {
+                                              return const Center(
+                                                  child:
+                                                      Text('No orders found.'));
+                                            }
+
+                                            List<OrderItem> orders =
+                                                snapshot.data!;
+
+                                            return SingleChildScrollView(
+                                              child: Padding(
+                                                padding:
+                                                    const EdgeInsets.all(16.0),
+                                                child: Table(
+                                                  border: const TableBorder
+                                                      .symmetric(
+                                                    inside: BorderSide(
+                                                        color: Colors.grey),
+                                                  ),
+                                                  columnWidths: const {
+                                                    0: FlexColumnWidth(),
+                                                    1: FlexColumnWidth(),
+                                                    2: FlexColumnWidth(),
+                                                    3: FlexColumnWidth(),
+                                                    4: FlexColumnWidth(),
+                                                    5: FlexColumnWidth(),
+                                                  },
+                                                  defaultVerticalAlignment:
+                                                      TableCellVerticalAlignment
+                                                          .middle,
+                                                  children: [
+                                                    // Header Row
+                                                    TableRow(
+                                                      decoration: BoxDecoration(
+                                                        color: Colors
+                                                            .grey.shade200,
+                                                      ),
+                                                      children: const [
+                                                        Padding(
+                                                          padding:
+                                                              EdgeInsets.all(
+                                                                  12.0),
+                                                          child: Center(
+                                                              child: Text(
+                                                                  "Shop ID",
+                                                                  style: TextStyle(
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .bold))),
+                                                        ),
+                                                        Padding(
+                                                          padding:
+                                                              EdgeInsets.all(
+                                                                  12.0),
+                                                          child: Center(
+                                                              child: Text(
+                                                                  "Shopper ID",
+                                                                  style: TextStyle(
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .bold))),
+                                                        ),
+                                                        Padding(
+                                                          padding:
+                                                              EdgeInsets.all(
+                                                                  12.0),
+                                                          child: Center(
+                                                              child: Text(
+                                                                  "Order Status",
+                                                                  style: TextStyle(
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .bold))),
+                                                        ),
+                                                        Padding(
+                                                          padding:
+                                                              EdgeInsets.all(
+                                                                  12.0),
+                                                          child: Center(
+                                                              child: Text(
+                                                                  "Order Total",
+                                                                  style: TextStyle(
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .bold))),
+                                                        ),
+                                                        Padding(
+                                                          padding:
+                                                              EdgeInsets.all(
+                                                                  12.0),
+                                                          child: Center(
+                                                              child: Text(
+                                                                  "Device Type",
+                                                                  style: TextStyle(
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .bold))),
+                                                        ),
+                                                        Padding(
+                                                          padding:
+                                                              EdgeInsets.all(
+                                                                  12.0),
+                                                          child: Center(
+                                                              child: Text(
+                                                                  "Created At",
+                                                                  style: TextStyle(
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .bold))),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                    // Data Rows
+                                                    ...orders.map((order) {
+                                                      return TableRow(
+                                                        children: [
+                                                          Padding(
+                                                            padding:
+                                                                const EdgeInsets
+                                                                    .all(10.0),
+                                                            child: Center(
+                                                                child: Text(order
+                                                                    .shopid)),
+                                                          ),
+                                                          Padding(
+                                                            padding:
+                                                                const EdgeInsets
+                                                                    .all(10.0),
+                                                            child: Center(
+                                                                child: Text(order
+                                                                    .shopperid)),
+                                                          ),
+                                                          Padding(
+                                                            padding:
+                                                                const EdgeInsets
+                                                                    .all(10.0),
+                                                            child: Center(
+                                                                child: Text(order
+                                                                    .orderstatus)),
+                                                          ),
+                                                          Padding(
+                                                            padding:
+                                                                const EdgeInsets
+                                                                    .all(10.0),
+                                                            child: Center(
+                                                                child: Text(order
+                                                                    .ordertotal
+                                                                    .toString())),
+                                                          ),
+                                                          Padding(
+                                                            padding:
+                                                                const EdgeInsets
+                                                                    .all(10.0),
+                                                            child: Center(
+                                                                child: Text(order
+                                                                    .devicetype)),
+                                                          ),
+                                                          Padding(
+                                                            padding:
+                                                                const EdgeInsets
+                                                                    .all(10.0),
+                                                            child: Center(
+                                                                child: Text(order
+                                                                    .createdat
+                                                                    .toDate()
+                                                                    .toString())),
+                                                          ),
+                                                        ],
+                                                      );
+                                                    }).toList(),
+                                                  ],
+                                                ),
+                                              ),
+                                            );
+                                          },
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              );
+                            },
+                          );
+                        },
+                        child: _DataCard(
+                          title: "${reports.monthlyorders}",
+                          subTitle: "Orders",
+                          percentage: "96.00",
+                          iconData: Icons.arrow_drop_up_outlined,
+                          cardIcon: Icons.shopping_bag_outlined,
+                        ),
                       ),
-                      _DataCard(
-                        title: "${reports.newusers}",
-                        subTitle: "New Users",
-                        percentage: "98.00",
-                        iconData: Icons.arrow_drop_up_outlined,
-                        cardIcon: Icons.person_add_alt_1_outlined,
+                      GestureDetector(
+                        onTap: () async {
+                          showDialog(
+                            context: context,
+                            builder: (context) {
+                              return AlertDialog(
+                                content: Container(
+                                  width:
+                                      900, // Using double.infinity for better responsiveness
+                                  height: double.infinity,
+                                  child: SingleChildScrollView(
+                                    child: Column(
+                                      children: [
+                                        Padding(
+                                          padding: EdgeInsets.all(8.0),
+                                          child: Text(
+                                            "New Users",
+                                            style: TextStyle(
+                                              fontSize: 18,
+                                              fontWeight: FontWeight.bold,
+                                              color: primary,
+                                            ),
+                                          ),
+                                        ),
+                                        FutureBuilder<List<Shopper>>(
+                                          future:
+                                              _fs.getUsersDataForCurrentMonth(),
+                                          builder: (context, snapshot) {
+                                            if (snapshot.connectionState ==
+                                                ConnectionState.waiting) {
+                                              return const Center(
+                                                  child:
+                                                      CircularProgressIndicator());
+                                            } else if (snapshot.hasError) {
+                                              return Center(
+                                                  child: Text(
+                                                      'Error: ${snapshot.error}'));
+                                            } else if (!snapshot.hasData ||
+                                                snapshot.data!.isEmpty) {
+                                              return const Center(
+                                                  child: Text(
+                                                      'No data available'));
+                                            }
+
+                                            List<Shopper> shoppers =
+                                                snapshot.data!;
+
+                                            return Padding(
+                                              padding:
+                                                  const EdgeInsets.all(16.0),
+                                              child: Table(
+                                                border:
+                                                    const TableBorder.symmetric(
+                                                  inside: BorderSide(
+                                                      color: Colors.grey),
+                                                ),
+                                                columnWidths: const {
+                                                  0: FlexColumnWidth(2),
+                                                  1: FlexColumnWidth(2),
+                                                  2: FlexColumnWidth(2),
+                                                  3: FlexColumnWidth(2),
+                                                },
+                                                children: [
+                                                  // Header Row
+                                                  TableRow(
+                                                    decoration: BoxDecoration(
+                                                      color:
+                                                          Colors.grey.shade200,
+                                                    ),
+                                                    children: const [
+                                                      TableCell(
+                                                        child: Padding(
+                                                          padding:
+                                                              EdgeInsets.all(
+                                                                  8.0),
+                                                          child: Center(
+                                                            child: Text(
+                                                              'First Name',
+                                                              style: TextStyle(
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                      TableCell(
+                                                        child: Padding(
+                                                          padding:
+                                                              EdgeInsets.all(
+                                                                  8.0),
+                                                          child: Center(
+                                                            child: Text(
+                                                              'Last Name',
+                                                              style: TextStyle(
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                      TableCell(
+                                                        child: Padding(
+                                                          padding:
+                                                              EdgeInsets.all(
+                                                                  8.0),
+                                                          child: Center(
+                                                            child: Text(
+                                                              'Role',
+                                                              style: TextStyle(
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                      TableCell(
+                                                        child: Padding(
+                                                          padding:
+                                                              EdgeInsets.all(
+                                                                  8.0),
+                                                          child: Center(
+                                                            child: Text(
+                                                              'Date Joined',
+                                                              style: TextStyle(
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                  // Data Rows
+                                                  ...shoppers.map((shopper) {
+                                                    return TableRow(
+                                                      children: [
+                                                        TableCell(
+                                                          child: Padding(
+                                                            padding:
+                                                                const EdgeInsets
+                                                                    .all(8.0),
+                                                            child: Text(shopper
+                                                                .firstname),
+                                                          ),
+                                                        ),
+                                                        TableCell(
+                                                          child: Padding(
+                                                            padding:
+                                                                const EdgeInsets
+                                                                    .all(8.0),
+                                                            child: Text(shopper
+                                                                .lastname),
+                                                          ),
+                                                        ),
+                                                        TableCell(
+                                                          child: Padding(
+                                                            padding:
+                                                                const EdgeInsets
+                                                                    .all(8.0),
+                                                            child: Text(
+                                                                shopper.role),
+                                                          ),
+                                                        ),
+                                                        TableCell(
+                                                          child: Padding(
+                                                            padding:
+                                                                const EdgeInsets
+                                                                    .all(8.0),
+                                                            child: Text(shopper
+                                                                .datejoined
+                                                                .toDate()
+                                                                .toString()),
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    );
+                                                  }).toList(),
+                                                ],
+                                              ),
+                                            );
+                                          },
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              );
+                            },
+                          );
+                        },
+                        child: _DataCard(
+                          title: "${reports.newusers}",
+                          subTitle: "New Users",
+                          percentage: "98.00",
+                          iconData: Icons.arrow_drop_up_outlined,
+                          cardIcon: Icons.person_add_alt_1_outlined,
+                        ),
                       ),
-                      _DataCard(
-                        title: "${reports.currentusers}",
-                        subTitle: "Existing Users",
-                        percentage: "87.00",
-                        iconData: Icons.arrow_drop_up_outlined,
-                        cardIcon: Icons.groups_2_outlined,
+                      GestureDetector(
+                        onTap: () {},
+                        child: _DataCard(
+                          title: "${reports.currentusers}",
+                          subTitle: "Existing Users",
+                          percentage: "87.00",
+                          iconData: Icons.arrow_drop_up_outlined,
+                          cardIcon: Icons.groups_2_outlined,
+                        ),
                       ),
                     ],
                   ),

@@ -44,6 +44,54 @@ class FirestoreService {
     }
   }
 
+  Future<List<Shopper>> getUsersDataForCurrentMonth() async {
+    final _firestore_db = FirebaseFirestore.instance;
+    List<Shopper> shoppers = [];
+
+    try {
+      // Get the first and last date of the current month
+      DateTime now = DateTime.now();
+      DateTime startOfMonth = DateTime(now.year, now.month, 1);
+      DateTime endOfMonth = DateTime(now.year, now.month + 1, 0, 23, 59, 59);
+
+      QuerySnapshot snapshotUsers = await _firestore_db
+          .collection('users')
+          .where('dateJoined',
+              isGreaterThanOrEqualTo: Timestamp.fromDate(startOfMonth))
+          .where('dateJoined',
+              isLessThanOrEqualTo: Timestamp.fromDate(endOfMonth))
+          .get();
+
+      for (var userdoc in snapshotUsers.docs) {
+        Map<String, dynamic> data = userdoc.data() as Map<String, dynamic>;
+
+        final shopper = Shopper(
+          id: data['id'] ?? "",
+          firstname: data['firstName'] ?? "",
+          lastname: data['lastName'] ?? "",
+          email: data['email'] ?? "",
+          phone: data['phone'] ?? "",
+          role: data['role'] ?? "",
+          location: {
+            "street": data["street"]?.toString() ?? '',
+            "barangay": data["barangay"]?.toString() ?? '',
+            "city": data["city"]?.toString() ?? '',
+            "province": data["province"]?.toString() ?? '',
+            "region": data["region"]?.toString() ?? '',
+          },
+          profileurl: data['profileUrl'] ?? '',
+          datejoined: data['dateJoined'],
+        );
+
+        shoppers.add(shopper);
+      }
+    } catch (error) {
+      print(error);
+    }
+
+    return shoppers;
+  }
+
   Future<List<Seller>> getSellersData() async {
     final _firestore_db = FirebaseFirestore.instance;
     List<Seller> sellers = [];
@@ -396,37 +444,110 @@ class FirestoreService {
     return shop;
   }
 
-  Future<List<OrderItem>> getOrdersData() async {
-    List<OrderItem> orders = [];
-    int totalprice = 0;
+  Future<List<Shop>> getShopDataForCurrentMonth() async {
+    List<Shop> shop = [];
+    int count = 0;
 
     try {
+      // Get the current date and calculate the start and end of the current month
+      DateTime now = DateTime.now();
+      DateTime startOfMonth = DateTime(now.year, now.month, 1);
+      DateTime startOfNextMonth = DateTime(now.year, now.month + 1, 1);
+
+      // Firestore query to filter orders within the current month
+      QuerySnapshot snapshotShops =
+          await _firestore_db.collection("shops").get();
+      QuerySnapshot snapshotOrders = await _firestore_db
+          .collection("orders")
+          .where("createdAt", isGreaterThanOrEqualTo: startOfMonth)
+          .where("createdAt", isLessThan: startOfNextMonth)
+          .get();
+
+      for (var shopdoc in snapshotShops.docs) {
+        Map<String, dynamic> shopdata = shopdoc.data() as Map<String, dynamic>;
+
+        double revenue = 0;
+        int totalproductsold = 0;
+
+        String shopname = shopdata['name'];
+        String shopid = shopdata['userId'];
+
+        for (var orderdoc in snapshotOrders.docs) {
+          Map<String, dynamic> orderdata =
+              orderdoc.data() as Map<String, dynamic>;
+          List<dynamic> orderItems = orderdata["orderItems"];
+
+          int totalproductprice = 0;
+
+          if (shopdata['userId'] == orderdata['shopId'] &&
+              (orderdata['orderStatus'] == "Delivered" ||
+                  orderdata["orderStatus"] == "Picked-up")) {
+            int priceSubtotal = 0;
+
+            for (var item in orderItems) {
+              int totalItemPrice = item['totalItemPrice'];
+              int quantity = item['quantity'];
+              totalproductsold += quantity;
+              priceSubtotal += totalItemPrice;
+            }
+            totalproductprice += priceSubtotal;
+          }
+          revenue += totalproductprice * 0.05;
+        }
+
+        String revenueFormat = revenue.toStringAsFixed(2);
+        revenue = double.parse(revenueFormat);
+
+        shop.add(Shop(
+            shopid: shopid,
+            shopname: shopname,
+            revenue: revenue,
+            orders: totalproductsold));
+      }
+
+      // Sort the shops based on quantity sold (in descending order)
+      shop.sort((a, b) => b.orders.compareTo(a.orders));
+    } catch (error) {
+      print(error);
+    }
+
+    return shop;
+  }
+
+  Future<List<OrderItem>> getOrdersData() async {
+    List<OrderItem> orders = [];
+    try {
+      // Get the current date and extract year and month
+      DateTime now = DateTime.now();
+      int currentYear = now.year;
+      int currentMonth = now.month;
+
       QuerySnapshot snapshotOrders =
           await _firestore_db.collection("orders").get();
 
       for (var orderdoc in snapshotOrders.docs) {
         Map<String, dynamic> data = orderdoc.data() as Map<String, dynamic>;
-        List<dynamic> orderItems = data["orderItems"];
-        int pricesubtotal = 0;
-        int quantitysubtotal = 0;
+        Timestamp createdAtTimestamp = data["createdAt"];
+        DateTime createdAt = createdAtTimestamp.toDate();
 
-        orders.add(
-          OrderItem(
-            shopid: data["shopId"],
-            shopperid: data["shopperId"],
-            orderstatus: data["orderStatus"],
-            ordertotal: data["orderTotal"],
-            createdat: data["createdAt"] ?? '',
-            orderitems: data["orderItems"],
-            devicetype: data["deviceType"] ?? "",
-          ),
-        );
+        // Check if the order's createdAt year and month match the current year and month
+        if (createdAt.year == currentYear && createdAt.month == currentMonth) {
+          orders.add(
+            OrderItem(
+              shopid: data["shopId"] ?? '',
+              shopperid: data["shopperId"] ?? '',
+              orderstatus: data["orderStatus"] ?? '',
+              ordertotal: data["orderTotal"] ?? 0,
+              createdat: createdAtTimestamp,
+              orderitems: data["orderItems"] ?? [],
+              devicetype: data["deviceType"] ?? "",
+            ),
+          );
+        }
       }
-      // revenue = (totalprice * 5) / 100;
     } catch (error) {
-      print(error);
+      print("Error fetching order data: $error");
     }
-
     return orders;
   }
 
@@ -816,90 +937,78 @@ class FirestoreService {
 
   Future<MonthlyReport> getMonthlyReport() async {
     int currentMonth = DateTime.now().month;
-
-    int month = DateTime.now().month;
     int year = DateTime.now().year;
-    int newusers = 0;
-    int existingusers = 0;
-    double revenue = 0;
-    int monthlyorders = 0;
 
-    int totalprice = 0;
+    int newUsers = 0;
+    int existingUsers = 0;
+    double revenue = 0;
+    int monthlyOrders = 0;
+
+    int totalPrice = 0;
 
     try {
+      // Fetch data from Firestore
       QuerySnapshot snapshotUsers =
           await _firestore_db.collection('users').get();
-      QuerySnapshot snapshotShops =
-          await _firestore_db.collection('shops').get();
       QuerySnapshot snapshotOrders =
           await _firestore_db.collection("orders").get();
 
-      for (var users in snapshotUsers.docs) {
-        Map<String, dynamic> data = users.data() as Map<String, dynamic>;
+      // Count new and existing users
+      for (var userDoc in snapshotUsers.docs) {
+        Map<String, dynamic> userData = userDoc.data() as Map<String, dynamic>;
 
-        String datejoined = toMonth(data["dateJoined"]);
+        // Ensure `dateJoined` is a valid field and parse it correctly
+        DateTime dateJoined = (userData['dateJoined'] as Timestamp).toDate();
 
-        if (int.parse(datejoined) == month) {
-          newusers++;
+        if (dateJoined.month == currentMonth && dateJoined.year == year) {
+          newUsers++;
         }
-        existingusers++;
+        existingUsers++;
       }
 
-      for (var shops in snapshotShops.docs) {
-        Map<String, dynamic> data = shops.data() as Map<String, dynamic>;
-      }
+      // Calculate revenue and order statistics
+      for (var orderDoc in snapshotOrders.docs) {
+        Map<String, dynamic> orderData =
+            orderDoc.data() as Map<String, dynamic>;
 
-      for (var orders in snapshotOrders.docs) {
-        Map<String, dynamic> data = orders.data() as Map<String, dynamic>;
+        // Ensure `createdAt` is a valid field and parse it correctly
+        DateTime createdAt = (orderData['createdAt'] as Timestamp).toDate();
 
-        List<dynamic> orderItems = data["orderItems"];
+        if (createdAt.month == currentMonth && createdAt.year == year) {
+          if (orderData["orderStatus"] == "Delivered" ||
+              orderData["orderStatus"] == "Picked-up") {
+            List<dynamic> orderItems = orderData["orderItems"];
+            int priceSubtotal = 0;
+            int quantitySubtotal = 0;
 
-        int pricesubtotal = 0;
-        int quantitysubtotal = 0;
+            for (var item in orderItems) {
+              int totalItemPrice = item["totalItemPrice"];
+              int quantity = item["quantity"];
 
-        String ordersinmonth = toMonth(data['createdAt']);
+              priceSubtotal += totalItemPrice;
+              quantitySubtotal += quantity;
+            }
 
-        if (int.parse(ordersinmonth) == month &&
-                data["orderStatus"] == "Delivered" ||
-            data["orderStatus"] == "Picked-up") {
-          for (var items in orderItems) {
-            int totalItemPrice = items["totalItemPrice"];
-            int quantity = items["quantity"];
-            pricesubtotal += totalItemPrice;
-            quantitysubtotal += quantity;
+            totalPrice += priceSubtotal;
+            monthlyOrders += quantitySubtotal;
           }
         }
-
-        totalprice += pricesubtotal;
-        monthlyorders += quantitysubtotal;
       }
-      revenue = totalprice * 0.05;
 
-      // print("New users: ${newusers}");
-      // print("Existing users: ${existingusers}");
-      // print("Revenue: ${revenue}");
-      // print("Orders: ${monthlyorders}");
-
-      // await _firestore_db.collection("reports").add({
-      //   "id": docRef.id,
-      //   "newUsers": newusers.toString(),
-      //   "currentUsers": existingusers.toString(),
-      //   "monthlyRevenue": revenue.toString(),
-      //   "monthlyOrders": monthlyorders.toString(),
-      //   "month": monthToText(month).toString(),
-      //   "year": year.toString(),
-      // });
+      // Calculate revenue as 5% of the total price
+      revenue = totalPrice * 0.05;
     } catch (error) {
-      print(error);
+      print("Error fetching monthly report data: $error");
     }
 
+    // Create the MonthlyReport instance
     MonthlyReport report = MonthlyReport(
-      id: " ",
-      newusers: newusers,
-      currentusers: existingusers,
+      id: "", // Provide a meaningful ID if required
+      newusers: newUsers,
+      currentusers: existingUsers,
       monthlyrevenue: revenue,
-      monthlyorders: monthlyorders,
-      month: monthToText(month),
+      monthlyorders: monthlyOrders,
+      month: monthToText(currentMonth),
       year: year,
     );
 
