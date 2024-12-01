@@ -364,10 +364,6 @@ class _MenuScreenState extends State<MenuScreen> {
                   //     sideMenu.changePage(index);
                   //   },
                   // ),
-                  const SideMenuItem(
-                    title: 'Exit',
-                    icon: Icon(Icons.exit_to_app),
-                  ),
                 ],
               ),
               const VerticalDivider(

@@ -123,27 +123,27 @@ class _DashboardViewState extends State<DashboardView> {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                OutlinedButton(
-                  onPressed: () {},
-                  child: const Row(
-                    children: [
-                      Icon(
-                        Icons.settings,
-                        size: 20,
-                        color: Colors.black,
-                      ),
-                      SizedBox(
-                        width: 5,
-                      ),
-                      Text(
-                        "Manage",
-                        style: TextStyle(
-                          color: Colors.black,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
+                // OutlinedButton(
+                //   onPressed: () {},
+                //   child: const Row(
+                //     children: [
+                //       Icon(
+                //         Icons.settings,
+                //         size: 20,
+                //         color: Colors.black,
+                //       ),
+                //       SizedBox(
+                //         width: 5,
+                //       ),
+                //       Text(
+                //         "Manage",
+                //         style: TextStyle(
+                //           color: Colors.black,
+                //         ),
+                //       ),
+                //     ],
+                //   ),
+                // ),
               ],
             ),
             const SizedBox(
