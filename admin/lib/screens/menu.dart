@@ -8,6 +8,7 @@ import 'package:admin/screens/refund/refund.dart';
 import 'package:admin/screens/reports/report.dart';
 import 'package:admin/screens/requests/request.dart';
 import 'package:admin/screens/customers/seller.dart';
+import 'package:admin/screens/shopScreen.dart';
 import 'package:admin/themes/theme.dart';
 import 'package:admin/models/adminData.dart';
 import 'package:admin/screens/login.dart';
@@ -331,6 +332,13 @@ class _MenuScreenState extends State<MenuScreen> {
                     },
                     icon: const Icon(Icons.layers),
                   ),
+                  SideMenuItem(
+                    title: 'Documents',
+                    onTap: (index, _) {
+                      sideMenu.changePage(index);
+                    },
+                    icon: const Icon(Icons.description),
+                  ),
                   // SideMenuItem(
                   //   title: 'Requests',
                   //   onTap: (index, _) {
@@ -365,7 +373,8 @@ class _MenuScreenState extends State<MenuScreen> {
                     const ShoppersView(),
                     Refund(),
                     const ReportsView(),
-                    const PlatformScreen()
+                    const PlatformScreen(),
+                    ShopsScreen()
 
                     // RequestsView(),
 
