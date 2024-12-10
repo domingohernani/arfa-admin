@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class CommissionRateScreen extends StatefulWidget {
   const CommissionRateScreen({super.key});
@@ -11,11 +12,34 @@ class CommissionRateScreen extends StatefulWidget {
 class _CommissionRateScreenState extends State<CommissionRateScreen> {
   List<Map<String, dynamic>> commissionData = [];
   final int minRowCount = 5;
+  String? updatedBy;
 
   @override
   void initState() {
     super.initState();
+    fetchUpdatedBy();
     fetchCommissionData();
+  }
+
+  Future<void> fetchUpdatedBy() async {
+    final user = FirebaseAuth.instance.currentUser;
+
+    if (user != null) {
+      try {
+        final adminDoc = await FirebaseFirestore.instance
+            .collection('admins')
+            .doc(user.uid)
+            .get();
+
+        setState(() {
+          updatedBy = adminDoc.data()?['name'] ?? 'Admin';
+        });
+      } catch (e) {
+        print("Error fetching admin data: $e");
+      }
+    } else {
+      print("No user is logged in.");
+    }
   }
 
   Future<void> fetchCommissionData() async {
@@ -31,6 +55,7 @@ class _CommissionRateScreenState extends State<CommissionRateScreen> {
         return {
           'updatedAt': (commission['updatedAt'] as Timestamp).toDate(),
           'value': commission['value'],
+          'updatedBy': commission['updatedBy'] ?? 'Unknown',
         };
       }).toList();
 
@@ -85,12 +110,23 @@ class _CommissionRateScreenState extends State<CommissionRateScreen> {
                 if (commissionValue != null &&
                     commissionValue >= 0 &&
                     commissionValue <= 1) {
+                  if (updatedBy == null) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text(
+                            "Error: Please try logging out and logging in again."),
+                      ),
+                    );
+                    return;
+                  }
+
                   try {
                     await FirebaseFirestore.instance
                         .collection('commission-rate')
                         .add({
                       'value': commissionValue,
                       'updatedAt': FieldValue.serverTimestamp(),
+                      'updatedBy': updatedBy,
                     });
 
                     await fetchCommissionData();
@@ -131,7 +167,7 @@ class _CommissionRateScreenState extends State<CommissionRateScreen> {
   Widget build(BuildContext context) {
     List<Map<String, dynamic>> filledData = [...commissionData];
     while (filledData.length < minRowCount) {
-      filledData.add({'updatedAt': null, 'value': null});
+      filledData.add({'updatedAt': null, 'value': null, 'updatedBy': null});
     }
 
     return Scaffold(
@@ -153,45 +189,87 @@ class _CommissionRateScreenState extends State<CommissionRateScreen> {
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
               child: SizedBox(
                 width: double.infinity,
-                child: DataTable(
+                child: Table(
                   border: TableBorder.all(
                     color: Colors.grey,
                     width: 1,
                   ),
-                  columns: const [
-                    DataColumn(
-                      label: Text(
-                        "Date Updated",
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                    ),
-                    DataColumn(
-                      label: Text(
-                        "Commission Rate",
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                    ),
-                  ],
-                  rows: filledData.map((commission) {
-                    return DataRow(
-                      cells: [
-                        DataCell(Text(
-                          commission['updatedAt'] != null
-                              ? commission['updatedAt'].toString()
-                              : "-",
-                        )),
-                        DataCell(
-                          Text(
-                            commission['value'] != null
-                                ? (commission['value'] * 100)
-                                        .toStringAsFixed(2) +
-                                    "%"
-                                : "-",
+                  columnWidths: const {
+                    0: FlexColumnWidth(2), // Adjust proportionally
+                    1: FlexColumnWidth(1), // Adjust proportionally
+                    2: FlexColumnWidth(2), // Adjust proportionally
+                  },
+                  defaultVerticalAlignment: TableCellVerticalAlignment.middle,
+                  children: [
+                    TableRow(
+                      decoration: BoxDecoration(color: Colors.grey[300]),
+                      children: const [
+                        Center(
+                          child: Padding(
+                            padding: EdgeInsets.all(8.0),
+                            child: Text(
+                              "Date Updated",
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold, fontSize: 14),
+                            ),
+                          ),
+                        ),
+                        Center(
+                          child: Padding(
+                            padding: EdgeInsets.all(8.0),
+                            child: Text(
+                              "Commission Rate",
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold, fontSize: 14),
+                            ),
+                          ),
+                        ),
+                        Center(
+                          child: Padding(
+                            padding: EdgeInsets.all(8.0),
+                            child: Text(
+                              "Updated By",
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold, fontSize: 14),
+                            ),
                           ),
                         ),
                       ],
-                    );
-                  }).toList(),
+                    ),
+                    ...filledData.map((commission) {
+                      return TableRow(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.all(18),
+                            child: Text(
+                              commission['updatedAt'] != null
+                                  ? commission['updatedAt'].toString()
+                                  : "-",
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(18),
+                            child: Text(
+                              commission['value'] != null
+                                  ? (commission['value'] * 100)
+                                          .toStringAsFixed(2) +
+                                      "%"
+                                  : "-",
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(18),
+                            child: Text(
+                              commission['updatedBy'] ?? "-",
+                            ),
+                          ),
+                        ],
+                      );
+                    }).toList(),
+                  ],
                 ),
               ),
             ),
