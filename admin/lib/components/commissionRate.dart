@@ -189,56 +189,87 @@ class _CommissionRateScreenState extends State<CommissionRateScreen> {
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
               child: SizedBox(
                 width: double.infinity,
-                child: DataTable(
+                child: Table(
                   border: TableBorder.all(
                     color: Colors.grey,
                     width: 1,
                   ),
-                  columns: const [
-                    DataColumn(
-                      label: Text(
-                        "Date Updated",
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                    ),
-                    DataColumn(
-                      label: Text(
-                        "Commission Rate",
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                    ),
-                    DataColumn(
-                      label: Text(
-                        "Updated By",
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                    ),
-                  ],
-                  rows: filledData.map((commission) {
-                    return DataRow(
-                      cells: [
-                        DataCell(Text(
-                          commission['updatedAt'] != null
-                              ? commission['updatedAt'].toString()
-                              : "-",
-                        )),
-                        DataCell(
-                          Text(
-                            commission['value'] != null
-                                ? (commission['value'] * 100)
-                                        .toStringAsFixed(2) +
-                                    "%"
-                                : "-",
+                  columnWidths: const {
+                    0: FlexColumnWidth(2), // Adjust proportionally
+                    1: FlexColumnWidth(1), // Adjust proportionally
+                    2: FlexColumnWidth(2), // Adjust proportionally
+                  },
+                  defaultVerticalAlignment: TableCellVerticalAlignment.middle,
+                  children: [
+                    TableRow(
+                      decoration: BoxDecoration(color: Colors.grey[300]),
+                      children: const [
+                        Center(
+                          child: Padding(
+                            padding: EdgeInsets.all(8.0),
+                            child: Text(
+                              "Date Updated",
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold, fontSize: 14),
+                            ),
                           ),
                         ),
-                        DataCell(
-                          Text(
-                            commission['updatedBy'] ?? "-",
+                        Center(
+                          child: Padding(
+                            padding: EdgeInsets.all(8.0),
+                            child: Text(
+                              "Commission Rate",
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold, fontSize: 14),
+                            ),
+                          ),
+                        ),
+                        Center(
+                          child: Padding(
+                            padding: EdgeInsets.all(8.0),
+                            child: Text(
+                              "Updated By",
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold, fontSize: 14),
+                            ),
                           ),
                         ),
                       ],
-                    );
-                  }).toList(),
+                    ),
+                    ...filledData.map((commission) {
+                      return TableRow(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.all(18),
+                            child: Text(
+                              commission['updatedAt'] != null
+                                  ? commission['updatedAt'].toString()
+                                  : "-",
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(18),
+                            child: Text(
+                              commission['value'] != null
+                                  ? (commission['value'] * 100)
+                                          .toStringAsFixed(2) +
+                                      "%"
+                                  : "-",
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(18),
+                            child: Text(
+                              commission['updatedBy'] ?? "-",
+                            ),
+                          ),
+                        ],
+                      );
+                    }).toList(),
+                  ],
                 ),
               ),
             ),

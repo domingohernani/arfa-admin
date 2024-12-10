@@ -32,7 +32,7 @@ class MenuScreen extends StatefulWidget {
 class _MenuScreenState extends State<MenuScreen> {
   // Widget menuView = DashboardView();
   final FirestoreService _fs = FirestoreService();
-  PageController pageController = PageController(initialPage: 0);
+  PageController pageController = PageController();
   SideMenuController sideMenu = SideMenuController();
 
   void initState() {

@@ -185,54 +185,80 @@ class _TaxScreenState extends State<TaxScreen> {
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
               child: SizedBox(
                 width: double.infinity,
-                child: DataTable(
+                child: Table(
                   border: TableBorder.all(
                     color: Colors.grey,
                     width: 1,
                   ),
-                  columns: const [
-                    DataColumn(
-                      label: Text(
-                        "Date Updated",
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                    ),
-                    DataColumn(
-                      label: Text(
-                        "Tax Value",
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                    ),
-                    DataColumn(
-                      label: Text(
-                        "Updated By",
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                    ),
-                  ],
-                  rows: filledData.map((tax) {
-                    return DataRow(
-                      cells: [
-                        DataCell(Text(
-                          tax['updatedAt'] != null
-                              ? tax['updatedAt'].toString()
-                              : "-",
-                        )),
-                        DataCell(
-                          Text(
-                            tax['value'] != null
-                                ? (tax['value'] * 100).toStringAsFixed(2) + "%"
-                                : "-",
+                  columnWidths: const {
+                    0: FlexColumnWidth(2), // Adjust proportionally
+                    1: FlexColumnWidth(1), // Adjust proportionally
+                    2: FlexColumnWidth(2), // Adjust proportionally
+                  },
+                  defaultVerticalAlignment: TableCellVerticalAlignment.middle,
+                  children: [
+                    TableRow(
+                      decoration: BoxDecoration(color: Colors.grey[300]),
+                      children: const [
+                        Padding(
+                          padding: EdgeInsets.all(8.0),
+                          child: Text(
+                            textAlign: TextAlign.center,
+                            "Date Updated",
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold, fontSize: 14),
                           ),
                         ),
-                        DataCell(
-                          Text(
-                            tax['updatedBy'] ?? "-",
+                        Padding(
+                          padding: EdgeInsets.all(8.0),
+                          child: Text(
+                            textAlign: TextAlign.center,
+                            "Tax Value",
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold, fontSize: 14),
+                          ),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.all(8.0),
+                          child: Text(
+                            textAlign: TextAlign.center,
+                            "Updated By",
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold, fontSize: 14),
                           ),
                         ),
                       ],
-                    );
-                  }).toList(),
+                    ),
+                    ...filledData.map((tax) {
+                      return TableRow(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.all(18.0),
+                            child: Text(
+                              tax['updatedAt'] != null
+                                  ? tax['updatedAt'].toString()
+                                  : "-",
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(18.0),
+                            child: Text(
+                              tax['value'] != null
+                                  ? (tax['value'] * 100).toStringAsFixed(2) +
+                                      "%"
+                                  : "-",
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(18.0),
+                            child: Text(
+                              tax['updatedBy'] ?? "-",
+                            ),
+                          ),
+                        ],
+                      );
+                    }).toList(),
+                  ],
                 ),
               ),
             ),
