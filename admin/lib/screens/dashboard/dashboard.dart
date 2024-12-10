@@ -1064,8 +1064,8 @@ class _DashboardViewState extends State<DashboardView> {
                         columnWidths: {
                           0: const FlexColumnWidth(),
                           1: const FlexColumnWidth(),
-                          2: const FlexColumnWidth(),
-                          3: const FlexColumnWidth(),
+                          2: const FixedColumnWidth(200.0),
+                          3: const FixedColumnWidth(150.0),
                           4: const FixedColumnWidth(100.0),
                         },
                         defaultVerticalAlignment:
@@ -1238,9 +1238,9 @@ class _DashboardViewState extends State<DashboardView> {
                             inside: BorderSide(color: Colors.grey)),
                         columnWidths: {
                           0: const FlexColumnWidth(),
-                          1: const FlexColumnWidth(),
-                          2: const FlexColumnWidth(),
-                          3: const FlexColumnWidth(),
+                          1: const FixedColumnWidth(250),
+                          2: const FixedColumnWidth(150),
+                          3: const FixedColumnWidth(150),
                           4: const FixedColumnWidth(100.0),
                         },
                         defaultVerticalAlignment:

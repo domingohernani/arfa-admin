@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class TaxScreen extends StatefulWidget {
   const TaxScreen({super.key});
@@ -11,11 +12,34 @@ class TaxScreen extends StatefulWidget {
 class _TaxScreenState extends State<TaxScreen> {
   List<Map<String, dynamic>> taxData = [];
   final int minRowCount = 5;
+  String? updatedBy;
 
   @override
   void initState() {
     super.initState();
+    fetchUpdatedBy();
     fetchTaxData();
+  }
+
+  Future<void> fetchUpdatedBy() async {
+    final user = FirebaseAuth.instance.currentUser;
+
+    if (user != null) {
+      try {
+        final adminDoc = await FirebaseFirestore.instance
+            .collection('admins')
+            .doc(user.uid)
+            .get();
+
+        setState(() {
+          updatedBy = adminDoc.data()?['name'] ?? 'Admin';
+        });
+      } catch (e) {
+        print("Error fetching admin data: $e");
+      }
+    } else {
+      print("No user is logged in.");
+    }
   }
 
   Future<void> fetchTaxData() async {
@@ -31,6 +55,7 @@ class _TaxScreenState extends State<TaxScreen> {
         return {
           'updatedAt': (tax['updatedAt'] as Timestamp).toDate(),
           'value': tax['value'],
+          'updatedBy': tax['updatedBy'] ?? 'Unknown',
         };
       }).toList();
 
@@ -83,10 +108,21 @@ class _TaxScreenState extends State<TaxScreen> {
                 final double? taxValue =
                     double.tryParse(taxController.text.trim());
                 if (taxValue != null && taxValue >= 0 && taxValue <= 1) {
+                  if (updatedBy == null) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text(
+                            "Error: Please try logging out and logging in again."),
+                      ),
+                    );
+                    return;
+                  }
+
                   try {
                     await FirebaseFirestore.instance.collection('tax').add({
                       'value': taxValue,
                       'updatedAt': FieldValue.serverTimestamp(),
+                      'updatedBy': updatedBy,
                     });
 
                     await fetchTaxData();
@@ -127,7 +163,7 @@ class _TaxScreenState extends State<TaxScreen> {
   Widget build(BuildContext context) {
     List<Map<String, dynamic>> filledData = [...taxData];
     while (filledData.length < minRowCount) {
-      filledData.add({'updatedAt': null, 'value': null});
+      filledData.add({'updatedAt': null, 'value': null, 'updatedBy': null});
     }
 
     return Scaffold(
@@ -167,6 +203,12 @@ class _TaxScreenState extends State<TaxScreen> {
                         style: TextStyle(fontWeight: FontWeight.bold),
                       ),
                     ),
+                    DataColumn(
+                      label: Text(
+                        "Updated By",
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                    ),
                   ],
                   rows: filledData.map((tax) {
                     return DataRow(
@@ -181,6 +223,11 @@ class _TaxScreenState extends State<TaxScreen> {
                             tax['value'] != null
                                 ? (tax['value'] * 100).toStringAsFixed(2) + "%"
                                 : "-",
+                          ),
+                        ),
+                        DataCell(
+                          Text(
+                            tax['updatedBy'] ?? "-",
                           ),
                         ),
                       ],

@@ -411,8 +411,8 @@ class _ReportsViewState extends State<ReportsView> {
                             inside: BorderSide(color: Colors.grey)),
                         columnWidths: const {
                           0: FlexColumnWidth(),
-                          1: FlexColumnWidth(),
-                          2: FlexColumnWidth(),
+                          1: FixedColumnWidth(300),
+                          2: FixedColumnWidth(150),
                           3: FixedColumnWidth(100.0),
                         },
                         defaultVerticalAlignment:
